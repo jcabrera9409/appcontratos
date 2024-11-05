@@ -1,0 +1,26 @@
+meta {
+  name: crearVendedor
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/clientes/documento
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 1,
+    "nombres": "Allisson Huaracha",
+    "correo": "allisson.hv@gmail.com",
+    "password": "likilakagada",
+    "estado": 1,
+    "roles": [
+      {
+        "id": 1
+      }
+    ]
+  }
+}

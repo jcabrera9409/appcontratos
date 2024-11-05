@@ -1,0 +1,20 @@
+meta {
+  name: crearMenu
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/menus
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "3",
+    "icono": "E",
+    "nombre": "Estadísticas",
+    "url": "/estadisticas"
+  }
+}

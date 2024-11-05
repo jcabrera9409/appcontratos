@@ -1,0 +1,20 @@
+meta {
+  name: listarMenus
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/menus
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "id": "1",
+    "icono": "I",
+    "nombre": "Crear Contrato",
+    "url": "/contrato/crear"
+  }
+}

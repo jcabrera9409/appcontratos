@@ -1,0 +1,20 @@
+meta {
+  name: modificarMenu
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/menus
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "3",
+    "icono": "es",
+    "nombre": "Estadísticas",
+    "url": "/estadisticas/ver"
+  }
+}
