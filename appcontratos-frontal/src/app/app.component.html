@@ -1,0 +1,40 @@
+<div class="main-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="main-toolbar">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+        <h1 class="main-app-title">CreaConfort</h1>
+
+        <span class="spacer"></span>
+
+        <button mat-button [matMenuTriggerFor]="menu" aria-label="Menu">
+            <span>Jose Cabrera</span>
+            <mat-icon iconPositionEnd>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>logout</mat-icon>
+                <span>Cerrar Sesión</span>
+            </button>
+        </mat-menu>
+
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56"> 
+            <mat-nav-list>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/']">
+                    <mat-icon matListItemIcon>home</mat-icon> Home
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/clientes']">
+                    <mat-icon matListItemIcon>person</mat-icon> Clientes
+                </mat-list-item>
+
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <router-outlet />
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

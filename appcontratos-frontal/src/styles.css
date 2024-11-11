@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.responsive-table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    min-height: auto;
+    max-height: calc(100vh - 25rem);
+}
+
+.mat-card-header-style {
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.mat-card-page-style {
+    margin: 5px
+}
+
+.success-snackbar * {
+    background: #A6CA8A !important;
+    color: #3C763D !important;
+}
+.info-snackbar * {
+    background: #91C5F2 !important;
+    color: #31708F !important;
+}
+.warning-snackbar * {
+    background: #F2C779 !important;
+    color: #8A6D3B !important;
+}
+.error-snackbar * {
+    background: #F5ACA6 !important;
+    color: #A94442 !important;
+}
