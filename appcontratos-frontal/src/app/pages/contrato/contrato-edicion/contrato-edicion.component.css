@@ -1,0 +1,62 @@
+.example-container mat-form-field {
+    width: 49%;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.invalido {
+    color: red
+}
+
+.responsive-table mat-form-field {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.responsive-table .cantidad {
+    width: 5%;
+}
+
+.responsive-table .descripcion {
+    width: 85%;
+}
+
+.responsive-table .precio {
+    width: 5%;
+}
+
+.responsive-table .accion {
+    width: 5%;
+}
+
+.responsive-table textarea {
+    height: 120px;
+    margin-top: 5px;
+}
+
+.stepper-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+@media (max-width: 600px) {
+    .example-container mat-form-field {
+        width: 100%;
+    }
+
+    .botonAgregarDetalle {
+        float: right;
+    }
+
+    .responsive-table mat-form-field {
+        width: auto;
+        margin-top: 5px;
+    }
+
+    .responsive-table .cantidad .descripcion .precio .accion {
+        width: auto;
+    }
+    
+}

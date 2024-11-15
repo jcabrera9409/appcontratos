@@ -3,34 +3,29 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Cliente } from '../_model/cliente';
 import { Subject } from 'rxjs';
-import { Mensaje } from '../_model/Mensaje';
+import { Mensaje } from '../_model/mensaje'; 
+import { GenericService } from './generic.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClienteService {
+export class ClienteService extends GenericService<Cliente> {
 
   private clienteCambio: Subject<Cliente[]> = new Subject<Cliente[]>();
   private mensajeCambio: Subject<Mensaje> = new Subject<Mensaje>();
 
-  private url: String = `${environment.HOST}/clientes`
+  //private url: String = `${environment.HOST}/clientes`
 
-  constructor(private http: HttpClient) { }
-
-  listar() {
-   return this.http.get<Cliente[]>(`${this.url}`);
-  }
-  
-  listarPorId(id: number) {
-    return this.http.get<Cliente>(`${this.url}/${id}`);
+  //constructor(private http: HttpClient) { }
+  constructor(protected override http: HttpClient) {
+    super(
+      http,
+      `${environment.HOST}/clientes`
+    )
   }
 
-  registrar(cliente: Cliente) {
-    return this.http.post(`${this.url}`, cliente);
-  }
-
-  modificar(cliente: Cliente) {
-    return this.http.put(`${this.url}`, cliente);
+  listarPorDocumentoCliente(documentoCliente: String) {
+    return this.http.get<Cliente>(`${this.url}/documento/${documentoCliente}`);
   }
 
   getClienteCambio() {

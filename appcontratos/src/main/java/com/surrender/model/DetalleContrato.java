@@ -28,6 +28,10 @@ public class DetalleContrato {
 	@Column(nullable = false)
 	private float precio;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_plantilla", nullable = true)
+	private Plantilla objPlantilla;
+	
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="id_contrato", nullable = false)

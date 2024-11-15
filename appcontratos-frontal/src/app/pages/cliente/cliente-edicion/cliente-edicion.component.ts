@@ -9,7 +9,8 @@ import { Cliente } from '../../../_model/cliente';
 import { ClienteService } from '../../../_service/cliente.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Mensaje } from '../../../_model/Mensaje';
+import { Mensaje } from '../../../_model/mensaje';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-edicion',
@@ -85,20 +86,22 @@ export class ClienteEdicionComponent implements OnInit {
     }
     
     if(cliente.id > 0) {
-      this.clienteService.modificar(cliente).subscribe(() => {
-        this.clienteService.listar().subscribe(data => {
-          this.clienteService.setClienteCambio(data);
-          this.clienteService.setMensajeCambio(new Mensaje("OK", "Cliente Actualizado"))
-        });
-      });
+      this.clienteService.modificar(cliente).pipe(switchMap(() => {
+        return this.clienteService.listar();
+      }))
+      .subscribe(data => {
+        this.clienteService.setClienteCambio(data);
+        this.clienteService.setMensajeCambio(new Mensaje("OK", "Cliente Actualizado"))
+      })
     }
     else {
-      this.clienteService.registrar(cliente).subscribe(() => {
-        this.clienteService.listar().subscribe(data => {
-          this.clienteService.setClienteCambio(data);
-          this.clienteService.setMensajeCambio(new Mensaje("OK", "Cliente Registrado"))
-        });
-      });
+      this.clienteService.registrar(cliente).pipe(switchMap(() => {
+        return this.clienteService.listar();
+      }))
+      .subscribe(data => {
+        this.clienteService.setClienteCambio(data);
+        this.clienteService.setMensajeCambio(new Mensaje("OK", "Cliente Registrado"))
+      })
     }
     
     this.dialogRef.close();

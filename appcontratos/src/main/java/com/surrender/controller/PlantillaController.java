@@ -1,0 +1,62 @@
+package com.surrender.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.surrender.exception.ModeloNotFoundException;
+import com.surrender.model.Plantilla;
+import com.surrender.service.IPlantillaService;
+
+@RestController
+@RequestMapping("/plantillas")
+public class PlantillaController {
+
+	@Autowired
+	private IPlantillaService service;
+	
+	@GetMapping
+	public ResponseEntity<?> listar() throws Exception {
+		List<Plantilla> lista = service.listar();
+		return new ResponseEntity<List<Plantilla>>(lista, HttpStatus.OK);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> listarPorId(@PathVariable Integer id) throws Exception {
+		Plantilla obj = service.listarPorId(id);
+		
+		if(obj == null) {
+			throw new ModeloNotFoundException("Plantilla no encontrada " + id);
+		}
+		
+		return new ResponseEntity<Plantilla>(obj, HttpStatus.OK);
+	}
+	
+	@PostMapping
+	public ResponseEntity<?> registrar(@RequestBody Plantilla v) throws Exception {
+		Plantilla obj = service.registrar(v);
+		return new ResponseEntity<Plantilla>(obj, HttpStatus.CREATED);
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> modificar(@RequestBody Plantilla v) throws Exception {
+		Plantilla obj = service.modificar(v);
+		return new ResponseEntity<Plantilla>(obj, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> eliminar(@PathVariable Integer id) throws Exception {
+		service.eliminar(id);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+}

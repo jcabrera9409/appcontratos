@@ -1,0 +1,172 @@
+<mat-card class="mat-card-page-style">
+    <mat-card-header class="mat-card-header-style">
+        <mat-card-title>Nuevo Contrato</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+
+        <mat-stepper linear #stepper>
+            <mat-step [stepControl]="primerForm" [optional]="false">
+                <form [formGroup]="primerForm" (submit)="primerPaso()">
+                    <ng-template matStepLabel>Datos Cliente</ng-template>
+                    <div class="example-container">
+                        <div [hidden]="true">
+                            <mat-form-field>
+                                <input matInput placeholder="ID" formControlName="id" />
+                            </mat-form-field>
+                        </div>
+                        <mat-radio-group color="primary" formControlName="tipoCliente"
+                            aria-label="Selecciona Tipo de Cliente" (change)="onChangeTipoCliente($event)">
+                            <mat-radio-button value="N">Persona Natural</mat-radio-button>
+                            <mat-radio-button value="J">Persona Jurídica</mat-radio-button>
+                        </mat-radio-group>
+                        <br />
+                        <mat-form-field>
+                            <mat-label>Número de Documento/RUC</mat-label>
+                            <input formControlName="documentoCliente" matInput placeholder="Ingresar Documento/RUC"
+                                (blur)="buscarCliente()" (keydown.enter)="buscarCliente()">
+                        </mat-form-field>
+                        <div *ngIf="isPersonaNatural">
+                            <mat-form-field>
+                                <mat-label>Nombres Cliente</mat-label>
+                                <input formControlName="nombresCliente" matInput placeholder="Ingresar Nombres">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Apellidos Cliente</mat-label>
+                                <input formControlName="apellidosCliente" matInput placeholder="Ingresar Apellidos">
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!isPersonaNatural">
+                            <mat-form-field>
+                                <mat-label>Razón Social</mat-label>
+                                <input formControlName="razonSocial" matInput placeholder="Ingresar Razón Social">
+                            </mat-form-field>
+                        </div>
+                        <mat-form-field>
+                            <mat-label>Teléfono</mat-label>
+                            <input formControlName="telefono" matInput placeholder="Ingresar Teléfono">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Correo</mat-label>
+                            <input formControlName="correo" matInput placeholder="Ingresar Correo">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Dirección</mat-label>
+                            <input formControlName="direccion" matInput placeholder="Ingresar Dirección">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Referencia</mat-label>
+                            <input formControlName="referencia" matInput placeholder="Ingresar Referencia">
+                        </mat-form-field>
+                    </div>
+                    <div class="stepper-buttons">
+                        <span class="spacer"></span>
+                        <button mat-button matStepperNext type="submit" [disabled]="primerForm.invalid">Siguiente</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="segundoForm" [optional]="false">
+                <form [formGroup]="segundoForm" (submit)="segundoPaso()">
+                    <ng-template matStepLabel>Detalle</ng-template>
+                    <div class="example-container">
+                        <mat-form-field>
+                            <mat-label>Plantilla</mat-label>
+                            <mat-select formControlName="cmbPlantilla">
+                                <mat-option>-- Selecciona una Plantilla --</mat-option>
+                                <mat-option *ngFor="let p of(dataPlantillas$ | async)" [value]="p">{{p.nombre}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <span class="spacer"></span>
+                        <button mat-flat-button color="primary" type="button" class="botonAgregarDetalle" (click)="openDialog()">Agregar</button>
+                        <br />
+                        <div class="responsive-table">
+                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                <ng-container matColumnDef="cantidad">
+                                    <th mat-header-cell *matHeaderCellDef=""> Cantidad </th>
+                                    <td mat-cell *matCellDef="let element">{{element.cantidad}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="descripcion">
+                                    <th mat-header-cell *matHeaderCellDef=""> Descripcion </th>
+                                    <td mat-cell *matCellDef="let element" [innerHTML]='replaceDescription(element.descripcion, "\n", "\<br/>")'></td>
+                                </ng-container>
+                                <ng-container matColumnDef="precio">
+                                    <th mat-header-cell *matHeaderCellDef=""> Precio </th>
+                                    <td mat-cell *matCellDef="let element">{{element.precio}}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="accion">
+                                    <th mat-header-cell *matHeaderCellDef="" class="accion">  </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button mat-icon-button color="primary" aria-label="Editar" (click)="openDialog(element)">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn" (click)="eliminarDetalle(element)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsDetalle; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let element; columns: displayedColumnsDetalle"></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="stepper-buttons">
+                        <button mat-button matStepperPrevious>Anterior</button>
+                        <button mat-button matStepperNext [disabled]="segundoForm.invalid || this.data.length == 0" type="submit">Siguiente</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="tercerForm" [optional]="false">
+                <form [formGroup]="tercerForm" (submit)="tercerPaso()">
+                    <ng-template matStepLabel>Finalizar Contrato</ng-template>
+                    <div class="example-container">
+                        <mat-form-field>
+                            <mat-label>Fecha de Entrega</mat-label>
+                            <input formControlName="fechaEntrega" matInput [matDatepicker]="picker" required [min]="fechaActual">
+                            <mat-hint>DD/MM/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Movilidad</mat-label>
+                            <input formControlName="movilidad" matInput placeholder="Ingresar Movilidad" type="number" value="0" (input)="actualizarTotal()" required />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>A Cuenta</mat-label>
+                            <input formControlName="aCuenta" matInput placeholder="Ingresar Cantidad A Cuenta" type="number" required [min]="1" value="0" (input)="actualizarTotal()" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Tipo Abono</mat-label>
+                            <mat-select formControlName="cmbTipoAbono" (valueChange)="onChangeTipoAbono($event)">
+                                <mat-option value="PLIN">PLIN</mat-option>
+                                <mat-option value="YAPE">YAPE</mat-option>
+                                <mat-option value="Scotiabank">Scotiabank</mat-option>
+                                <mat-option value="Interbank">Interbank</mat-option>
+                                <mat-option value="BCP">BCP</mat-option>
+                                <mat-option value="BBVA">BBVA</mat-option>
+                                <mat-option value="Efectivo">Efectivo</mat-option>
+                                <mat-option value="Niubiz">Niubiz</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Recargo</mat-label>
+                            <input formControlName="recargo" matInput placeholder="Ingresar Recargo" type="number" required value="0" (input)="actualizarTotal()" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Saldo</mat-label>
+                            <input formControlName="saldo" matInput placeholder="Ingresar Saldo" type="number" required value="0" />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Total</mat-label>
+                            <input formControlName="total" matInput placeholder="Ingresar Total" type="number" required value="0" />
+                        </mat-form-field>
+                    </div>
+                    <div class="stepper-buttons">
+                        <button mat-button matStepperPrevious>Anterior</button>
+                        <button mat-button [disabled]="tercerForm.invalid" type="submit">Enviar Contrato</button>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-stepper>
+
+    </mat-card-content>
+</mat-card>

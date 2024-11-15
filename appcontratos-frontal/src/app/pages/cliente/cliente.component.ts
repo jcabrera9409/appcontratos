@@ -6,18 +6,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { Cliente } from '../../_model/cliente';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ClienteEdicionComponent } from './cliente-edicion/cliente-edicion.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginatorImpl } from '../../material/mat-paginator';
 
 @Component({
   selector: 'app-cliente',
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatCardModule, MatIconModule, MatButtonModule, MatPaginator, MatPaginatorModule, MatDialogModule],
   templateUrl: './cliente.component.html',
-  styleUrl: './cliente.component.css'
+  styleUrl: './cliente.component.css',
+  providers: [{provide: MatPaginatorIntl, useClass: MatPaginatorImpl}]
 })
 export class ClienteComponent implements OnInit {
 
@@ -51,12 +53,6 @@ export class ClienteComponent implements OnInit {
   crearTabla(data: Cliente[]) {
     this.dataSource = new MatTableDataSource<Cliente>(data);
     this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = "Clientes por página"
-    this.paginator._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
-      const start = page * pageSize + 1;
-      const end = pageSize;
-      return `${start} - ${end} de ${length}`;
-    };
   }
 
   applyFilter(event: Event) {
@@ -67,8 +63,7 @@ export class ClienteComponent implements OnInit {
   openDialog(cliente?: Cliente) {
     this.dialog.open(ClienteEdicionComponent, {
       data: cliente,
-      width: "800px",
-      
+      width: "800px"
     });
   }
 

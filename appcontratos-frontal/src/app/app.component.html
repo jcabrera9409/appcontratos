@@ -19,16 +19,32 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'push' : 'side'" [fixedInViewport]="mobileQuery.matches"
             fixedTopGap="56"> 
             <mat-nav-list>
-                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/']">
-                    <mat-icon matListItemIcon>home</mat-icon> Home
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/contratos/nuevo']" (click)="snav.toggle()">
+                    <mat-icon matListItemIcon>post_add</mat-icon> Nuevo Contrato
                 </mat-list-item>
                 <mat-divider></mat-divider>
-                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/clientes']">
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/contratos']" (click)="snav.toggle()">
+                    <mat-icon matListItemIcon>description</mat-icon> Contratos
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/']" (click)="snav.toggle()">
+                    <mat-icon matListItemIcon>content_copy</mat-icon> Plantillas
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/clientes']" (click)="snav.toggle()">
                     <mat-icon matListItemIcon>person</mat-icon> Clientes
                 </mat-list-item>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/']" (click)="snav.toggle()">
+                    <mat-icon matListItemIcon>contact_mail</mat-icon> Vendedor
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item routerLinkActive="router-link-active" [routerLink]="['/']" (click)="snav.toggle()">
+                    <mat-icon matListItemIcon>manage_accounts</mat-icon> Roles
+                </mat-list-item>
+                <mat-divider></mat-divider>
 
             </mat-nav-list>
         </mat-sidenav>
