@@ -2,6 +2,8 @@ package com.surrender.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,6 +35,7 @@ public class Vendedor {
 	@Column(nullable = false)
 	private boolean estado;
 	
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_vendedor_rol", joinColumns = @JoinColumn(name = "id_vendedor", referencedColumnName = "id"),
 				inverseJoinColumns = @JoinColumn(name = "id_rol", referencedColumnName = "id"))

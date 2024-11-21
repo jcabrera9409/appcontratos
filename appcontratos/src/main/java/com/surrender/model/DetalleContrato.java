@@ -31,7 +31,7 @@ public class DetalleContrato {
 	@ManyToOne
 	@JoinColumn(name = "id_plantilla", nullable = true)
 	private Plantilla objPlantilla;
-	
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="id_contrato", nullable = false)
@@ -75,6 +75,14 @@ public class DetalleContrato {
 
 	public void setObjContrato(Contrato objContrato) {
 		this.objContrato = objContrato;
+	}
+	
+	public Plantilla getObjPlantilla() {
+		return objPlantilla;
+	}
+
+	public void setObjPlantilla(Plantilla objPlantilla) {
+		this.objPlantilla = objPlantilla;
 	}
 
 }

@@ -9,8 +9,8 @@ export class Contrato {
     correo: String;
     direccionEntrega: String;
     referencia: String;
-    fechaContrato: Date;
-    fechaEntrega: Date;
+    fechaContrato: String;
+    fechaEntrega: String;
     movilidad: number;
     aCuenta: number;
     tipoAbono: String;

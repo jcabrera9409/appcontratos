@@ -44,6 +44,7 @@ public class ContratoController {
 	
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
+		System.out.println(c.getDetalleContrato().get(0).getObjPlantilla());
 		Contrato obj = service.registrarContratoTransaccional(c);
 		return new ResponseEntity<Contrato>(obj, HttpStatus.CREATED);
 	}

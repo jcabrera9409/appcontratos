@@ -22,6 +22,8 @@ import { DetalleContrato } from '../../../_model/detalle-contrato';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Contrato } from '../../../_model/contrato';
 import { Vendedor } from '../../../_model/vendedor';
+import moment from 'moment';
+import { ContratoService } from '../../../_service/contrato.service';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -50,6 +52,7 @@ export class ContratoEdicionComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private plantillaService: PlantillaService,
+    private contratoService: ContratoService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -92,13 +95,14 @@ export class ContratoEdicionComponent implements OnInit {
   primerPaso() {
     let idCliente = this.primerForm.value["id"];
     this.contrato.objCliente = new Cliente();
+    this.contrato.id = 0;
     this.contrato.objCliente.id = idCliente;
 
     if(idCliente == 0) {
       this.contrato.objCliente.esPersonaNatural = this.primerForm.value["tipoCliente"] == "N" ? true : false;
       this.contrato.objCliente.documentoCliente = this.primerForm.value["documentoCliente"];
       if(this.contrato.objCliente.esPersonaNatural) {
-        this.contrato.objCliente.nombreCliente = this.primerForm.value["nombrescliente"];
+        this.contrato.objCliente.nombreCliente = this.primerForm.value["nombresCliente"];
         this.contrato.objCliente.apellidosCliente = this.primerForm.value["apellidosCliente"];
         this.contrato.objCliente.razonSocial = "";
       } else {
@@ -115,19 +119,27 @@ export class ContratoEdicionComponent implements OnInit {
   }
   
   segundoPaso() {
+    this.data.forEach(item => {
+      if(item.objPlantilla != null && item.objPlantilla.id == 0)
+        item.objPlantilla = null;
+    });
     this.contrato.detalleContrato = this.data;
   }
 
   tercerPaso() {
-    this.contrato.fechaContrato = new Date();
-    this.contrato.fechaEntrega = this.tercerForm.value["fechaEntrega"];
+    this.contrato.fechaContrato = moment().format("YYYY-MM-DDTHH:mm:ss");
+    this.contrato.fechaEntrega = moment(this.tercerForm.value["fechaEntrega"]).format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.movilidad = this.tercerForm.value["movilidad"];
     this.contrato.aCuenta = this.tercerForm.value["aCuenta"];
     this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"];
-    this.contrato.recargo = this.tercerForm.value["recargo"];
+    this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? this.tercerForm.value["recargo"] : 0;
+    this.contrato.estado = "NUEVO";
     this.contrato.objVendedor = new Vendedor();
-    this.contrato.objVendedor.id = 1;
-    console.log(this.contrato)
+    this.contrato.objVendedor.id = 2;
+    console.log(this.contrato);
+    this.contratoService.registrarContrato(this.contrato).subscribe(() => {
+      console.log("se inserto")
+    });
   }
 
   actualizarTotal() {
@@ -232,16 +244,15 @@ export class ContratoEdicionComponent implements OnInit {
   openDialog(detalle?: DetalleContrato) {
     let plantilla = this.segundoForm.value["cmbPlantilla"];
     let detalleToEdit: DetalleContrato;
-
     if (typeof plantilla == "object" && detalle == undefined) {
       detalleToEdit = new DetalleContrato();
-      detalleToEdit.id_plantilla = plantilla.id;
+      detalleToEdit.objPlantilla = plantilla;
       detalleToEdit.cantidad = 1;
       detalleToEdit.descripcion = plantilla.descripcion;
       detalleToEdit.precio = plantilla.precio;
     } else if (detalle != undefined) {
       detalleToEdit = detalle;
-    }
+    } 
 
     let dialogRef = this.dialog.open(DetalleEdicionComponent, {
       data: detalleToEdit,
