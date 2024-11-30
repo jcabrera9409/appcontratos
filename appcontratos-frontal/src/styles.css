@@ -35,15 +35,52 @@ body {
     background: #A6CA8A !important;
     color: #3C763D !important;
 }
+
 .info-snackbar * {
     background: #91C5F2 !important;
     color: #31708F !important;
 }
+
 .warning-snackbar * {
     background: #F2C779 !important;
     color: #8A6D3B !important;
 }
+
 .error-snackbar * {
     background: #F5ACA6 !important;
     color: #A94442 !important;
+}
+
+/* Overlay para bloquear la pantalla */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Se coloca al frente de todo */
+}
+
+/* Centrar el spinner */
+.spinner {
+    z-index: 1001;
+}
+
+/* Efecto desenfoque para el contenido solo si el spinner está activo */
+.content.blurred {
+    filter: blur(2px);
+    pointer-events: none;
+    /* Bloquea interacciones mientras está desenfocado */
+}
+
+/* Contenido normal (sin desenfoque) */
+.content {
+    transition: filter 0.3s ease-in-out;
+    /* Suaviza el cambio */
 }

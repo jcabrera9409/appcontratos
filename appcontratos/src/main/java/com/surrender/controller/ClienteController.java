@@ -3,6 +3,8 @@ package com.surrender.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -69,5 +71,11 @@ public class ClienteController {
 	public ResponseEntity<?> eliminar(@PathVariable Integer id) throws Exception {
 		service.eliminar(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping("/pageable")
+	public ResponseEntity<Page<Cliente>> listarPageable(Pageable pageable) throws Exception {
+		Page<Cliente> clientes = service.listarPageable(pageable);
+		return new ResponseEntity<Page<Cliente>>(clientes, HttpStatus.OK);
 	}
 }

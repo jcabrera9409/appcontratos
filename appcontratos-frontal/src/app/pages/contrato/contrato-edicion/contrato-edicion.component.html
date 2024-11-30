@@ -1,4 +1,12 @@
-<mat-card class="mat-card-page-style">
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner
+      class="spinner"
+      [diameter]="80"
+      mode="indeterminate"
+      color="primary"
+    ></mat-progress-spinner>
+  </div>
+<mat-card class="mat-card-page-style content" [class.blurred]="this.isLoading">
     <mat-card-header class="mat-card-header-style">
         <mat-card-title>Nuevo Contrato</mat-card-title>
     </mat-card-header>
