@@ -1,0 +1,22 @@
+meta {
+  name: refresh_token
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/refresh_token
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM2NzY5NDUsImV4cCI6MTczNDI4MTc0NX0.QEYY-CANbuJaOLSPj6OMWpM5LrAVItZCHP-pSzJz9bSVCDuUelrTDe825Dr0dUpJVW93Olh-j7GBNBxYXIeGFQ
+}
+
+body:json {
+  {
+    "email": "jcabrera9409@gmail.com",
+    "verificationCode": "616805"
+  }
+}

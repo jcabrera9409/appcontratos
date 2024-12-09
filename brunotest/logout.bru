@@ -1,0 +1,22 @@
+meta {
+  name: logout
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/logout
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM2Nzc0NjksImV4cCI6MTczMzc2Mzg2OX0.NAb8npbGCBya9K0AEP0DoxifYeWaDOawWTRJhWyu8CtHWtEtFCg-zVoX1OLfChotVwDNOoIDC0Ol-aSmvFuNxQ
+}
+
+body:json {
+  {
+    "email": "jcabrera9409@gmail.com",
+    "verificationCode": "616805"
+  }
+}

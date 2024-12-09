@@ -1,0 +1,27 @@
+meta {
+  name: signup
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nombres": "Test Insert",
+    "correo": "test@gmail.com",
+    "password": "123",
+    "estado": true,
+    "roles": [{
+      "id": 2
+    },
+             {
+      "id": 1
+    }]
+  }
+  
+}

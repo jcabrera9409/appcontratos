@@ -1,0 +1,23 @@
+meta {
+  name: users
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/plantillas
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTczMzcyNjY1MCwiZXhwIjoxNzMzNzY5ODUwfQ.vZ3QuM1Oz1LNVwIp7AwvwP7aw2VNs8cSzuQyx6JG5AYYm_d97mExnLYq7cq9vL3f1-NwjpJS5ZNaxce4cdPIHA
+}
+
+body:json {
+  {
+    "nombre": "Plantilla 2",
+    "descripcion": "Test Plantilla",
+    "precio": 1000
+  }
+}

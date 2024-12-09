@@ -1,5 +1,7 @@
 package com.surrender.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,5 @@ public class VendedorServiceImpl extends CRUDImpl<Vendedor, Integer> implements 
 	protected IGenericRepo<Vendedor, Integer> getRepo() {
 		return repo;
 	}
-
 	
 }
