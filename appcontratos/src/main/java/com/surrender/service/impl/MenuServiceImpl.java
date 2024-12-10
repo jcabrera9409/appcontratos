@@ -1,5 +1,7 @@
 package com.surrender.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,11 @@ public class MenuServiceImpl extends CRUDImpl<Menu, Integer> implements IMenuSer
 	@Override
 	protected IGenericRepo<Menu, Integer> getRepo() {
 		return repo;
+	}
+
+	@Override
+	public List<Menu> listarMenusByVendedorCorreo(String correo) {
+		return repo.findAllMenusByVendedorCorreo(correo);
 	}
 
 }

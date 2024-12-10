@@ -95,6 +95,7 @@ public class JwtService {
                 .subject(vendedor.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTime ))
+                .claim("name", vendedor.getNombres())
                 .signWith(getSigninKey())
                 .compact();
 

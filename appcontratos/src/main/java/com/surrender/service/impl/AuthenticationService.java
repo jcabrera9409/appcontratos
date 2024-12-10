@@ -143,6 +143,7 @@ public class AuthenticationService {
     	case "cliente":
     	case "contrato":
     	case "plantilla-listar":
+    	case "menu-listar-correo":
     		metodoRol="VENDEDOR,ADMIN,ROOT";
     		break;
     	case "vendedor":

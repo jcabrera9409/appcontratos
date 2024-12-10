@@ -1,13 +1,10 @@
 import { Routes } from '@angular/router';
-import { ClienteComponent } from './pages/cliente/cliente.component';
-import { ContratoComponent } from './pages/contrato/contrato.component';
-import { ContratoEdicionComponent } from './pages/contrato/contrato-edicion/contrato-edicion.component';
+import { LoginComponent } from './pages/login/login.component';
+import { LayoutComponent } from './pages/layout/layout.component';
+import { pagesRoutes } from './pages/pages.routes';
 
 export const routes: Routes = [
-    { path: 'contratos', component: ContratoComponent },
-    { path: 'contratos/nuevo', component: ContratoEdicionComponent },
-    { path: 'contratos/modificar', component: ContratoEdicionComponent },
-    { path: 'clientes', component: ClienteComponent },
-
-    { path: '**', redirectTo: ''}
+    { path: 'login', component: LoginComponent },
+    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: 'pages', component: LayoutComponent, children: pagesRoutes }
 ];

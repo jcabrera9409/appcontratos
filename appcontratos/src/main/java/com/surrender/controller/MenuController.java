@@ -1,5 +1,6 @@
 package com.surrender.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,14 @@ public class MenuController {
 		}
 		
 		return new ResponseEntity<Menu>(obj, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("@authenticationService.tieneAcceso('menu-listar-correo')")
+	@PostMapping("/correo")
+	public ResponseEntity<?> listarPorCorreo(@RequestBody String correo) throws Exception {
+		List<Menu> menus = new ArrayList<>();
+		menus = service.listarMenusByVendedorCorreo(correo);
+		return new ResponseEntity<List<Menu>>(menus, HttpStatus.OK);
 	}
 	
 	@PostMapping

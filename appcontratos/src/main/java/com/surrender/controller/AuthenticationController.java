@@ -23,7 +23,6 @@ public class AuthenticationController {
 	@Autowired
 	private AuthenticationService authService;
 	
-	@PreAuthorize("@authenticationService.tieneAcceso('vendedor')")
 	@PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody Vendedor request
