@@ -8,7 +8,7 @@ import { environment } from '../environments/environment.development';
 import { JwtModule } from '@auth0/angular-jwt';
 
 export function tokenGetter() {
-  return sessionStorage.getItem(environment.TOKEN_NAME);
+  return localStorage.getItem(environment.TOKEN_NAME);
 }
 
 const jwtConfig = {

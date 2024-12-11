@@ -6,11 +6,11 @@
         <span class="spacer"></span>
 
         <button mat-button [matMenuTriggerFor]="menu" aria-label="Menu">
-            <span>Jose Cabrera</span>
+            <span>{{usuarioNombre}}</span>
             <mat-icon iconPositionEnd>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="cerrarSesion()">
                 <mat-icon>logout</mat-icon>
                 <span>Cerrar Sesión</span>
             </button>

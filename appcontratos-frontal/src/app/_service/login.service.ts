@@ -9,7 +9,7 @@ import { Vendedor } from '../_model/vendedor';
 })
 export class LoginService {
 
-  private url: string = `${environment.HOST}/auth/login`;
+  private url: string = `${environment.HOST}/auth`;
 
   constructor(
     private http: HttpClient,
@@ -21,16 +21,18 @@ export class LoginService {
     vendedor = new Vendedor();
     vendedor.correo = correo;
     vendedor.password = password;
-    return this.http.post<any>(this.url, vendedor);
+    return this.http.post<any>(`${this.url}/login`, vendedor);
   }
 
   estaLogueado() {
-    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    let token = localStorage.getItem(environment.TOKEN_NAME);
     return token != null;
   }
 
   cerrarSesion() {
-    sessionStorage.clear();
-    this.router.navigate(['login']);
+    this.http.get(`${environment.HOST}/logout`).subscribe(() => {
+      localStorage.clear();
+      this.router.navigate(['login']);
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,9 @@ import { RouterModule } from '@angular/router';
 import { MenuService } from '../../_service/menu.service';
 import { Menu } from '../../_model/menu';
 import { CommonModule } from '@angular/common';
-import { VendedorService } from '../../_service/vendedor.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from '../../../environments/environment.development';
+import { LoginService } from '../../_service/login.service';
 
 @Component({
   selector: 'app-layout',
@@ -21,36 +23,72 @@ import { VendedorService } from '../../_service/vendedor.service';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
 
   private _mobileQueryListener: () => void;
 
   menus: Menu[];
-  usuarioNombre: String;
+  usuarioNombre: String = "";
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef, 
     private media: MediaMatcher,
     private menuService: MenuService,
-    private vendedorService: VendedorService) {
+    private loginService: LoginService,
+    private router: Router) {
       this.mobileQuery = this.media.matchMedia('(max-width: 600px)');
       this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
-      this.mobileQuery.addListener(this._mobileQueryListener);
+      this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
   ngOnInit(): void {
+    
+    let token = localStorage.getItem(environment.TOKEN_NAME);
+    if(token != null && token != "" && token != undefined) {
+      this.cargarDatos(token);
+    }
+    else {
+      this.router.navigate(['login']);
+    }
+  }
+
+  cerrarSesion() {
+    this.loginService.cerrarSesion();
+  }
+
+  cargarDatos(token) {
+    if(this.menus == null || this.menus.length == 0) {
+      this.cargarMenus(token);
+    }
+
+    if(this.usuarioNombre == undefined || this.usuarioNombre == "") {
+      this.cargarNombreUsuario(token);
+    }
+
     this.menuService.getMenuCambio().subscribe(data => {
       this.menus = data;
     });
 
-    this.vendedorService.getUsuarioNombreCambio().subscribe(data => {
-      this.usuarioNombre = data;
-      this.changeDetectorRef.detectChanges();
+  }
+
+  cargarMenus(token) {
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(token);
+    let correo = decodedToken.sub;
+    
+    this.menuService.listarPorCorreo(correo).subscribe(data => {
+      this.menuService.setMenuCambio(data);
     });
   }
 
+  cargarNombreUsuario(token) {
+    const helper = new JwtHelperService();
+    const decodedToken = helper.decodeToken(token);
+    this.usuarioNombre = decodedToken.name;
+  }
+
   ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
   }
 }

@@ -18,7 +18,7 @@ export const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnaps
   }
   else {
     const helper = new JwtHelperService();
-    let token = sessionStorage.getItem(environment.TOKEN_NAME);
+    let token = localStorage.getItem(environment.TOKEN_NAME);
     if(!helper.isTokenExpired(token)) {
       let url:String = state.url;
       const decodedToken = helper.decodeToken(token);
