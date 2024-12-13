@@ -5,13 +5,9 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/plantillas
+  url: {{baseUrl}}/auth/enviarCorreo
   body: none
-  auth: bearer
-}
-
-auth:bearer {
-  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTczMzcyNjY1MCwiZXhwIjoxNzMzNzY5ODUwfQ.vZ3QuM1Oz1LNVwIp7AwvwP7aw2VNs8cSzuQyx6JG5AYYm_d97mExnLYq7cq9vL3f1-NwjpJS5ZNaxce4cdPIHA
+  auth: none
 }
 
 body:json {
