@@ -6,14 +6,11 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { environment } from '../environments/environment.development';
 import { JwtModule } from '@auth0/angular-jwt';
-
-export function tokenGetter() {
-  return localStorage.getItem(environment.TOKEN_NAME);
-}
+import { UtilMethods } from './util/util';
 
 const jwtConfig = {
   config: {
-    tokenGetter: tokenGetter,
+    tokenGetter: UtilMethods.getJwtToken,
     allowedDomains: [environment.HOST.substring(7)], 
     disallowedRoutes: [`${environment.HOST}/auth/login`], 
   }

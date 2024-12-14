@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Vendedor } from '../_model/vendedor';
+import { UtilMethods } from '../util/util';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class LoginService {
   }
 
   estaLogueado() {
-    let token = localStorage.getItem(environment.TOKEN_NAME);
+    let token = UtilMethods.getJwtToken();
     return token != null;
   }
 
@@ -34,5 +35,9 @@ export class LoginService {
       localStorage.clear();
       this.router.navigate(['login']);
     });
+  }
+
+  recuperarPassword(correo: string) {
+    return this.http.post(`${this.url}/recover_password/`, correo);
   }
 }

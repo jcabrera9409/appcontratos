@@ -28,12 +28,10 @@ public class EmailUtil {
 		Context context = new Context();
 		context.setVariables(mail.getModel());
 		
-		String html = templateEngine.process("email/email-template", context);
-		System.out.println("html");
+		String html = templateEngine.process(mail.getTemplate(), context);
 		helper.setTo(mail.getTo());
 		helper.setText(html, true);
 		helper.setSubject(mail.getSubject());
-		helper.setFrom(mail.getFrom());
 		
 		emailSender.send(message);
 	}

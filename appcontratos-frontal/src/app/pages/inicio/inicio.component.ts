@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Router } from '@angular/router';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-inicio',
@@ -20,7 +21,7 @@ export class InicioComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    let token = localStorage.getItem(environment.TOKEN_NAME);
+    let token = UtilMethods.getJwtToken();
     if(token == null || token == "" || token == undefined) {
       this.router.navigate(['login']);
     }

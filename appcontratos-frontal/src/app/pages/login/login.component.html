@@ -2,26 +2,42 @@
     <section class="form-section">
         <img src="/assets/svg/logo.png" alt="">
 
-        <form [formGroup]="loginForm" #frm="ngForm" (ngSubmit)="submit()">
-            <div class="example-container">
-                <mat-form-field appearance="fill">
-                    <mat-label>Correo</mat-label>
-                    <input matInput placeholder="Escribe tu correo" formControlName="email">
-                    <mat-icon matSuffix>email</mat-icon>
-                </mat-form-field>
+        <div [hidden]="!loginFormEnabled">
+            <form [formGroup]="loginForm" (ngSubmit)="submit()" [class.display]="'block'">
+                <div class="example-container">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Correo</mat-label>
+                        <input matInput placeholder="Escribe tu correo" formControlName="email">
+                        <mat-icon matSuffix>email</mat-icon>
+                    </mat-form-field>
 
-                <mat-form-field>
-                    <mat-label>Contraseña</mat-label>
-                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
-                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-                        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-            <span><a href="pages/clientes">Olvidé mi contraseña</a></span>
-            <button mat-flat-button color="primary" type="submit" [disabled]="frm.invalid">Iniciar Sesión</button>
-        </form>
-
+                    <mat-form-field>
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar
+                    Sesión</button>
+                <span><a (click)="changeForm(false)" class="clickable-link">Olvidé mi contraseña</a></span>
+            </form>
+        </div>
+        <div [hidden]="loginFormEnabled">
+            <form [formGroup]="forgotPasswordForm" (ngSubmit)="submitForgotPassword()" [class.display]="'hidden'">
+                <div class="example-container">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Correo</mat-label>
+                        <input matInput placeholder="Escribe tu correo" formControlName="email">
+                        <mat-icon matSuffix>email</mat-icon>
+                    </mat-form-field>
+                </div>
+                <button mat-flat-button color="primary" type="submit"
+                    [disabled]="forgotPasswordForm.invalid">Enviar</button>
+                <span><a class="clickable-link" (click)="changeForm(true)">Iniciar Sesión</a></span>
+            </form>
+        </div>
     </section>
 </main>

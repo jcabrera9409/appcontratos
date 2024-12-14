@@ -11,7 +11,7 @@ import com.surrender.repo.IVendedorRepo;
 import com.surrender.service.IVendedorService;
 
 @Service
-public class VendedorServiceImpl extends CRUDImpl<Vendedor, Integer> implements IVendedorService{
+public class VendedorServiceImpl extends CRUDImpl<Vendedor, Integer> implements IVendedorService {
 
 	@Autowired
 	private IVendedorRepo repo = null;
@@ -19,6 +19,11 @@ public class VendedorServiceImpl extends CRUDImpl<Vendedor, Integer> implements 
 	@Override
 	protected IGenericRepo<Vendedor, Integer> getRepo() {
 		return repo;
+	}
+
+	@Override
+	public Optional<Vendedor> listarPorCorreo(String correo) {
+		return repo.findByCorreo(correo);
 	}
 	
 }

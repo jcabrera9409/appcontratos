@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../../environments/environment.development';
 import { LoginService } from '../../_service/login.service';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-layout',
@@ -44,7 +45,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     
-    let token = localStorage.getItem(environment.TOKEN_NAME);
+    let token = UtilMethods.getJwtToken();
     if(token != null && token != "" && token != undefined) {
       this.cargarDatos(token);
     }

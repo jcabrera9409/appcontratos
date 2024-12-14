@@ -6,6 +6,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment.development';
 import { map, Observable } from 'rxjs';
 import { Menu } from '../_model/menu';
+import { UtilMethods } from '../util/util';
 
 export const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean => {
   const loginService = inject(LoginService);
@@ -17,12 +18,9 @@ export const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnaps
     return false;
   }
   else {
-    const helper = new JwtHelperService();
-    let token = localStorage.getItem(environment.TOKEN_NAME);
-    if(!helper.isTokenExpired(token)) {
+    if(!UtilMethods.isTokenExpired()) {
       let url:String = state.url;
-      const decodedToken = helper.decodeToken(token);
-      const correo = decodedToken.sub;
+      const correo = UtilMethods.getFieldJwtToken('sub');
 
       return menuService.listarPorCorreo(correo).pipe(map((data: Menu[]) => {
         menuService.setMenuCambio(data);

@@ -84,3 +84,7 @@ body {
     transition: filter 0.3s ease-in-out;
     /* Suaviza el cambio */
 }
+
+.clickable-link {
+    cursor: pointer;
+}

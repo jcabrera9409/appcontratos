@@ -18,8 +18,10 @@ import { environment } from '../../../environments/environment.development';
 export class LoginComponent implements OnInit {
 
   hidePassword: boolean = true;
+  loginFormEnabled: boolean = true;
 
   loginForm: FormGroup;
+  forgotPasswordForm: FormGroup;
 
   constructor(
     private loginService: LoginService,
@@ -28,10 +30,16 @@ export class LoginComponent implements OnInit {
     
   }
   ngOnInit(): void {
+    
     this.loginForm = new FormGroup({
       "email": new FormControl('', [Validators.required, Validators.email]),
       "password": new FormControl('', [Validators.required, Validators.minLength(1)])
     });
+
+    this.forgotPasswordForm = new FormGroup({
+      "email": new FormControl('', [Validators.required, Validators.email]),
+    });
+
   }
 
   submit() {
@@ -39,6 +47,17 @@ export class LoginComponent implements OnInit {
       localStorage.setItem(environment.TOKEN_NAME, data.access_token);
       this.router.navigate(['pages/']);
     });
+  }
+
+  submitForgotPassword() {
+
+    this.loginService.recuperarPassword(this.forgotPasswordForm.value.email).subscribe(() => {
+      this.router.navigate(['login']);
+    });
+  }
+
+  changeForm(isLogin: boolean) {
+    this.loginFormEnabled = isLogin;
   }
 
 }
