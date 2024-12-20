@@ -135,6 +135,11 @@ public class AuthenticationService {
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 	
+	public int modificarPasswordPorId(Integer id, String password) {
+		int filasActualizadas = repository.updatePasswordById(id, passwordEncoder.encode(password));
+		return filasActualizadas;
+	}
+	
 	public boolean tieneAcceso(String path) {
     	boolean rpta = false;
     	String metodoRol = "";

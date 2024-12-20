@@ -26,6 +26,9 @@ import { Contrato } from '../../../_model/contrato';
 import { Vendedor } from '../../../_model/vendedor';
 import moment from 'moment';
 import { ContratoService } from '../../../_service/contrato.service';
+import { UtilMethods } from '../../../util/util';
+import { VisualizarPdfComponent } from '../../visualizar-pdf/visualizar-pdf.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -33,7 +36,7 @@ import { ContratoService } from '../../../_service/contrato.service';
   imports: [MatCardModule, MatStepperModule, MatIconModule, MatFormFieldModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatRadioModule, MatDatepickerModule, CommonModule, MatSelectModule, MatOption, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './contrato-edicion.component.html',
   styleUrl: './contrato-edicion.component.css',
-  providers: [provideNativeDateAdapter(),{provide: MAT_DATE_LOCALE, useValue: "es-ES"}]
+  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" }]
 })
 export class ContratoEdicionComponent implements OnInit {
 
@@ -60,7 +63,8 @@ export class ContratoEdicionComponent implements OnInit {
     private plantillaService: PlantillaService,
     private contratoService: ContratoService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.contrato = new Contrato();
@@ -91,9 +95,9 @@ export class ContratoEdicionComponent implements OnInit {
       "movilidad": new FormControl(0),
       "aCuenta": new FormControl(0),
       "cmbTipoAbono": new FormControl('PLIN'),
-      "recargo": new FormControl({value: 0, disabled: true}),
-      "saldo": new FormControl({value: 0, disabled: true}),
-      "total": new FormControl({value: 0, disabled: true})
+      "recargo": new FormControl({ value: 0, disabled: true }),
+      "saldo": new FormControl({ value: 0, disabled: true }),
+      "total": new FormControl({ value: 0, disabled: true })
     });
 
     this.crearTabla();
@@ -105,18 +109,28 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.id = 0;
     this.contrato.objCliente.id = idCliente;
 
-    if(idCliente == 0) {
-      this.contrato.objCliente.esPersonaNatural = this.primerForm.value["tipoCliente"] == "N" ? true : false;
-      this.contrato.objCliente.documentoCliente = this.primerForm.value["documentoCliente"];
-      if(this.contrato.objCliente.esPersonaNatural) {
-        this.contrato.objCliente.nombreCliente = this.primerForm.value["nombresCliente"];
-        this.contrato.objCliente.apellidosCliente = this.primerForm.value["apellidosCliente"];
-        this.contrato.objCliente.razonSocial = "";
-      } else {
-        this.contrato.objCliente.nombreCliente = "";
-        this.contrato.objCliente.apellidosCliente = "";
-        this.contrato.objCliente.razonSocial = this.primerForm.value["razonSocial"];
-      }
+    this.primerForm.controls["tipoCliente"].enable();
+    this.primerForm.controls["nombresCliente"].enable();
+    this.primerForm.controls["apellidosCliente"].enable();
+    this.primerForm.controls["razonSocial"].enable();
+
+    this.contrato.objCliente.esPersonaNatural = this.primerForm.value["tipoCliente"] == "N" ? true : false;
+    this.contrato.objCliente.documentoCliente = this.primerForm.value["documentoCliente"];
+    if (this.contrato.objCliente.esPersonaNatural) {
+      this.contrato.objCliente.nombreCliente = this.primerForm.value["nombresCliente"];
+      this.contrato.objCliente.apellidosCliente = this.primerForm.value["apellidosCliente"];
+      this.contrato.objCliente.razonSocial = "";
+    } else {
+      this.contrato.objCliente.nombreCliente = "";
+      this.contrato.objCliente.apellidosCliente = "";
+      this.contrato.objCliente.razonSocial = this.primerForm.value["razonSocial"];
+    }
+
+    if (idCliente > 0) {
+      this.primerForm.controls["tipoCliente"].disable();
+      this.primerForm.controls["nombresCliente"].disable();
+      this.primerForm.controls["apellidosCliente"].disable();
+      this.primerForm.controls["razonSocial"].disable();
     }
 
     this.contrato.telefono = this.primerForm.value["telefono"];
@@ -124,17 +138,17 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.correo = this.primerForm.value["correo"];
     this.contrato.referencia = this.primerForm.value["referencia"];
   }
-  
+
   segundoPaso() {
     this.data.forEach(item => {
-      if(item.objPlantilla != null && item.objPlantilla.id == 0)
+      if (item.objPlantilla != null && item.objPlantilla.id == 0)
         item.objPlantilla = null;
     });
     this.contrato.detalleContrato = this.data;
     this.actualizarTotal()
   }
 
-  tercerPaso() {
+  tercerPaso(guardar: boolean = true) {
     this.contrato.fechaContrato = moment().format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.fechaEntrega = moment(this.tercerForm.value["fechaEntrega"]).format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.movilidad = this.tercerForm.value["movilidad"];
@@ -142,25 +156,54 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"];
     this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? this.tercerForm.value["recargo"] : 0;
     this.contrato.estado = "NUEVO";
+    this.contrato.codigo = UtilMethods.generateRandomCode();
     this.contrato.objVendedor = new Vendedor();
-    this.contrato.objVendedor.id = 2;
-    
-    this.guardarContrato();
+    this.contrato.objVendedor.correo = UtilMethods.getFieldJwtToken("sub");
+
+    if (guardar) {
+      this.guardarContrato();
+    }
+  }
+
+  previsualizarContrato() {
+    this.tercerPaso(false);
+
+    this.isLoading = true;
+
+    this.contratoService.generarPdfPreview(this.contrato).subscribe((data) => {
+      this.dialog.open(VisualizarPdfComponent, {
+        data: data
+      });
+
+      this.isLoading = false;
+    });
   }
 
   guardarContrato() {
-    console.log(this.contrato);
     this.isLoading = true;
 
-    setTimeout(() => {
-      this.isLoading = false; 
+    /*setTimeout(() => {
+      this.isLoading = false;
       this.limpiarFormulario()
-      this.snackBar.open("Contrato Registrado", "X", {duration: 5000, panelClass: ["success-snackbar"]})
-    }, 3000); 
-    
-    /*this.contratoService.registrarContrato(this.contrato).subscribe(() => {
-      this.snackBar.open("Contrato Registrado", "X", {duration: 5000, panelClass: ["success-snackbar"]})
-    });*/
+      this.snackBar.open("Contrato Registrado", "X", { duration: 5000, panelClass: ["success-snackbar"] })
+    }, 3000);*/
+
+    this.contratoService.registrarContrato(this.contrato).subscribe({
+      next: (data) => {
+        this.limpiarFormulario();
+        this.isLoading = false;
+        this.snackBar.open("Contrato Registrado", "X", {duration: 5000, panelClass: ["success-snackbar"]})
+
+        setTimeout(() => {
+          this.router.navigate(["/pages/contratos"]);
+        }, 3000);
+      },
+
+      error: (err) => {
+        this.isLoading = false;
+        this.snackBar.open("Error al registrar el contrato", "X", { duration: 5000, panelClass: ["error-snackbar"] })
+      }
+    });
   }
 
   limpiarFormulariov2() {
@@ -170,7 +213,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.primerForm.reset({
       documentoCliente: "", // Valor inicial vacío
     }, { emitEvent: false }); // Evita eventos de cambio
-    
+
     // Configura los validadores nuevamente
     this.primerForm.controls["documentoCliente"].setValidators([Validators.required]);
     this.primerForm.controls["documentoCliente"].updateValueAndValidity(); // Actualiza
@@ -185,12 +228,12 @@ export class ContratoEdicionComponent implements OnInit {
     this.data = []
 
     this.stepper.reset();
-    
+
     this.isPersonaNatural = true;
 
     this.primerForm.controls["id"].setValue(0);
     this.primerForm.controls["tipoCliente"].setValue("N");
-    
+
     this.primerForm.controls["tipoCliente"].enable();
     this.primerForm.controls["nombresCliente"].enable();
     this.primerForm.controls["apellidosCliente"].enable();
@@ -210,10 +253,10 @@ export class ContratoEdicionComponent implements OnInit {
     this.primerForm.controls["razonSocial"].setErrors(null);
     this.primerForm.controls["telefono"].setErrors(null);
     this.primerForm.controls["direccion"].setErrors(null);
-    this.primerForm.controls["correo"].setErrors(null); 
+    this.primerForm.controls["correo"].setErrors(null);
 
     this.primerForm.controls["tipoCliente"].markAsTouched()
-    
+
     let fechaNueva = new Date(this.fechaActual);
     fechaNueva.setDate(fechaNueva.getDate() + 7);
 
@@ -222,14 +265,14 @@ export class ContratoEdicionComponent implements OnInit {
     this.tercerForm.controls["aCuenta"].setValue(0);
     this.tercerForm.controls["aCuenta"].setErrors(null);
     this.tercerForm.controls["cmbTipoAbono"].setValue('PLIN');
-    this.tercerForm.controls["recargo"].setValue(0, {disabled: true});
-    this.tercerForm.controls["saldo"].setValue(0, {disabled: true});
-    this.tercerForm.controls["total"].setValue(0, {disabled: true});
+    this.tercerForm.controls["recargo"].setValue(0, { disabled: true });
+    this.tercerForm.controls["saldo"].setValue(0, { disabled: true });
+    this.tercerForm.controls["total"].setValue(0, { disabled: true });
 
     this.crearTabla()
 
-    
-    
+
+
   }
 
   actualizarTotal() {
@@ -239,7 +282,7 @@ export class ContratoEdicionComponent implements OnInit {
     let aCuenta = parseFloat(this.tercerForm.value["aCuenta"]) || 0;
     let movilidad = parseFloat(this.tercerForm.value["movilidad"]) || 0;
 
-    recargo = (recargo/100) * aCuenta;
+    recargo = (recargo / 100) * aCuenta;
     total = total += (movilidad + recargo);
     saldo = total - aCuenta - recargo;
 
@@ -319,7 +362,7 @@ export class ContratoEdicionComponent implements OnInit {
   }
 
   onChangeTipoAbono(event) {
-    if(event == "Niubiz") {
+    if (event == "Niubiz") {
       this.tercerForm.controls["recargo"].enable();
       this.tercerForm.controls["recargo"].setValue(4.5);
     } else {
@@ -341,7 +384,7 @@ export class ContratoEdicionComponent implements OnInit {
       detalleToEdit.precio = plantilla.precio;
     } else if (detalle != undefined) {
       detalleToEdit = detalle;
-    } 
+    }
 
     let dialogRef = this.dialog.open(DetalleEdicionComponent, {
       data: detalleToEdit,

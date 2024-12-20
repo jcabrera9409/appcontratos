@@ -1,0 +1,8 @@
+.pdf-container {
+  width: 80vw; /* Límite del ancho */
+  height: 90vh; /* Límite del alto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}

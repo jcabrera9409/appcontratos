@@ -1,0 +1,38 @@
+div form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 34px;
+}
+
+div form mat-form-field {
+    width: 100%;
+}
+
+div form span {
+    font-size: 14px;
+    text-decoration: underline;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+}
+
+main section{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+main .form-section img {
+    margin-bottom: 30px;
+    width: 350px;
+}

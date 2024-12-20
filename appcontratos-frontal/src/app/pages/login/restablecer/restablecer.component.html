@@ -1,0 +1,32 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<main>
+    <section class="form-section">
+        <img src="/assets/svg/logo.png" alt="">
+        <div>
+            <form [formGroup]="reestablecerForm" (ngSubmit)="submit()" [class.display]="'block'">
+                <div class="example-container">
+                    <mat-form-field>
+                        <mat-label>Nueva Contraseña</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Repetir Contraseña</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password_confirm">
+                        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <button mat-flat-button color="primary" type="submit" [disabled]="isInvalidForm()">Restablecer Contraseña</button>
+            </form>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,45 @@
+meta {
+  name: contrato-previsualizar
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/contratos/previsualizar
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqY2FicmVyYTk0MDlAZ21haWwuY29tIiwiaWF0IjoxNzM0NTY2Nzg0LCJleHAiOjE3MzQ2MDk5ODQsIm5hbWUiOiJKb3NlIENhYnJlcmEifQ.e7fvjs8Eo2DaMjBaCyXieBWZrPHStp4OuiFT2QtDERH6sK9g77-pBdKD2sK0cvKPUYtZHu6jSBnMWSMneb9MNg
+}
+
+body:json {
+  {
+    "id" : 0,
+    "objCliente" : {
+      "id" : 1,
+      "esPersonaNatural" : true,
+      "nombreCliente" : "Jose",
+      "apellidosCliente" : "Cabrera",
+      "razonSocial" : "",
+      "documentoCliente" : "72955711"
+    },
+    "telefono" : "971805993",
+    "correo" : "asasasa@asassa",
+    "direccionEntrega" : "Angamos Este 1559",
+    "referencia" : "",
+    "saldo" : 1800.0,
+    "total" : 2000.0,
+    "detalleContrato" : [ {
+      "id" : 0,
+      "cantidad" : 1.0,
+      "descripcion" : "asasas",
+      "precio" : 2000.0
+    } ]
+  }
+}
+
+body:text {
+  jcabrera9409@gmail.com
+}

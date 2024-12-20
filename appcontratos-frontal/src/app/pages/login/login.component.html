@@ -1,3 +1,6 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
 <main>
     <section class="form-section">
         <img src="/assets/svg/logo.png" alt="">
@@ -30,7 +33,7 @@
                 <div class="example-container">
                     <mat-form-field appearance="fill">
                         <mat-label>Correo</mat-label>
-                        <input matInput placeholder="Escribe tu correo" formControlName="email">
+                        <input matInput placeholder="Escribe tu correo" formControlName="email_recovery">
                         <mat-icon matSuffix>email</mat-icon>
                     </mat-form-field>
                 </div>

@@ -98,6 +98,33 @@
 	      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 	      <version>2.6.0</version>
 	   </dependency>
+	   
+	   <!-- Apache POI para manipular documentos Word -->
+	    <dependency>
+	        <groupId>org.apache.poi</groupId>
+	        <artifactId>poi-ooxml</artifactId>
+	        <version>5.2.3</version>
+	    </dependency>
+		
+		<!--Dependencias para GoogleDrive-->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-drive</artifactId>
+			<version>v3-rev20240123-2.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		
+		 <dependency>
+		     <groupId>com.google.api-client</groupId>
+		     <artifactId>google-api-client-gson</artifactId>
+		     <version>2.1.1</version>
+		 </dependency>
+	   
 	</dependencies>
 
 	<build>

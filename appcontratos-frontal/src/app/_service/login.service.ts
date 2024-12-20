@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Vendedor } from '../_model/vendedor';
 import { UtilMethods } from '../util/util';
+import { ResetPasswordRequest } from '../_model/dto';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,10 @@ export class LoginService {
   }
 
   recuperarPassword(correo: string) {
-    return this.http.post(`${this.url}/recover_password/`, correo);
+    return this.http.get(`${this.url}/recover_password/${correo}`);
+  }
+
+  restablecerPassword(resetPassword: ResetPasswordRequest) {
+    return this.http.put(`${this.url}/reset_password`, resetPassword);
   }
 }

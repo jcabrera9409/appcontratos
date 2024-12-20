@@ -4,6 +4,7 @@ import { Vendedor } from "./vendedor";
 
 export class Contrato {
     id: number;
+    codigo: String;
     objCliente: Cliente;
     telefono: String;
     correo: String;
@@ -19,5 +20,7 @@ export class Contrato {
     total: number;
     objVendedor: Vendedor;
     estado: String;
+    google_doc_id: String;
+    google_pdf_id: String;
     detalleContrato: DetalleContrato[]
 }   

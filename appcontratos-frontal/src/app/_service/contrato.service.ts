@@ -17,4 +17,10 @@ export class ContratoService {
   registrarContrato(contrato: Contrato) {
     return this.http.post(this.url, contrato);
   }
+
+  generarPdfPreview(contrato: Contrato) {
+    return this.http.post(`${this.url}/previsualizar`, contrato, {
+      responseType: 'blob'
+    });
+  }
 }

@@ -6,7 +6,7 @@ export class UtilMethods {
     public static getFieldJwtToken(field: string): string {
         const decodeToken = this.getDecodedJwtToken();
         if (decodeToken) {
-            if(field in decodeToken) {  
+            if (field in decodeToken) {
                 return decodeToken[field];
             }
             return "";
@@ -19,7 +19,7 @@ export class UtilMethods {
     public static isTokenExpired(): boolean {
         const helper = this.getHelper();
         let token = this.getJwtToken();
-        
+
         return helper.isTokenExpired(token);
     }
 
@@ -46,8 +46,8 @@ export class UtilMethods {
         try {
             const helper = this.getHelper();
             const decodedToken = helper.decodeToken(token);
-        
-        return decodedToken;
+
+            return decodedToken;
         } catch (e) {
             return null;
         }
@@ -55,5 +55,24 @@ export class UtilMethods {
 
     public static getHelper(): JwtHelperService {
         return new JwtHelperService();
+    }
+
+    public static generateRandomCode(): string {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numbers = '0123456789';
+
+        let code = '';
+
+        for (let i = 0; i < 3; i++) {
+            const randomLetter = letters.charAt(Math.floor(Math.random() * letters.length));
+            code += randomLetter;
+        }
+
+        for (let i = 0; i < 3; i++) {
+            const randomNumber = numbers.charAt(Math.floor(Math.random() * numbers.length));
+            code += randomNumber;
+        }
+
+        return code;
     }
 }

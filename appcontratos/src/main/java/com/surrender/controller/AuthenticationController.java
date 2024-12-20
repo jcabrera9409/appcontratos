@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.surrender.model.ResetToken;
@@ -27,6 +26,7 @@ import com.surrender.util.EmailUtil;
 import com.surrender.util.Mail;
 
 import dto.AuthenticationResponse;
+import dto.ResetPasswordRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +50,7 @@ public class AuthenticationController {
 	private EmailUtil emailUtil;
 	
 	@Autowired
-	private IResetTokenService serviceToken;
+	private IResetTokenService serviceResetToken;
 	
 	@PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -80,16 +80,16 @@ public class AuthenticationController {
 		if (optVendedor.isPresent()) {
 			Vendedor vendedor = optVendedor.get();
 			
-			List<ResetToken> listaTokens = serviceToken.listarPorIdentityIdAndResetTokenType(vendedor.getId(), ResetTokenType.RECOVER_PASSWORD_VENDEDOR);
-			serviceToken.deleteAllResetTokenByIdentity(listaTokens);
+			List<ResetToken> listaTokens = serviceResetToken.listarPorIdentityIdAndResetTokenType(vendedor.getId(), ResetTokenType.RECOVER_PASSWORD_VENDEDOR);
+			serviceResetToken.deleteAllResetTokenByIdentity(listaTokens);
 			
 			ResetToken resetToken = new ResetToken();
 			resetToken.setIdEntity(vendedor.getId());
 			resetToken.setToken(UUID.randomUUID().toString());
 			resetToken.setTokenType(ResetTokenType.RECOVER_PASSWORD_VENDEDOR);
-			resetToken.setExpiracion(15);
+			resetToken.setExpiracion(10);
 			
-			serviceToken.registrar(resetToken);
+			serviceResetToken.registrar(resetToken);
 			
 			Mail mail = new Mail();
 			mail.setTo(vendedor.getCorreo());
@@ -110,6 +110,35 @@ public class AuthenticationController {
 		}
 		else {
 			Vendedor v = new Vendedor();
+			return new ResponseEntity(HttpStatus.NOT_FOUND);
+		}
+		
+	}
+	
+	@PutMapping("/reset_password")
+	public ResponseEntity postMethodName(@RequestBody ResetPasswordRequest resetPassword) throws Exception {
+		Optional<ResetToken> optionalReset = serviceResetToken.listarPorToken(resetPassword.getToken());
+		if (optionalReset.isPresent()) {
+			ResetToken reset = optionalReset.get();
+			if (!reset.isExpired()) {
+				if (reset.getTokenType() == ResetTokenType.RECOVER_PASSWORD_VENDEDOR) {
+					Vendedor vendedor = serviceVendedor.listarPorId(reset.getIdEntity());
+					int filasAfectadas = authService.modificarPasswordPorId(vendedor.getId(), resetPassword.getPassword());
+					if (filasAfectadas > 0) {
+						serviceResetToken.eliminar(reset.getId());
+						return new ResponseEntity(HttpStatus.OK);
+					} else {
+						return new ResponseEntity(HttpStatus.FAILED_DEPENDENCY);
+					}
+					
+				} else {
+					return new ResponseEntity(HttpStatus.CONTINUE);
+				}
+			} else {
+				return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
+			}
+			
+		} else {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
 		

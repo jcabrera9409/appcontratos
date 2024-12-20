@@ -22,6 +22,9 @@ public class Contrato {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(nullable = false)
+	private String codigo;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_cliente", nullable = false)
 	private Cliente objCliente;
@@ -62,6 +65,12 @@ public class Contrato {
 	@Column(nullable = false)
 	private Float total;
 	
+	@Column(nullable = false)
+	private String google_doc_id;
+	
+	@Column(nullable = false)
+	private String google_pdf_id;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_vendedor", nullable = false)
 	private Vendedor objVendedor;
@@ -77,6 +86,12 @@ public class Contrato {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public String getCodigo() {
+		return codigo;
+	}
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 	public Cliente getObjCliente() {
 		return objCliente;
@@ -173,6 +188,18 @@ public class Contrato {
 	}
 	public void setDetalleContrato(List<DetalleContrato> detalleContrato) {
 		this.detalleContrato = detalleContrato;
+	}
+	public String getGoogle_doc_id() {
+		return google_doc_id;
+	}
+	public void setGoogle_doc_id(String google_doc_id) {
+		this.google_doc_id = google_doc_id;
+	}
+	public String getGoogle_pdf_id() {
+		return google_pdf_id;
+	}
+	public void setGoogle_pdf_id(String google_pdf_id) {
+		this.google_pdf_id = google_pdf_id;
 	}
 	
 	

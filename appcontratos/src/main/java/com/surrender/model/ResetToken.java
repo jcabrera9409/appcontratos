@@ -78,7 +78,7 @@ public class ResetToken {
 		this.tokenType = tokenType;
 	}
 	
-	public boolean extaExpirado() {
+	public boolean isExpired() {
 		return LocalDateTime.now().isAfter(this.expiracion);
 	}
 	
