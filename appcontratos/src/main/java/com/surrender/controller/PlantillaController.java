@@ -28,7 +28,6 @@ public class PlantillaController {
 	private IPlantillaService service;
 	
 	@GetMapping
-	@PreAuthorize("@authenticationService.tieneAcceso('plantilla-listar')")
 	public ResponseEntity<?> listar() throws Exception {
 		List<Plantilla> lista = service.listar();
 		return new ResponseEntity<List<Plantilla>>(lista, HttpStatus.OK);

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Cliente } from '../_model/cliente';
 import { Subject } from 'rxjs';
-import { Mensaje } from '../_model/mensaje'; 
+import { Mensaje } from '../_model/Mensaje';
 import { GenericService } from './generic.service';
 
 @Injectable({

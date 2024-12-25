@@ -3,11 +3,16 @@ import { GenericService } from './generic.service';
 import { Plantilla } from '../_model/plantilla';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
+import { Subject } from 'rxjs';
+import { Mensaje } from '../_model/Mensaje';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlantillaService extends GenericService<Plantilla>{
+
+  private plantillaCambio: Subject<Plantilla[]> = new Subject<Plantilla[]>();
+  private mensajeCambio: Subject<Mensaje> = new Subject<Mensaje>();
 
   constructor(protected override http: HttpClient) {
     super(
@@ -15,4 +20,20 @@ export class PlantillaService extends GenericService<Plantilla>{
       `${environment.HOST}/plantillas`
     )
   }
+
+  getPlantillaCambio() {
+      return this.plantillaCambio.asObservable();
+    }
+  
+    setPlantillaCambio(lista: Plantilla[]) {
+      this.plantillaCambio.next(lista);
+    }
+  
+    getMensajeCambio() {
+      return this.mensajeCambio.asObservable();
+    }
+  
+    setMensajeCambio(mensaje: Mensaje) {
+      this.mensajeCambio.next(mensaje);
+    }
 }
