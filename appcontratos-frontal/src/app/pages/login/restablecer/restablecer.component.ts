@@ -63,11 +63,14 @@ export class RestablecerComponent implements OnInit {
         }, 1000);
       },
       error: (error) => {
-        if (error.status == 404) {
+        if (error.status == 401) {
+          this.snackBar.open("La cuenta esta desactivada", "X", {duration: 5000, panelClass: ["error-snackbar"]});
+        }
+        else if (error.status == 404) {
           this.snackBar.open("Token inválido", "X", {duration: 5000, panelClass: ["error-snackbar"]});
         }
         else if (error.status == 412) {
-          this.snackBar.open("Solicitud vencida, por favor genera otra.", "X", {duration: 5000, panelClass: ["error-snackbar"]});
+          this.snackBar.open("Solicitud vencida, por favor genera una nueva solicitud.", "X", {duration: 5000, panelClass: ["error-snackbar"]});
         }
         else if (error.status == 424) {
           this.snackBar.open("No se ha podido restablecer la contraseña", "X", {duration: 5000, panelClass: ["error-snackbar"]});

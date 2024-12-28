@@ -129,14 +129,17 @@ public class AuthenticationController {
 			if (!reset.isExpired()) {
 				if (reset.getTokenType() == ResetTokenType.RECOVER_PASSWORD_VENDEDOR) {
 					Vendedor vendedor = serviceVendedor.listarPorId(reset.getIdEntity());
-					int filasAfectadas = authService.modificarPasswordPorId(vendedor.getId(), resetPassword.getPassword());
-					if (filasAfectadas > 0) {
-						serviceResetToken.eliminar(reset.getId());
-						return new ResponseEntity(HttpStatus.OK);
+					if(vendedor.isEstado()) {
+						int filasAfectadas = authService.modificarPasswordPorId(vendedor.getId(), resetPassword.getPassword());
+						if (filasAfectadas > 0) {
+							serviceResetToken.eliminar(reset.getId());
+							return new ResponseEntity(HttpStatus.OK);
+						} else {
+							return new ResponseEntity(HttpStatus.FAILED_DEPENDENCY);
+						}
 					} else {
-						return new ResponseEntity(HttpStatus.FAILED_DEPENDENCY);
+						return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 					}
-					
 				} else {
 					return new ResponseEntity(HttpStatus.CONTINUE);
 				}
