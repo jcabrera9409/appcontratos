@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -63,7 +64,12 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody Vendedor request
     ) {
-		return new ResponseEntity<AuthenticationResponse>(authService.authenticate(request), HttpStatus.OK);
+		AuthenticationResponse response = authService.authenticate(request);
+		if(response.getAccessToken() != null) {
+			return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<AuthenticationResponse>(response, HttpStatus.UNAUTHORIZED);
+		}
     }
 	
 	@PostMapping("/refresh_token")

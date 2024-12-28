@@ -6,4 +6,6 @@ import com.surrender.model.Vendedor;
 
 public interface IVendedorService extends ICRUD<Vendedor, Integer> {
 	Optional<Vendedor> listarPorCorreo(String correo);
+	
+	int actualizarEstadoPorId(Integer id, boolean estado);
 }

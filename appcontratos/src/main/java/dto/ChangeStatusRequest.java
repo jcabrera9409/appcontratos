@@ -1,0 +1,21 @@
+package dto;
+
+public class ChangeStatusRequest {
+	private int id;
+	private boolean estado;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public boolean isEstado() {
+		return estado;
+	}
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+	
+	
+
+}

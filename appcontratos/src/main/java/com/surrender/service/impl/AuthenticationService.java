@@ -74,17 +74,21 @@ public class AuthenticationService {
         );
 
         Vendedor vendedor = repository.findByCorreo(request.getUsername()).orElseThrow();
-        String accessToken = jwtService.generateAccessToken(vendedor);
-        String refreshToken = jwtService.generateRefreshToken(vendedor);
+        
+        if(vendedor.isEstado()) {
+        	String accessToken = jwtService.generateAccessToken(vendedor);
+            String refreshToken = jwtService.generateRefreshToken(vendedor);
 
-        revokeAllTokenByVendedor(vendedor);
-        saveUserToken(accessToken, refreshToken, vendedor);
+            revokeAllTokenByVendedor(vendedor);
+            saveUserToken(accessToken, refreshToken, vendedor);
 
-        return new AuthenticationResponse(accessToken, refreshToken, "Vendedor autenticado correctamente");
-
+            return new AuthenticationResponse(accessToken, refreshToken, "Vendedor autenticado correctamente");
+        } else {
+        	return new AuthenticationResponse(null, null, "Su cuenta esta desactivada.");
+        }
     }
 	
-	private void revokeAllTokenByVendedor(Vendedor vendedor) {
+	public void revokeAllTokenByVendedor(Vendedor vendedor) {
         List<Token> validTokens = tokenRepository.findByObjVendedorIdAndLoggedOutFalse(vendedor.getId());
         if(validTokens.isEmpty()) {
             return;

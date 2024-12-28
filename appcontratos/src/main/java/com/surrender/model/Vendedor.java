@@ -37,13 +37,13 @@ public class Vendedor implements UserDetails {
 	@Column(nullable = false, length = 250)
 	private String correo;
 	
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
 	
 	@Column(nullable = false)
 	private boolean estado;
 	
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tbl_vendedor_rol", joinColumns = @JoinColumn(name = "id_vendedor", referencedColumnName = "id"),
 				inverseJoinColumns = @JoinColumn(name = "id_rol", referencedColumnName = "id"))

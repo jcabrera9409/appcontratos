@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.surrender.exception.ModeloNotFoundException;
 import com.surrender.model.Vendedor;
 import com.surrender.service.IVendedorService;
+import com.surrender.service.impl.AuthenticationService;
+
+import dto.ChangeStatusRequest;
 
 @RestController
 @RequestMapping("/vendedores")
@@ -26,6 +29,9 @@ public class VendedorController {
 
 	@Autowired
 	private IVendedorService service;
+	
+	@Autowired
+	private AuthenticationService authenticationService;
 
 	@GetMapping
 	public ResponseEntity<?> listar() throws Exception {
@@ -54,6 +60,21 @@ public class VendedorController {
 	public ResponseEntity<?> modificar(@RequestBody Vendedor v) throws Exception {
 		Vendedor obj = service.modificar(v);
 		return new ResponseEntity<Vendedor>(obj, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("cambiar_estado")
+	public ResponseEntity<?> cambiarEstado(@RequestBody ChangeStatusRequest request) throws Exception {
+		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.isEstado());
+		if(filasAfectadas > 0) {
+			if(!request.isEstado()) {
+				Vendedor v = new Vendedor();
+				v.setId(request.getId());
+				this.authenticationService.revokeAllTokenByVendedor(v);
+			}			
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+		else
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 	
 	@DeleteMapping("/{id}")

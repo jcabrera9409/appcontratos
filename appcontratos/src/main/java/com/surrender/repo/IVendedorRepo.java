@@ -18,5 +18,10 @@ public interface IVendedorRepo extends IGenericRepo<Vendedor, Integer> {
 	@Modifying
 	@Query("UPDATE Vendedor v SET v.password = :password WHERE v.id = :id")
 	int updatePasswordById(@Param("id") Integer id, @Param("password") String password);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Vendedor v SET v.estado = :estado WHERE v.id = :id")
+	int updateEstadoById(@Param("id") Integer id, @Param("estado") boolean estado);
 
 }

@@ -54,9 +54,16 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['pages/']);
       },
       error: (error) => {
+        if(error.status == 401) {
+          if("access_token" in error.error && error.error.access_token == null) {
+            this.snackBar.open(error.error.message, "X", {duration: 5000, panelClass: ["error-snackbar"]})
+          } else {
+            this.snackBar.open("Credenciales incorrectas", "X", {duration: 5000, panelClass: ["error-snackbar"]})
+          }
+        } else {
+          this.snackBar.open("Credenciales incorrectas", "X", {duration: 5000, panelClass: ["error-snackbar"]})
+        }
         this.isLoading = false;
-        this.snackBar.open("Credenciales incorrectas", "X", {duration: 5000, panelClass: ["error-snackbar"]})
-        console.log(error.error);
       }
     });
   }

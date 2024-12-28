@@ -25,5 +25,10 @@ public class VendedorServiceImpl extends CRUDImpl<Vendedor, Integer> implements 
 	public Optional<Vendedor> listarPorCorreo(String correo) {
 		return repo.findByCorreo(correo);
 	}
+
+	@Override
+	public int actualizarEstadoPorId(Integer id, boolean estado) {
+		return repo.updateEstadoById(id, estado);
+	}
 	
 }
