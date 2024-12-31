@@ -62,7 +62,7 @@ export class CambiarEstadoVendedorComponent implements OnInit {
     )
     .subscribe({
       next: (data) => {
-        this.vendedorService.setClienteCambio(data);
+        this.vendedorService.setVendedorCambio(data);
         this.vendedorService.setMensajeCambio(new Mensaje("OK", "Estado actualizado correctamente"));
         this.isLoading = false;
         this.dialogRef.close();

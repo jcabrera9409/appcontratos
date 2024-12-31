@@ -41,30 +41,6 @@ public class AuthenticationService {
 	@Autowired
     private AuthenticationManager authenticationManager;
 	
-	public AuthenticationResponse register(Vendedor request) {
-
-        if(repository.findByCorreo(request.getUsername()).isPresent()) {
-            return new AuthenticationResponse(null, null,"El correo ya se encuentra registrado");
-        }
-
-        Vendedor vendedor = new Vendedor();
-        vendedor.setNombres(request.getNombres());
-        vendedor.setCorreo(request.getCorreo());
-        vendedor.setPassword(passwordEncoder.encode(request.getPassword()));
-        vendedor.setRoles(request.getRoles());
-        vendedor.setEstado(true);
-
-        vendedor = repository.save(vendedor);
-
-        String accessToken = jwtService.generateAccessToken(vendedor);
-        String refreshToken = jwtService.generateRefreshToken(vendedor);
-
-        saveUserToken(accessToken, refreshToken, vendedor);
-
-        return new AuthenticationResponse(accessToken, refreshToken, "El vendedor se registro correctamente");
-
-    }
-	
 	public AuthenticationResponse authenticate(Vendedor request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

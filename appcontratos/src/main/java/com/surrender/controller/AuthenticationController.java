@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,14 +51,7 @@ public class AuthenticationController {
 	
 	@Autowired
 	private IResetTokenService serviceResetToken;
-	
-	@PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody Vendedor request
-            ) {
-		return new ResponseEntity<AuthenticationResponse>(authService.register(request), HttpStatus.OK);
-    }
-	
+		
 	@PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(
             @RequestBody Vendedor request

@@ -14,6 +14,7 @@ import { Vendedor } from '../../_model/vendedor';
 import { VendedorService } from '../../_service/vendedor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CambiarEstadoVendedorComponent } from './cambiar-estado-vendedor/cambiar-estado-vendedor.component';
+import { VendedorEdicionComponent } from './vendedor-edicion/vendedor-edicion.component';
 
 @Component({
   selector: 'app-vendedor',
@@ -61,7 +62,10 @@ export class VendedorComponent implements OnInit {
   }
 
   openDialog(vendedor?: Vendedor) {
-    console.log(vendedor);
+    this.dialog.open(VendedorEdicionComponent, {
+      data: vendedor,
+      width: "800px"
+    });
   }
 
   applyFilter(event: Event) {

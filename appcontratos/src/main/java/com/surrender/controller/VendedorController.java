@@ -1,11 +1,13 @@
 package com.surrender.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,9 @@ public class VendedorController {
 	@Autowired
 	private AuthenticationService authenticationService;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@GetMapping
 	public ResponseEntity<?> listar() throws Exception {
 		List<Vendedor> lista = service.listar();
@@ -52,12 +57,23 @@ public class VendedorController {
 	
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Vendedor v) throws Exception {
-		Vendedor obj = service.registrar(v);
-		return new ResponseEntity<Vendedor>(obj, HttpStatus.CREATED);
+		Optional<Vendedor> busqueda = service.listarPorCorreo(v.getCorreo());
+		if(!busqueda.isPresent()) {
+			v.setPassword(passwordEncoder.encode(v.getPassword()));
+			Vendedor obj = service.registrar(v);
+			return new ResponseEntity<Vendedor>(obj, HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<Vendedor>(busqueda.get(), HttpStatus.CONFLICT);
+		}
 	}
 	
 	@PutMapping
 	public ResponseEntity<?> modificar(@RequestBody Vendedor v) throws Exception {
+		Vendedor busqueda = service.listarPorId(v.getId());
+		v.setCorreo(busqueda.getCorreo());
+		v.setEstado(busqueda.isEstado());
+		v.setPassword(busqueda.getPassword());
+		
 		Vendedor obj = service.modificar(v);
 		return new ResponseEntity<Vendedor>(obj, HttpStatus.CREATED);
 	}

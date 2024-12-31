@@ -12,9 +12,6 @@ import { UtilMethods } from '../../util/util';
 })
 export class InicioComponent implements OnInit{
 
-  usuario: String
-  correo: String
-
   constructor(
     private router: Router
   ) {

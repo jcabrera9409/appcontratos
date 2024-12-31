@@ -2,38 +2,33 @@
     <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
 </div>
 <h2 mat-dialog-title>{{tituloDialogo}}</h2>
-<form [formGroup]="form" #frmPlantilla="ngForm" (ngSubmit)="operar()" >
-<mat-dialog-content class="mat-typography">
-    <div class="example-container">
-    
-        <div [hidden]="true">
+<form [formGroup]="form" #frmPlantilla="ngForm" (ngSubmit)="operar()">
+    <mat-dialog-content class="mat-typography">
+        <div class="example-container">
+
+            <div [hidden]="true">
+                <mat-form-field>
+                    <input matInput placeholder="ID" formControlName="id" />
+                </mat-form-field>
+            </div>
             <mat-form-field>
-                <input matInput placeholder="ID" formControlName="id" />
+                <mat-label>Nombre Plantilla</mat-label>
+                <input formControlName="nombre" matInput placeholder="Ingresar Nombre">
             </mat-form-field>
+            <mat-form-field>
+                <mat-label>Descripcion Plantilla</mat-label>
+                <textarea cdkTextareaAutosize cdkAutosizeMinRows="8" cdkAutosizeMaxRows="10"
+                    formControlName="descripcion" matInput placeholder="Ingresar Descripción"></textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Precio</mat-label>
+                <input formControlName="precio" matInput placeholder="Ingresar Precio" type="number">
+            </mat-form-field>
+
         </div>
-        <mat-form-field>
-            <mat-label>Nombre Plantilla</mat-label>
-            <input formControlName="nombre" matInput placeholder="Ingresar Nombre" >
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Descripcion Plantilla</mat-label>
-            <textarea
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="8"
-                cdkAutosizeMaxRows="10"
-                formControlName="descripcion" 
-                matInput 
-                placeholder="Ingresar Descripción"></textarea>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Precio</mat-label>
-            <input formControlName="precio" matInput placeholder="Ingresar Precio" type="number">
-        </mat-form-field>
-    
-</div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button color="primary" type="submit" [disabled]="frmPlantilla.invalid">Guardar</button>
-</mat-dialog-actions>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button color="primary" type="submit" [disabled]="frmPlantilla.invalid">Guardar</button>
+    </mat-dialog-actions>
 </form>

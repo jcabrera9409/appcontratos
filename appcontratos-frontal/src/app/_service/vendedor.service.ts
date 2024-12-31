@@ -30,7 +30,7 @@ export class VendedorService extends GenericService<Vendedor> {
     return this.vendedorCambio.asObservable();
   }
 
-  setClienteCambio(lista: Vendedor[]) {
+  setVendedorCambio(lista: Vendedor[]) {
     this.vendedorCambio.next(lista);
   }
 

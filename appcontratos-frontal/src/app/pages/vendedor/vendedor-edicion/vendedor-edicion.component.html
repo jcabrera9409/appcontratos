@@ -1,0 +1,52 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmVendedor="ngForm" (ngSubmit)="operar()" >
+<mat-dialog-content class="mat-typography">
+    <div class="example-container">
+    
+        <div [hidden]="true">
+            <mat-form-field>
+                <input matInput placeholder="ID" formControlName="id" />
+            </mat-form-field>
+        </div>
+        <mat-form-field>
+            <mat-label>Nombres</mat-label>
+            <input formControlName="nombres" matInput placeholder="Ingresar Nombres" >
+        </mat-form-field>
+        
+        <mat-form-field>
+            <mat-label>Correo</mat-label>
+            <input formControlName="correo" matInput placeholder="Ingresar Correo" type="email">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Roles</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Roles">
+                @for (rol of rolesSeleccionados; track rol) {
+                <mat-chip-row (removed)="eliminarRol(rol)">
+                    {{rol.nombre}}
+                    <button matChipRemove [attr.aria-label]="'Eliminar ' + rol.nombre">
+                    <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip-row>
+                }
+            </mat-chip-grid>
+            <input placeholder="Seleccionar Roles" formControlName="roles"
+                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"/>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="seleccionarRol($event)">
+                @for (rol of rolesFiltrados | async; track rol) {
+                <mat-option [value]="rol">{{rol.nombre}}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+    
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" type="submit" [disabled]="frmVendedor.invalid || rolesSeleccionados.length<=0">Guardar</button>
+</mat-dialog-actions>
+</form>
