@@ -11,7 +11,7 @@ import { VendedorComponent } from './vendedor/vendedor.component';
 export const pagesRoutes: Routes = [
     { path: 'contratos', component: ContratoComponent, canActivate: [authGuard] },
     { path: 'contratos/nuevo', component: ContratoEdicionComponent, canActivate: [authGuard] },
-    { path: 'contratos/modificar', component: ContratoEdicionComponent, canActivate: [authGuard] },
+    { path: 'contratos/modificar/:codigo', component: ContratoEdicionComponent, canActivate: [authGuard] },
     { path: 'clientes', component: ClienteComponent, canActivate: [authGuard] },
     { path: 'plantillas', component: PlantillaComponent, canActivate: [authGuard] },
     { path: 'vendedores', component: VendedorComponent, canActivate: [authGuard] },
