@@ -24,3 +24,11 @@ export class Contrato {
     google_pdf_id: String;
     detalleContrato: DetalleContrato[]
 }   
+
+export enum EstadoContrato {
+    NUEVO = 'Nuevo',
+    EN_PROCESO = 'En Proceso',
+    PARA_ENTREGAR = 'Para Entregar',
+    ENTREGADO = 'Entregado',
+    CANCELADO = 'Cancelado'
+}

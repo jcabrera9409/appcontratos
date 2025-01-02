@@ -17,6 +17,11 @@
                                 <input matInput placeholder="ID" formControlName="id" />
                             </mat-form-field>
                         </div>
+                        <div [hidden]="true">
+                            <mat-form-field>
+                                <input matInput placeholder="ID" formControlName="idCliente" />
+                            </mat-form-field>
+                        </div>
                         <mat-radio-group color="primary" formControlName="tipoCliente"
                             aria-label="Selecciona Tipo de Cliente" (change)="onChangeTipoCliente($event)">
                             <mat-radio-button value="N">Persona Natural</mat-radio-button>
@@ -119,7 +124,7 @@
                     </div>
                     <div class="stepper-buttons">
                         <button mat-button matStepperPrevious>Anterior</button>
-                        <button mat-button matStepperNext [disabled]="segundoForm.invalid || this.data.length == 0"
+                        <button mat-button matStepperNext [disabled]="segundoForm.invalid || this.dataDetalleContrato.length == 0"
                             type="submit">Siguiente</button>
                     </div>
                 </form>

@@ -3,6 +3,8 @@ package dto;
 public class ChangeStatusRequest {
 	private int id;
 	private boolean estado;
+	private String estadoString;
+	
 	public int getId() {
 		return id;
 	}
@@ -15,7 +17,10 @@ public class ChangeStatusRequest {
 	public void setEstado(boolean estado) {
 		this.estado = estado;
 	}
-	
-	
-
+	public String getEstadoString() {
+		return estadoString;
+	}
+	public void setEstadoString(String estadoString) {
+		this.estadoString = estadoString;
+	}
 }

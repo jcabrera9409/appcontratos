@@ -10,11 +10,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorImpl } from '../../material/mat-paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { Contrato } from '../../_model/contrato';
+import { Contrato, EstadoContrato } from '../../_model/contrato';
 import { ContratoService } from '../../_service/contrato.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.component';
+import { CambiarEstadoContratoComponent } from './cambiar-estado-contrato/cambiar-estado-contrato.component';
 
 @Component({
   selector: 'app-contrato',
@@ -25,6 +26,8 @@ import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.compone
   providers: [{provide: MatPaginatorIntl, useClass: MatPaginatorImpl}]
 })
 export class ContratoComponent implements OnInit {
+
+  ESTADO_ENTREGADO: String = EstadoContrato.ENTREGADO
 
   displayedColumns: string[] = ['id', 'codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
   dataSource: MatTableDataSource<Contrato>;
@@ -56,8 +59,11 @@ export class ContratoComponent implements OnInit {
     })
   }
 
-  openDialog(contrato?: Contrato) {
-    
+  cambiarEstado(contrato: Contrato) {
+    this.dialog.open(CambiarEstadoContratoComponent, {
+      data: contrato,
+      width: "500px"
+    });
   }
 
   verContrato(contrato: Contrato) {

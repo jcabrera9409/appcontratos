@@ -75,7 +75,7 @@ public class Contrato {
 	@JoinColumn(name = "id_vendedor", nullable = false)
 	private Vendedor objVendedor;
 	
-	@Column(nullable = false, length = 10)
+	@Column(nullable = false, length = 25)
 	private String estado;
 	
 	@OneToMany(mappedBy = "objContrato", cascade = {CascadeType.ALL}, orphanRemoval = true)

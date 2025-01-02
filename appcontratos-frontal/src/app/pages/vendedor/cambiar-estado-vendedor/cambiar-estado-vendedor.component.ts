@@ -41,7 +41,8 @@ export class CambiarEstadoVendedorComponent implements OnInit {
   cambiarEstado() {
     let changeStatus: ChangeStatusRequest = {
       id: this.vendedor.id,
-      estado: !this.vendedor.estado
+      estado: !this.vendedor.estado,
+      estadoString: ""
     };
     
     this.isLoading = true; 

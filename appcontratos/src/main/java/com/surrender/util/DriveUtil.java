@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,15 +48,62 @@ public class DriveUtil {
 		
 		return uploadedFile.getId();
 	}
+	
+	public String uploadFileAsNewVersion(File file, String mimeType, String existingFileId) throws FileNotFoundException, IOException, GeneralSecurityException {
+	    Drive service = createDriveService();
+
+	    FileContent mediaContent = new FileContent(mimeType, file);
+
+	    com.google.api.services.drive.model.File updatedFile = service.files()
+	            .update(existingFileId, null, mediaContent)
+	            .setFields("id")
+	            .execute();
+
+	    return existingFileId;
+	}
 		
 	public String convertWordToGoogleDoc(String wordId) throws FileNotFoundException, IOException, GeneralSecurityException {
 		Drive service = createDriveService();
 		
-		com.google.api.services.drive.model.File convertedFile = service.files().copy(wordId, new com.google.api.services.drive.model.File().setMimeType(GlobalVariables.DOC_DRIVE_MIME_TYPE))
+		com.google.api.services.drive.model.File convertedFile = service.files()
+				.copy(wordId, new com.google.api.services.drive.model.File().setMimeType(GlobalVariables.DOC_DRIVE_MIME_TYPE))
         		.setFields("id")
         		.execute();
 		
 		return convertedFile.getId();
+	}
+	
+	public String convertWordToGoogleDocAsNewVersion(String wordId, String existingFileId) throws IOException, GeneralSecurityException {
+	    Drive service = createDriveService();
+
+	    // Copiar el archivo Word como Google Doc
+	    com.google.api.services.drive.model.File convertedFile = service.files()
+	            .copy(wordId, new com.google.api.services.drive.model.File().setMimeType(GlobalVariables.DOC_DRIVE_MIME_TYPE))
+	            .setFields("id")
+	            .execute();
+
+	    // Nombre temporal del archivo exportado
+	    String tempFileName = UUID.randomUUID().toString() + ".docx";
+
+	    // Exportar el archivo Google Doc como un archivo Word (.docx)
+	    try (OutputStream outputStream = new FileOutputStream(tempFileName)) {
+	        service.files()
+	                .export(convertedFile.getId(), GlobalVariables.WORD_DOCUMENT_MIME_TYPE)
+	                .executeMediaAndDownloadTo(outputStream);
+	    }
+
+	    // Crear un archivo temporal
+	    File tempFile = new File(tempFileName);
+
+	    // Actualizar el archivo existente en Google Drive con el contenido del archivo temporal
+	    FileContent mediaContent = new FileContent(GlobalVariables.WORD_DOCUMENT_MIME_TYPE, tempFile);
+	    service.files().update(existingFileId, null, mediaContent).execute();
+
+	    // Eliminar el archivo temporal
+	    tempFile.delete();
+	    deleteFile(convertedFile.getId());
+
+	    return existingFileId;
 	}
 	
 	public boolean deleteFile(String fileId) {
@@ -72,9 +120,9 @@ public class DriveUtil {
 	public File converGoogleDocToPDF(String wordId, String pdfName) throws FileNotFoundException, IOException, GeneralSecurityException {
 		 Drive service = createDriveService();
 	        
-		 com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-		 fileMetadata.setName(pdfName);
-		 fileMetadata.setParents(Collections.singletonList(folderId));
+		 //com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+		 //fileMetadata.setName(pdfName);
+		 //fileMetadata.setParents(Collections.singletonList(folderId));
 		 
 		 try (OutputStream outputStream = new FileOutputStream(pdfName)) {
 			 service.files().export(wordId, GlobalVariables.PDF_MIME_TYPE)

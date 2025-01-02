@@ -45,4 +45,25 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 		return repo.save(contrato); 
 	}
 
+	@Transactional
+	@Override
+	public Contrato modificarContratoTransaccional(Contrato contrato) {
+		if(!contrato.getObjVendedor().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
+			contrato.setObjVendedor(repoVendedor.findByCorreo(contrato.getObjVendedor().getCorreo()).get());
+		}
+		
+		contrato.getDetalleContrato().forEach(det -> det.setObjContrato(contrato));
+		return repo.save(contrato);
+	}
+	
+	@Override
+	public int actualizarEstadoPorId(Integer id, String estado) {
+		return repo.updateEstadoById(id, estado);
+	}
+
+	@Override
+	public Contrato listarPorCodigo(String codigo) {
+		return repo.findByCodigo(codigo);
+	}
+
 }

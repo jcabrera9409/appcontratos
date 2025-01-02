@@ -6,4 +6,5 @@ export interface ResetPasswordRequest {
 export interface ChangeStatusRequest {
     id: number;
     estado: boolean;
+    estadoString: String;
 }

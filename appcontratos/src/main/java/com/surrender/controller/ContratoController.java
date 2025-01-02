@@ -29,6 +29,8 @@ import com.surrender.util.GlobalVariables;
 import com.surrender.util.Mail;
 import com.surrender.util.WordGenerator;
 
+import dto.ChangeStatusRequest;
+
 @RestController
 @RequestMapping("/contratos")
 @PreAuthorize("@authenticationService.tieneAcceso('contrato')")
@@ -63,10 +65,20 @@ public class ContratoController {
 		return new ResponseEntity<Contrato>(obj, HttpStatus.OK);
 	}
 	
+	@GetMapping("/codigo/{codigo}")
+	public ResponseEntity<?> listarPorCodigo(@PathVariable String codigo) throws Exception {
+		Contrato obj = service.listarPorCodigo(codigo);
+		
+		if(obj == null ) {
+			throw new ModeloNotFoundException("Contrato no encontrado " + codigo);
+		}
+		
+		return new ResponseEntity<Contrato>(obj, HttpStatus.OK);
+	}
+	
+	
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
-		
-		
 		File file = wordGenerator.generateWordContrato(c);
 		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
 		String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
@@ -122,23 +134,65 @@ public class ContratoController {
 		return new ResponseEntity<byte[]>(pdfBytes, HttpStatus.OK);
 	}
 	
-	
-	/*@PostMapping
-	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
-		Contrato obj = service.registrar(c);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(location).build();
-	}*/
-	
 	@PutMapping
 	public ResponseEntity<?> modificar(@RequestBody Contrato c) throws Exception {
-		Contrato obj = service.modificar(c);
-		return new ResponseEntity<Contrato>(obj, HttpStatus.CREATED);
+		Contrato objBusqueda = service.listarPorId(c.getId());
+		if(objBusqueda != null) {
+			c.setGoogle_doc_id(objBusqueda.getGoogle_doc_id());
+			c.setGoogle_pdf_id(objBusqueda.getGoogle_pdf_id());
+			c.setFechaContrato(objBusqueda.getFechaContrato());
+			
+			File file = wordGenerator.generateWordContrato(c);
+			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
+			String idConvertedDoc = driveService.convertWordToGoogleDocAsNewVersion(idUploadFileWord, c.getGoogle_doc_id());
+			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
+			String idConvertedPdf = driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 
+			
+			Contrato obj = service.modificarContratoTransaccional(c);
+			
+			Mail mail = new Mail();
+			mail.setTo(obj.getCorreo());
+			mail.setSubject("Te enviamos tu contrato actualizado!");
+			mail.setTemplate("email/contrato-template");
+			mail.addCc(obj.getObjVendedor().getCorreo());
+			
+			String nombreUsuario = obj.getObjCliente().getNombreCliente();
+			if(!obj.getObjCliente().isEsPersonaNatural()) {
+				nombreUsuario = obj.getObjCliente().getRazonSocial();
+			}
+			
+			Map<String, Object> model = new HashMap<>();
+			model.put("nombreUsuario", nombreUsuario);
+			
+			mail.setModel(model);
+			mail.setFileToAttach(pdfFile);	
+			
+			emailUtil.enviarMail(mail);
+			
+			file.delete();
+			pdfFile.delete();
+			driveService.deleteFile(idUploadFileWord);
+			
+			return new ResponseEntity<Contrato>(obj, HttpStatus.CREATED);
+			
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> eliminar(@PathVariable Integer id) throws Exception {
 		service.eliminar(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PutMapping("cambiar_estado")
+	public ResponseEntity<?> cambiarEstado(@RequestBody ChangeStatusRequest request) throws Exception {
+		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.getEstadoString());
+		if(filasAfectadas > 0) {			
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+		else
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 }

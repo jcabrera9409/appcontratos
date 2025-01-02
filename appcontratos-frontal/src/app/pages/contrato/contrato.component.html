@@ -78,7 +78,8 @@
                                 matTooltipShowDelay="500"
                                 color="primary" 
                                 aria-label="Cambiar Estado" 
-                                (click)="openDialog(element)">
+                                (click)="cambiarEstado(element)"
+                                *ngIf="element.estado != ESTADO_ENTREGADO">
                             <mat-icon>manage_history</mat-icon>
                         </button>
                     </td>
