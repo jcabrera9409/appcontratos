@@ -69,7 +69,8 @@
                                 matTooltipShowDelay="500" 
                                 color="primary" 
                                 aria-label="Editar" 
-                                (click)="editarContrato(element)">
+                                (click)="editarContrato(element)"
+                                *ngIf="element.estado != ESTADO_ENTREGADO">
                             <mat-icon>edit</mat-icon>
                         </button>
                         <button mat-icon-button 

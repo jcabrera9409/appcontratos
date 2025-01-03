@@ -367,7 +367,12 @@ export class ContratoEdicionComponent implements OnInit {
       next: (data) => {
         this.contrato = data;
         this.isLoading = false;
-        this.modificarCamposBusquedaContrato();
+        
+        if(this.contrato.estado == EstadoContrato.ENTREGADO) {
+          this.router.navigate(["/not-404"]);
+        } else {
+          this.modificarCamposBusquedaContrato();
+        }
       },
       error: (err) => {
         this.isLoading = false;
