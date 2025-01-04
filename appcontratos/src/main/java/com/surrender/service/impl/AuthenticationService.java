@@ -133,6 +133,7 @@ public class AuthenticationService {
     		break;
     	case "vendedor":
     	case "plantilla":
+    	case "rol-listar":
     		metodoRol="ADMIN,ROOT";
     		break;
     	case "menu":

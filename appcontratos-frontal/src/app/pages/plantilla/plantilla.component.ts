@@ -24,7 +24,7 @@ import { PlantillaEdicionComponent } from './plantilla-edicion/plantilla-edicion
 })
 export class PlantillaComponent implements OnInit {
   
-  displayedColumns: string[] = ['id', 'nombre', 'descripcion', 'precio', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'descripcion', 'precio', 'acciones'];
   dataSource: MatTableDataSource<Plantilla>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

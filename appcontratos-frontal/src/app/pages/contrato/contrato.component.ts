@@ -29,7 +29,7 @@ export class ContratoComponent implements OnInit {
 
   ESTADO_ENTREGADO: String = EstadoContrato.ENTREGADO
 
-  displayedColumns: string[] = ['id', 'codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
+  displayedColumns: string[] = ['codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
   dataSource: MatTableDataSource<Contrato>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -83,8 +83,8 @@ export class ContratoComponent implements OnInit {
   crearTabla(data: Contrato[]) {
     data.sort((a, b) => {
       const fechaA = new Date(`${a.fechaEntrega}`).getTime();
-      const fechaB = new Date(`${a.fechaEntrega}`).getTime();
-      return fechaB - fechaA;
+      const fechaB = new Date(`${b.fechaEntrega}`).getTime();
+      return fechaA - fechaB;
     });
     this.dataSource = new MatTableDataSource<Contrato>(data);
     this.dataSource.paginator = this.paginator;

@@ -50,13 +50,13 @@ public class WordGenerator {
         XWPFTable table = document.getTables().get(1);
         
         for (DetalleContrato detalle : contrato.getDetalleContrato()) {
-        	insertRowInTable(table, String.format("%.0f", detalle.getCantidad()) , detalle.getDescripcion(), String.format("%.2f", detalle.getPrecio()));
+        	insertRowInTable(table, String.format("%.0f", detalle.getCantidad()) , detalle.getDescripcion(), String.format("%.2f", detalle.getPrecio()), String.format("%.2f", detalle.getPrecioTotal()));
 		}
         
         if(contrato.getMovilidad() > 0) {
-        	insertRowInTable(table, "1" , "Movilidad", String.format("%.2f", contrato.getMovilidad()));
+        	insertRowInTable(table, "1" , "Movilidad", String.format("%.2f", contrato.getMovilidad()), String.format("%.2f", contrato.getMovilidad()));
         } else {
-        	insertRowInTable(table, "1" , "Incluye Movilidad", "0.00");
+        	insertRowInTable(table, "1" , "Incluye Movilidad", "0.00", "0.00");
         }
         
         table.removeRow(1);
@@ -96,10 +96,10 @@ public class WordGenerator {
 	    });
 	}
 	
-	private void insertRowInTable(XWPFTable table, String cantidad, String articulo, String precio) {
+	private void insertRowInTable(XWPFTable table, String cantidad, String articulo, String precio, String precioTotal) {
 	    XWPFTableRow newRow = table.createRow();
 
-	    for (int i = 0; i < 3; i++) {
+	    for (int i = 0; i < 4; i++) {
 	        XWPFTableCell newCell = newRow.getCell(i);
 	        newCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER); 
 	    }
@@ -124,6 +124,11 @@ public class WordGenerator {
 	    paragraphPrecio.setAlignment(ParagraphAlignment.CENTER);
 	    XWPFRun runPrecio = paragraphPrecio.createRun();
 	    runPrecio.setText(precio); 
+	    
+	    XWPFParagraph paragraphPrecioTotal = newRow.getCell(3).getParagraphArray(0);
+	    paragraphPrecioTotal.setAlignment(ParagraphAlignment.CENTER);
+	    XWPFRun runPrecioTotal = paragraphPrecioTotal.createRun();
+	    runPrecioTotal.setText(precioTotal); 
 	    
 	}
 

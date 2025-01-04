@@ -75,4 +75,8 @@ export class UtilMethods {
 
         return code;
     }
+
+    public static getFloatFixed(value: number, fixed: number): number {
+        return parseFloat(value.toFixed(fixed));
+    }
 }

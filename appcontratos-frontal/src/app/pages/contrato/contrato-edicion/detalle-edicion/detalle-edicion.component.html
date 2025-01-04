@@ -15,15 +15,19 @@
         </div>
         <mat-form-field>
             <mat-label>Cantidad</mat-label>
-            <input formControlName="cantidad" matInput placeholder="Ingresar Cantidad" type="number" [min]="1" required >
+            <input formControlName="cantidad" matInput placeholder="Ingresar Cantidad" type="number" [min]="1" (input)="actualizarTotal()" required >
         </mat-form-field>
         <mat-form-field>
             <mat-label>Descripcion</mat-label>
             <textarea formControlName="descripcion" matInput placeholder="Ingresar Descripcion" required style="height: 120px;"></textarea>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Precio</mat-label>
-            <input formControlName="precio" matInput placeholder="Ingresar Precio" required type="number" [min]="1">
+            <mat-label>Precio Unitario</mat-label>
+            <input formControlName="precio" matInput placeholder="Ingresar Precio Unitario" (input)="actualizarTotal()" required type="number" [min]="1">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>SubTotal</mat-label>
+            <input formControlName="precioTotal" matInput placeholder="Ingresar SubTotal" required type="number" [min]="1">
         </mat-form-field>
 </div>
 </mat-dialog-content>

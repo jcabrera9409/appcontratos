@@ -29,6 +29,7 @@ import { ContratoService } from '../../../_service/contrato.service';
 import { UtilMethods } from '../../../util/util';
 import { VisualizarPdfComponent } from '../../visualizar-pdf/visualizar-pdf.component';
 import { Router, ActivatedRoute } from '@angular/router';
+import { U } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -49,7 +50,7 @@ export class ContratoEdicionComponent implements OnInit {
   codigoContrato: String;
   contrato: Contrato;
 
-  displayedColumnsDetalle: string[] = ["cantidad", "descripcion", "precio", "accion"];
+  displayedColumnsDetalle: string[] = ["cantidad", "descripcion", "precio", "precioTotal", "accion"];
   dataSource: MatTableDataSource<DetalleContrato>;
   dataDetalleContrato: DetalleContrato[] = [];
 
@@ -175,10 +176,10 @@ export class ContratoEdicionComponent implements OnInit {
 
     this.contrato.fechaContrato = moment().format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.fechaEntrega = moment(this.tercerForm.value["fechaEntrega"]).format("YYYY-MM-DDTHH:mm:ss");
-    this.contrato.movilidad = this.tercerForm.value["movilidad"];
-    this.contrato.aCuenta = this.tercerForm.value["aCuenta"];
+    this.contrato.movilidad = UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2);
+    this.contrato.aCuenta = UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2);
     this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"];
-    this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? this.tercerForm.value["recargo"] : 0;
+    this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2) : 0;
     this.contrato.estado = EstadoContrato.NUEVO;
     this.contrato.codigo = UtilMethods.generateRandomCode();
     this.contrato.objVendedor = new Vendedor();
@@ -319,28 +320,33 @@ export class ContratoEdicionComponent implements OnInit {
     this.tercerForm.controls["aCuenta"].enable();
     this.tercerForm.controls["movilidad"].enable();
 
-    let total = this.dataDetalleContrato.reduce((total, item) => total + item.precio, 0);
+    let total = this.dataDetalleContrato.reduce((total, item) => total + UtilMethods.getFloatFixed(item.precioTotal, 2), 0);
     let saldo = 0;
-    let recargo = parseFloat(this.tercerForm.value["recargo"]) || 0;
-    let aCuenta = parseFloat(this.tercerForm.value["aCuenta"]) || 0;
-    let movilidad = parseFloat(this.tercerForm.value["movilidad"]) || 0;
+    let recargo = UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2) || 0;
+    let aCuenta = UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2) || 0;
+    let movilidad = UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2) || 0;
 
     if(disableRecargo) this.tercerForm.controls["recargo"].disable();
     if(disableACuenta) this.tercerForm.controls["aCuenta"].disable();
     if(disableMovilidad) this.tercerForm.controls["movilidad"].disable();
 
-    recargo = (recargo / 100) * aCuenta;
-    total = total += (movilidad + recargo);
-    saldo = total - aCuenta - recargo;
+    recargo = UtilMethods.getFloatFixed(((recargo / 100) * aCuenta), 2);
+    total = total += UtilMethods.getFloatFixed((movilidad + recargo), 2);
+    saldo = UtilMethods.getFloatFixed((total - aCuenta - recargo), 2);
 
-    this.contrato.saldo = saldo;
-    this.contrato.total = total;
+    this.contrato.saldo = UtilMethods.getFloatFixed(saldo, 2);
+    this.contrato.total = UtilMethods.getFloatFixed(total, 2);
 
-    this.tercerForm.controls["saldo"].setValue(saldo);
-    this.tercerForm.controls["total"].setValue(total);
+    this.tercerForm.controls["saldo"].setValue(UtilMethods.getFloatFixed(saldo, 2));
+    this.tercerForm.controls["total"].setValue(UtilMethods.getFloatFixed(total, 2));
   }
 
   crearTabla() {
+    this.dataDetalleContrato.forEach(item => {
+      item.cantidad = UtilMethods.getFloatFixed(item.cantidad, 0);
+      item.precio = UtilMethods.getFloatFixed(item.precio, 2);
+      item.precioTotal = UtilMethods.getFloatFixed(item.precio * item.cantidad, 2);
+    });
     this.dataSource = new MatTableDataSource<DetalleContrato>(this.dataDetalleContrato);
   }
 
@@ -436,12 +442,12 @@ export class ContratoEdicionComponent implements OnInit {
     this.crearTabla();
 
     this.tercerForm.controls["fechaEntrega"].setValue(this.contrato.fechaEntrega);
-    this.tercerForm.controls["movilidad"].setValue(this.contrato.movilidad);
-    this.tercerForm.controls["aCuenta"].setValue(this.contrato.aCuenta);
+    this.tercerForm.controls["movilidad"].setValue(UtilMethods.getFloatFixed(this.contrato.movilidad, 2));
+    this.tercerForm.controls["aCuenta"].setValue(UtilMethods.getFloatFixed(this.contrato.aCuenta, 2));
     this.tercerForm.controls["cmbTipoAbono"].setValue(this.contrato.tipoAbono);
-    this.tercerForm.controls["recargo"].setValue(this.contrato.recargo);
-    this.tercerForm.controls["saldo"].setValue(this.contrato.saldo);
-    this.tercerForm.controls["total"].setValue(this.contrato.total);
+    this.tercerForm.controls["recargo"].setValue(UtilMethods.getFloatFixed(this.contrato.recargo, 2));
+    this.tercerForm.controls["saldo"].setValue(UtilMethods.getFloatFixed(this.contrato.saldo, 2));
+    this.tercerForm.controls["total"].setValue(UtilMethods.getFloatFixed(this.contrato.total, 2));
 
     this.tercerForm.controls["aCuenta"].disable();
     this.tercerForm.controls["cmbTipoAbono"].disable();
@@ -487,7 +493,7 @@ export class ContratoEdicionComponent implements OnInit {
       detalleToEdit.objPlantilla = plantilla;
       detalleToEdit.cantidad = 1;
       detalleToEdit.descripcion = plantilla.descripcion;
-      detalleToEdit.precio = plantilla.precio;
+      detalleToEdit.precio = UtilMethods.getFloatFixed(plantilla.precio, 2);
     } else if (detalle != undefined) {
       detalleToEdit = detalle;
     }

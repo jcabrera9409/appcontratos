@@ -28,12 +28,14 @@ public class RolController {
 	private IRolService service;
 
 	@GetMapping
+	@PreAuthorize("@authenticationService.tieneAcceso('rol-listar')")
 	public ResponseEntity<?> listar() throws Exception {
 		List<Rol> lista = service.listar();
 		return new ResponseEntity<List<Rol>>(lista, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("@authenticationService.tieneAcceso('rol-listar')")
 	public ResponseEntity<?> listarPorId(@PathVariable Integer id) throws Exception {
 		Rol obj = service.listarPorId(id);
 		

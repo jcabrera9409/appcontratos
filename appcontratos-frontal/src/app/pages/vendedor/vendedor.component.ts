@@ -26,7 +26,7 @@ import { VendedorEdicionComponent } from './vendedor-edicion/vendedor-edicion.co
 })
 export class VendedorComponent implements OnInit {
   
-  displayedColumns: string[] = ['id', 'nombres', 'correo', 'roles', 'estado', 'acciones'];
+  displayedColumns: string[] = ['nombres', 'correo', 'roles', 'estado', 'acciones'];
   dataSource: MatTableDataSource<Vendedor>
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

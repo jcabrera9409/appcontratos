@@ -5,5 +5,6 @@ export class DetalleContrato {
     cantidad: number;
     descripcion: String;
     precio: number;
+    precioTotal: number;
     objPlantilla: Plantilla;
 }

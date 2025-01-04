@@ -28,6 +28,9 @@ public class DetalleContrato {
 	@Column(nullable = false)
 	private float precio;
 	
+	@Column(nullable = false)
+	private float precioTotal;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_plantilla", nullable = true)
 	private Plantilla objPlantilla;
@@ -67,6 +70,14 @@ public class DetalleContrato {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+
+	public float getPrecioTotal() {
+		return precioTotal;
+	}
+
+	public void setPrecioTotal(float precioTotal) {
+		this.precioTotal = precioTotal;
 	}
 
 	public Contrato getObjContrato() {

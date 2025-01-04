@@ -23,7 +23,7 @@ import { MatPaginatorImpl } from '../../material/mat-paginator';
 })
 export class ClienteComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'nombreCliente', 'apellidosCliente', 'razonSocial', 'documentoCliente', 'acciones'];
+  displayedColumns: string[] = ['documentoCliente', 'nombreCliente', 'apellidosCliente', 'razonSocial', 'acciones'];
   dataSource: MatTableDataSource<Cliente>
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
