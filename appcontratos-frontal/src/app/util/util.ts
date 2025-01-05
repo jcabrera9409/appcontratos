@@ -1,5 +1,6 @@
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { environment } from "../../environments/environment.development";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 export class UtilMethods {
 
@@ -78,5 +79,17 @@ export class UtilMethods {
 
     public static getFloatFixed(value: number, fixed: number): number {
         return parseFloat(value.toFixed(fixed));
+    }
+
+    public static printHttpMessageSnackBar(snackBar: MatSnackBar, type?:string, duration?: number, mensaje?: string, error?: any): void {
+        if (error == null) {
+            snackBar.open(mensaje, "X", {duration: duration ? duration : 5000, panelClass: [type ? type : "error-snackbar"]})
+        } else if(error.status == 0) {
+            snackBar.open("No se ha podido establecer conexión con el servidor", "X", {duration: 5000, panelClass: ["error-snackbar"]})
+        } else if(mensaje == null) {
+            snackBar.open(error.error.message, "X", {duration: duration ? duration : 5000, panelClass: [type ? type : "error-snackbar"]})
+        } else {
+            snackBar.open(mensaje, "X", {duration: duration ? duration : 5000, panelClass: [type ? type : "error-snackbar"]})
+        }
     }
 }

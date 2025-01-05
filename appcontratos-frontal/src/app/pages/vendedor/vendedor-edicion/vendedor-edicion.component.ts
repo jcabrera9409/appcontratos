@@ -17,6 +17,7 @@ import { RolService } from '../../../_service/rol.service';
 import { Rol } from '../../../_model/rol';
 import { UtilMethods } from '../../../util/util';
 import { Mensaje } from '../../../_model/Mensaje';
+import moment from 'moment';
 
 @Component({
   selector: 'app-vendedor-edicion',
@@ -90,6 +91,11 @@ export class VendedorEdicionComponent implements OnInit {
     vendedorData.correo = this.form.value['correo'];
     vendedorData.estado = true;
     vendedorData.password = UtilMethods.generateRandomCode();
+    vendedorData.objVendedorActualizacion = null;
+    vendedorData.fechaActualizacion = null;
+    vendedorData.objVendedorActualizacion = new Vendedor();
+    vendedorData.objVendedorActualizacion.correo = UtilMethods.getFieldJwtToken("sub");
+    vendedorData.fechaActualizacion = moment().format("YYYY-MM-DDTHH:mm:ss");
 
     this.isLoading = true;
 
@@ -102,9 +108,9 @@ export class VendedorEdicionComponent implements OnInit {
         catchError(error => {
 
           if (error.status === 409) {
-            this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "El correo ya se encuentra registrado"));
+            this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "El correo ya se encuentra registrado", error));
           } else {
-            this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación"));
+            this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
           }
 
           console.log("Error en la operación (modificar/registrar):", error);
@@ -114,7 +120,7 @@ export class VendedorEdicionComponent implements OnInit {
         switchMap(() => this.vendedorService.listar()),
         catchError(error => {
           console.log("Error al listar plantillas:", error);
-          this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los vendedores"));
+          this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los vendedores", error));
           return EMPTY;
         })
       )

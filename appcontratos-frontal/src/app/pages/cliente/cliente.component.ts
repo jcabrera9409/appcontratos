@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ClienteEdicionComponent } from './cliente-edicion/cliente-edicion.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginatorImpl } from '../../material/mat-paginator';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-cliente',
@@ -45,7 +46,9 @@ export class ClienteComponent implements OnInit {
 
     this.clienteService.getMensajeCambio().subscribe(data => {
       if(data.estado == "OK") {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["success-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, data.mensaje);
+      } else {
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
       }
     })
   }

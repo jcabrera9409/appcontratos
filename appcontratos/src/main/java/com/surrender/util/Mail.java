@@ -44,7 +44,8 @@ public class Mail {
 	public void addCc(String cc) {
 		if(this.cc == null) 
 			this.cc = new ArrayList<>();
-		this.cc.add(cc);
+		if(this.cc.indexOf(cc) < 0)
+			this.cc.add(cc);
 	}
 
 	public String getSubject() {

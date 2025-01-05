@@ -24,12 +24,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Contrato, EstadoContrato } from '../../../_model/contrato';
 import { Vendedor } from '../../../_model/vendedor';
-import moment from 'moment';
 import { ContratoService } from '../../../_service/contrato.service';
 import { UtilMethods } from '../../../util/util';
 import { VisualizarPdfComponent } from '../../visualizar-pdf/visualizar-pdf.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { U } from '@angular/cdk/keycodes';
+import moment from 'moment';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -184,6 +183,8 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.codigo = UtilMethods.generateRandomCode();
     this.contrato.objVendedor = new Vendedor();
     this.contrato.objVendedor.correo = UtilMethods.getFieldJwtToken("sub");
+    this.contrato.objVendedorActualizacion = null;
+    this.contrato.fechaActualizacion = null;
 
     if(disableACuenta) this.tercerForm.controls["aCuenta"].disable();
     if(disableRecargo) this.tercerForm.controls["recargo"].disable();
@@ -192,9 +193,10 @@ export class ContratoEdicionComponent implements OnInit {
     if(this.codigoContrato != '') {
       this.contrato.id = this.primerForm.controls["id"].value;
       this.contrato.codigo = this.codigoContrato;
+      this.contrato.objVendedorActualizacion = new Vendedor();
+      this.contrato.objVendedorActualizacion.correo = UtilMethods.getFieldJwtToken("sub");
+      this.contrato.fechaActualizacion = moment().format("YYYY-MM-DDTHH:mm:ss");
     }
-
-    console.log(this.contrato);
 
     if (guardar) {
       this.guardarContrato();
@@ -206,12 +208,18 @@ export class ContratoEdicionComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.contratoService.generarPdfPreview(this.contrato).subscribe((data) => {
-      this.dialog.open(VisualizarPdfComponent, {
-        data: data
-      });
+    this.contratoService.generarPdfPreview(this.contrato).subscribe({
+      next: (data) => {
+        this.dialog.open(VisualizarPdfComponent, {
+          data: data
+        });
 
-      this.isLoading = false;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Error al generar el PDF", error);
+        this.isLoading = false
+      }
     });
   }
 
@@ -229,35 +237,18 @@ export class ContratoEdicionComponent implements OnInit {
         const mensaje = this.contrato.id != null && this.contrato.id > 0
             ? "Contrato Actualizado"
             : "Contrato Registrado";
-        this.snackBar.open(mensaje, "X", {duration: 5000, panelClass: ["success-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, mensaje);
 
         setTimeout(() => {
           this.router.navigate(["/pages/contratos"]);
         }, 3000);
       },
 
-      error: (err) => {
+      error: (error) => {
         this.isLoading = false;
-        this.snackBar.open("Error al realizar la operación", "X", { duration: 5000, panelClass: ["error-snackbar"] })
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Error al realizar la operación", error);
       }
     });
-  }
-
-  limpiarFormulariov2() {
-    // Vuelve al primer paso del stepper
-    this.stepper.steps.get(0).select();
-
-    this.primerForm.reset({
-      documentoCliente: "", // Valor inicial vacío
-    }, { emitEvent: false }); // Evita eventos de cambio
-
-    // Configura los validadores nuevamente
-    this.primerForm.controls["documentoCliente"].setValidators([Validators.required]);
-    this.primerForm.controls["documentoCliente"].updateValueAndValidity(); // Actualiza
-
-    console.log(this.primerForm.invalid);
-    console.log(this.primerForm.controls["documentoCliente"].errors); // null
-    console.log(this.primerForm.valid);
   }
 
   limpiarFormulario() {

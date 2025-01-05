@@ -9,6 +9,8 @@ import { CommonModule } from '@angular/common';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 import { Mensaje } from '../../../_model/Mensaje';
 import { ChangeStatusRequest } from '../../../_model/dto';
+import { UtilMethods } from '../../../util/util';
+import moment from 'moment';
 
 @Component({
   selector: 'app-cambiar-estado-vendedor',
@@ -39,10 +41,14 @@ export class CambiarEstadoVendedorComponent implements OnInit {
   }
 
   cambiarEstado() {
+    let vendedor = new Vendedor();
+    vendedor.correo = UtilMethods.getFieldJwtToken("sub");
     let changeStatus: ChangeStatusRequest = {
       id: this.vendedor.id,
       estado: !this.vendedor.estado,
-      estadoString: ""
+      estadoString: "",
+      objVendedor: vendedor,
+      fechaActualizacion: moment().format("YYYY-MM-DDTHH:mm:ss")
     };
     
     this.isLoading = true; 
@@ -50,14 +56,14 @@ export class CambiarEstadoVendedorComponent implements OnInit {
     this.vendedorService.cambiarEstado(changeStatus).pipe(
       catchError(error => {
         console.log("Error en la operación (cambiar_estado):", error);
-        this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación"));
+        this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
         this.isLoading = false;
         return EMPTY;
       }),
       switchMap(() => this.vendedorService.listar()),
       catchError(error => {
         console.log("Error al listar vendedores:", error);
-        this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los vendedores"));
+        this.vendedorService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los vendedores", error));
         return EMPTY;
       })
     )

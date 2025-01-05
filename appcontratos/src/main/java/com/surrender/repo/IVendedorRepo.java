@@ -1,5 +1,6 @@
 package com.surrender.repo;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,7 +22,12 @@ public interface IVendedorRepo extends IGenericRepo<Vendedor, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE Vendedor v SET v.estado = :estado WHERE v.id = :id")
-	int updateEstadoById(@Param("id") Integer id, @Param("estado") boolean estado);
+	@Query("UPDATE Vendedor v SET v.estado = :estado, v.objVendedorActualizacion.id = :vendedorId, v.fechaActualizacion = :fechaActualizacion WHERE v.id = :id")
+	int updateEstadoById(
+			@Param("id") Integer id, 
+			@Param("estado") boolean estado,  
+			@Param("vendedorId") Integer vendedorId, 
+		    @Param("fechaActualizacion") LocalDateTime fechaActualizacion
+			);
 
 }

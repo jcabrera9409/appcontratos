@@ -9,6 +9,9 @@ import { Mensaje } from '../../../_model/Mensaje';
 import { ChangeStatusRequest } from '../../../_model/dto';
 import { Contrato, EstadoContrato } from '../../../_model/contrato';
 import { ContratoService } from '../../../_service/contrato.service';
+import { Vendedor } from '../../../_model/vendedor';
+import { UtilMethods } from '../../../util/util';
+import moment from 'moment';
 
 @Component({
   selector: 'app-cambiar-estado-contrato',
@@ -49,10 +52,14 @@ export class CambiarEstadoContratoComponent implements OnInit {
   } 
 
   cambiarEstado() {
+    let vendedor = new Vendedor();
+    vendedor.correo = UtilMethods.getFieldJwtToken("sub");
     let changeStatus: ChangeStatusRequest = {
       id: this.contrato.id,
       estado: true,
-      estadoString: this.contrato.estado
+      estadoString: this.contrato.estado,
+      objVendedor: vendedor,
+      fechaActualizacion: moment().format("YYYY-MM-DDTHH:mm:ss")
     };
 
     this.isLoading = true;
@@ -60,14 +67,14 @@ export class CambiarEstadoContratoComponent implements OnInit {
     this.contratoService.cambiarEstado(changeStatus).pipe(
       catchError(error => {
         console.log("Error en la operación (cambiar_estado):", error);
-        this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación"));
+        this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
         this.isLoading = false;
         return EMPTY;
       }),
       switchMap(() => this.contratoService.listar()),
       catchError(error => {
         console.log("Error al listar contratos:", error);
-        this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los contratos"));
+        this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los contratos", error));
         return EMPTY;
       })
     )

@@ -1,5 +1,7 @@
 package com.surrender.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,17 +50,20 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	@Transactional
 	@Override
 	public Contrato modificarContratoTransaccional(Contrato contrato) {
-		if(!contrato.getObjVendedor().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
-			contrato.setObjVendedor(repoVendedor.findByCorreo(contrato.getObjVendedor().getCorreo()).get());
-		}
-		
+		if(!contrato.getObjVendedorActualizacion().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
+			contrato.setObjVendedorActualizacion(repoVendedor.findByCorreo(contrato.getObjVendedorActualizacion().getCorreo()).get());
+		}		
 		contrato.getDetalleContrato().forEach(det -> det.setObjContrato(contrato));
 		return repo.save(contrato);
 	}
 	
 	@Override
-	public int actualizarEstadoPorId(Integer id, String estado) {
-		return repo.updateEstadoById(id, estado);
+	public int actualizarEstadoPorId(Integer id, String estado, String correoVendedorActualizacion, LocalDateTime fechaActualizacion) {
+		int idVendedor = 0;
+		if(!correoVendedorActualizacion.equalsIgnoreCase(StringUtils.EMPTY)) {
+			idVendedor = repoVendedor.findByCorreo(correoVendedorActualizacion).get().getId();
+		}
+		return repo.updateEstadoById(id, estado, idVendedor, fechaActualizacion);
 	}
 
 	@Override

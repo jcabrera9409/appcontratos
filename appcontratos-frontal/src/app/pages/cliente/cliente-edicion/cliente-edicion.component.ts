@@ -97,14 +97,14 @@ export class ClienteEdicionComponent implements OnInit {
       .pipe(
         catchError(error => {
           console.log("Error en la operación (modificar/registrar):", error);
-          this.clienteService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación"));
+          this.clienteService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
           this.isLoading = false;
           return EMPTY;
         }),
         switchMap(() => this.clienteService.listar()),
         catchError(error => {
           console.log("Error al listar clientes:", error);
-          this.clienteService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los clientes"));
+          this.clienteService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los clientes", error));
           return EMPTY;
         })
       )

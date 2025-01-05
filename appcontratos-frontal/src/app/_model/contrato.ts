@@ -22,7 +22,9 @@ export class Contrato {
     estado: String;
     google_doc_id: String;
     google_pdf_id: String;
-    detalleContrato: DetalleContrato[]
+    detalleContrato: DetalleContrato[];
+    objVendedorActualizacion: Vendedor;
+    fechaActualizacion: String;
 }   
 
 export enum EstadoContrato {

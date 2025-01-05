@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,7 +79,7 @@ public class VendedorController {
 	
 	@PutMapping("cambiar_estado")
 	public ResponseEntity<?> cambiarEstado(@RequestBody ChangeStatusRequest request) throws Exception {
-		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.isEstado());
+		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.isEstado(), request.getObjVendedor().getCorreo(), request.getFechaActualizacion());
 		if(filasAfectadas > 0) {
 			if(!request.isEstado()) {
 				Vendedor v = new Vendedor();
@@ -91,11 +90,5 @@ public class VendedorController {
 		}
 		else
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> eliminar(@PathVariable Integer id) throws Exception {
-		service.eliminar(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 }

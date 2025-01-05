@@ -1,5 +1,6 @@
 package com.surrender.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,12 +21,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "tblVendedor")
 public class Vendedor implements UserDetails {
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +56,14 @@ public class Vendedor implements UserDetails {
 	@JsonIgnore
 	@OneToMany(mappedBy = "objVendedor")
     private List<Token> tokens;
+	
+	@ManyToOne
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JoinColumn(name = "id_vendedor_actualizacion", nullable = true)
+	private Vendedor objVendedorActualizacion;
+	
+	@Column(nullable = true)
+	private LocalDateTime fechaActualizacion;
 	
 	public Integer getId() {
 		return id;
@@ -95,7 +107,18 @@ public class Vendedor implements UserDetails {
 	public void setTokens(List<Token> tokens) {
 		this.tokens = tokens;
 	}
-	
+	public Vendedor getObjVendedorActualizacion() {
+		return objVendedorActualizacion;
+	}
+	public void setObjVendedorActualizacion(Vendedor objVendedorActualizacion) {
+		this.objVendedorActualizacion = objVendedorActualizacion;
+	}
+	public LocalDateTime getFechaActualizacion() {
+		return fechaActualizacion;
+	}
+	public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
+		this.fechaActualizacion = fechaActualizacion;
+	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> rolesAuth = new ArrayList<>();

@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.component';
 import { CambiarEstadoContratoComponent } from './cambiar-estado-contrato/cambiar-estado-contrato.component';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-contrato',
@@ -52,9 +53,9 @@ export class ContratoComponent implements OnInit {
 
     this.contratoService.getMensajeCambio().subscribe(data => {
       if(data.estado == "OK") {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["success-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, data.mensaje);
       } else {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["error-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
       }
     })
   }
@@ -82,10 +83,16 @@ export class ContratoComponent implements OnInit {
 
   crearTabla(data: Contrato[]) {
     data.sort((a, b) => {
+      if (a.estado === this.ESTADO_ENTREGADO && b.estado !== this.ESTADO_ENTREGADO) {
+        return 1;
+      } else if (b.estado === this.ESTADO_ENTREGADO && a.estado !== this.ESTADO_ENTREGADO) {
+        return -1; 
+      }
       const fechaA = new Date(`${a.fechaEntrega}`).getTime();
       const fechaB = new Date(`${b.fechaEntrega}`).getTime();
       return fechaA - fechaB;
     });
+
     this.dataSource = new MatTableDataSource<Contrato>(data);
     this.dataSource.paginator = this.paginator;
   }

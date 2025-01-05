@@ -15,6 +15,7 @@ import { VendedorService } from '../../_service/vendedor.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CambiarEstadoVendedorComponent } from './cambiar-estado-vendedor/cambiar-estado-vendedor.component';
 import { VendedorEdicionComponent } from './vendedor-edicion/vendedor-edicion.component';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-vendedor',
@@ -48,10 +49,10 @@ export class VendedorComponent implements OnInit {
 
     this.vendedorService.getMensajeCambio().subscribe(data => {
       if(data.estado == "OK") {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["success-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, data.mensaje);
       }
       else {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["error-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
       }
     })
   }

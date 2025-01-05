@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UtilMethods } from '../../util/util';
 
 @Component({
   selector: 'app-login',
@@ -56,12 +57,12 @@ export class LoginComponent implements OnInit {
       error: (error) => {
         if(error.status == 401) {
           if("access_token" in error.error && error.error.access_token == null) {
-            this.snackBar.open(error.error.message, "X", {duration: 5000, panelClass: ["error-snackbar"]})
+            UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, null, error);
           } else {
-            this.snackBar.open("Credenciales incorrectas", "X", {duration: 5000, panelClass: ["error-snackbar"]})
+            UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Credenciales incorrectas", error);
           }
         } else {
-          this.snackBar.open("Credenciales incorrectas", "X", {duration: 5000, panelClass: ["error-snackbar"]})
+          UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Credenciales incorrectas", error);
         }
         this.isLoading = false;
       }
@@ -72,16 +73,14 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     this.loginService.recuperarPassword(this.forgotPasswordForm.value.email_recovery).subscribe({
       next: (data) => {
-        this.snackBar.open("Se ha enviado un correo con instrucciones para recuperar tu contraseña", "X", {duration: 5000, panelClass: ["success-snackbar"]});
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, "Se ha enviado un correo con instrucciones para recuperar tu contraseña", null);
         this.isLoading = false;
       },
       error: (error) => {
         if (error.status == 404) {
-          this.snackBar.open("No existe una cuenta con ese correo", "X", {duration: 5000, panelClass: ["info-snackbar"]});
-        }
-        else{
-          this.snackBar.open("No se ha podido enviar el correo", "X", {duration: 5000, panelClass: ["error-snackbar"]});
-          console.log(error);
+          UtilMethods.printHttpMessageSnackBar(this.snackBar, "info-snackbar", 5000, "No existe una cuenta con este correo");
+        } else {
+          UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "No se ha podido enviar el correo", error);
         }
         this.isLoading = false;
       }

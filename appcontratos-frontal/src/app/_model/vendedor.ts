@@ -7,4 +7,6 @@ export class Vendedor {
     password: String;
     estado: Boolean;
     roles: Rol[];
+    objVendedorActualizacion: Vendedor;
+    fechaActualizacion: String;
 }

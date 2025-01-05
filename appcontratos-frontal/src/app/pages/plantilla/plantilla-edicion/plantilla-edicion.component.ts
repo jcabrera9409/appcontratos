@@ -10,6 +10,9 @@ import { PlantillaService } from '../../../_service/plantilla.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 import { Mensaje } from '../../../_model/Mensaje';
+import { Vendedor } from '../../../_model/vendedor';
+import { UtilMethods } from '../../../util/util';
+import moment from 'moment';
 
 @Component({
   selector: 'app-plantilla-edicion',
@@ -56,6 +59,9 @@ export class PlantillaEdicionComponent implements OnInit {
     plantilla.nombre = this.form.value['nombre'];
     plantilla.descripcion = this.form.value['descripcion'];
     plantilla.precio = this.form.value['precio'];
+    plantilla.objVendedorActualizacion = new Vendedor();
+    plantilla.objVendedorActualizacion.correo = UtilMethods.getFieldJwtToken("sub");
+    plantilla.fechaActualizacion = moment().format("YYYY-MM-DDTHH:mm:ss");
 
     this.isLoading = true;
 
@@ -67,14 +73,14 @@ export class PlantillaEdicionComponent implements OnInit {
       .pipe(
         catchError(error => {
           console.log("Error en la operación (modificar/registrar):", error);
-          this.plantillaService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación"));
+          this.plantillaService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
           this.isLoading = false;
           return EMPTY;
         }),
         switchMap(() => this.plantillaService.listar()),
         catchError(error => {
           console.log("Error al listar plantillas:", error);
-          this.plantillaService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar las plantillas"));
+          this.plantillaService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar las plantillas", error));
           return EMPTY;
         })
       )

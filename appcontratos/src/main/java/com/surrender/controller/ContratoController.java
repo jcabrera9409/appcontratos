@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -141,12 +140,13 @@ public class ContratoController {
 			c.setGoogle_doc_id(objBusqueda.getGoogle_doc_id());
 			c.setGoogle_pdf_id(objBusqueda.getGoogle_pdf_id());
 			c.setFechaContrato(objBusqueda.getFechaContrato());
+			c.setObjVendedor(objBusqueda.getObjVendedor());
 			
 			File file = wordGenerator.generateWordContrato(c);
 			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
 			String idConvertedDoc = driveService.convertWordToGoogleDocAsNewVersion(idUploadFileWord, c.getGoogle_doc_id());
 			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
-			String idConvertedPdf = driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 
+			driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 
 			
 			Contrato obj = service.modificarContratoTransaccional(c);
 			
@@ -155,6 +155,7 @@ public class ContratoController {
 			mail.setSubject("Te enviamos tu contrato actualizado!");
 			mail.setTemplate("email/contrato-template");
 			mail.addCc(obj.getObjVendedor().getCorreo());
+			mail.addCc(obj.getObjVendedorActualizacion().getCorreo());
 			
 			String nombreUsuario = obj.getObjCliente().getNombreCliente();
 			if(!obj.getObjCliente().isEsPersonaNatural()) {
@@ -180,15 +181,9 @@ public class ContratoController {
 		}
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<?> eliminar(@PathVariable Integer id) throws Exception {
-		service.eliminar(id);
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-	}
-	
 	@PutMapping("cambiar_estado")
 	public ResponseEntity<?> cambiarEstado(@RequestBody ChangeStatusRequest request) throws Exception {
-		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.getEstadoString());
+		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.getEstadoString(), request.getObjVendedor().getCorreo(), request.getFechaActualizacion());
 		if(filasAfectadas > 0) {			
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}

@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginatorImpl } from '../../material/mat-paginator';
 import { PlantillaService } from '../../_service/plantilla.service';
 import { PlantillaEdicionComponent } from './plantilla-edicion/plantilla-edicion.component';
+import { UtilMethods } from '../../util/util';
 
 
 @Component({
@@ -46,9 +47,9 @@ export class PlantillaComponent implements OnInit {
 
     this.plantillaService.getMensajeCambio().subscribe(data => {
       if(data.estado == "OK") {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["success-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, data.mensaje);
       } else {
-        this.snackBar.open(data.mensaje, "X", {duration: 5000, panelClass: ["error-snackbar"]})
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
       }
     })
   }

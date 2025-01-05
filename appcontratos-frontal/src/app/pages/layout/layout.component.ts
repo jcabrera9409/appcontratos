@@ -16,6 +16,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../../environments/environment.development';
 import { LoginService } from '../../_service/login.service';
 import { UtilMethods } from '../../util/util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-layout',
@@ -37,7 +38,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
     private media: MediaMatcher,
     private menuService: MenuService,
     private loginService: LoginService,
-    private router: Router) {
+    private router: Router,
+    private snackBar: MatSnackBar) {
       this.mobileQuery = this.media.matchMedia('(max-width: 600px)');
       this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
       this.mobileQuery.addEventListener('change', this._mobileQueryListener);
@@ -78,8 +80,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
     const decodedToken = helper.decodeToken(token);
     let correo = decodedToken.sub;
     
-    this.menuService.listarPorCorreo(correo).subscribe(data => {
-      this.menuService.setMenuCambio(data);
+    this.menuService.listarPorCorreo(correo).subscribe({
+      next: (data) => {
+        this.menuService.setMenuCambio(data);
+      },
+      error: (error) => {
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Error al cargar los menus", error);
+      }
     });
   }
 
