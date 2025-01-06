@@ -1,0 +1,7 @@
+.example-container mat-form-field {
+    width: 100%;
+}
+
+.invalido {
+    color: red
+}

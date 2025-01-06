@@ -54,7 +54,7 @@ public class DriveUtil {
 
 	    FileContent mediaContent = new FileContent(mimeType, file);
 
-	    com.google.api.services.drive.model.File updatedFile = service.files()
+	    service.files()
 	            .update(existingFileId, null, mediaContent)
 	            .setFields("id")
 	            .execute();
@@ -119,10 +119,6 @@ public class DriveUtil {
 	
 	public File converGoogleDocToPDF(String wordId, String pdfName) throws FileNotFoundException, IOException, GeneralSecurityException {
 		 Drive service = createDriveService();
-	        
-		 //com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-		 //fileMetadata.setName(pdfName);
-		 //fileMetadata.setParents(Collections.singletonList(folderId));
 		 
 		 try (OutputStream outputStream = new FileOutputStream(pdfName)) {
 			 service.files().export(wordId, GlobalVariables.PDF_MIME_TYPE)

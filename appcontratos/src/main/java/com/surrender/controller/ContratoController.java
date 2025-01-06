@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.surrender.exception.ModeloNotFoundException;
 import com.surrender.model.Contrato;
+import com.surrender.model.DetallePago;
+import com.surrender.model.Vendedor;
 import com.surrender.service.IContratoService;
 import com.surrender.util.DriveUtil;
 import com.surrender.util.EmailUtil;
@@ -184,6 +186,36 @@ public class ContratoController {
 	@PutMapping("cambiar_estado")
 	public ResponseEntity<?> cambiarEstado(@RequestBody ChangeStatusRequest request) throws Exception {
 		int filasAfectadas = service.actualizarEstadoPorId(request.getId(), request.getEstadoString(), request.getObjVendedor().getCorreo(), request.getFechaActualizacion());
+		if(filasAfectadas > 0) {			
+			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		}
+		else
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
+	@PostMapping("pago")
+	public ResponseEntity<?> registrarDetallePago(@RequestBody Contrato contrato) throws Exception {
+		DetallePago detallePago = new DetallePago();
+		detallePago = contrato.getDetallePago().get(0);
+		detallePago.setObjContrato(contrato);		
+		DetallePago obj = service.registrarDetallePago(detallePago);
+		
+		return new ResponseEntity<DetallePago>(obj, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("pago")
+	public ResponseEntity<?> modificarDetallePago(@RequestBody Contrato contrato) throws Exception {
+		DetallePago detallePago = new DetallePago();
+		detallePago = contrato.getDetallePago().get(0);
+		detallePago.setObjContrato(contrato);		
+		DetallePago obj = service.registrarDetallePago(detallePago);
+		
+		return new ResponseEntity<DetallePago>(obj, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("pago/cambiar_estado")
+	public ResponseEntity<?> cambiarEstadoDetallePago(@RequestBody ChangeStatusRequest request) throws Exception {
+		int filasAfectadas = service.actualizarEstadoDetallePagoPorId(request.getId(), request.isEstado(), request.getObjVendedor().getCorreo(), request.getFechaActualizacion());
 		if(filasAfectadas > 0) {			
 			return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 		}

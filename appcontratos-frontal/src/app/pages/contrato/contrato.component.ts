@@ -17,6 +17,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.component';
 import { CambiarEstadoContratoComponent } from './cambiar-estado-contrato/cambiar-estado-contrato.component';
 import { UtilMethods } from '../../util/util';
+import { DetallePago } from '../../_model/detalle-pago';
+import { ContratoPagoEdicionComponent } from './contrato-pago-edicion/contrato-pago-edicion.component';
+import { CambiarEstadoContratoPagoComponent } from './cambiar-estado-contrato-pago/cambiar-estado-contrato-pago.component';
 
 @Component({
   selector: 'app-contrato',
@@ -28,10 +31,15 @@ import { UtilMethods } from '../../util/util';
 })
 export class ContratoComponent implements OnInit {
 
+  selectedIndex = 0;
+
   ESTADO_ENTREGADO: String = EstadoContrato.ENTREGADO
 
   displayedColumns: string[] = ['codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
+  displayedColumnsPagos: string[] = ['fechaPago', 'comentario', 'estado', 'pago', 'acciones'];
   dataSource: MatTableDataSource<Contrato>;
+  dataSourcePagos: MatTableDataSource<DetallePago>;
+  contratoSeleccionadoPago: Contrato;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -48,7 +56,15 @@ export class ContratoComponent implements OnInit {
     });
 
     this.contratoService.getContratoCambio().subscribe(data => {
+      if(this.contratoSeleccionadoPago.id != undefined && this.contratoSeleccionadoPago.id != null) {
+        data.forEach(contrato => {
+          if(contrato.id == this.contratoSeleccionadoPago.id) {
+            this.contratoSeleccionadoPago = contrato;
+          }
+        });
+      }
       this.crearTabla(data);
+      this.crearTablaPagos();
     })
 
     this.contratoService.getMensajeCambio().subscribe(data => {
@@ -58,6 +74,8 @@ export class ContratoComponent implements OnInit {
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
       }
     })
+
+    this.contratoSeleccionadoPago = new Contrato();
   }
 
   cambiarEstado(contrato: Contrato) {
@@ -93,6 +111,19 @@ export class ContratoComponent implements OnInit {
       return fechaA - fechaB;
     });
 
+    data.forEach(contrato => {
+      let totalPagado = 0;
+      if(contrato.detallePago != null && contrato.detallePago.length > 0) {
+        contrato.detallePago.forEach(detallePago => {
+          if(detallePago.estado)
+            totalPagado += UtilMethods.getFloatFixed(detallePago.pago, 2);
+        });
+      }
+
+      contrato.saldo = UtilMethods.getFloatFixed(contrato.saldo - totalPagado, 2);
+      
+    });
+
     this.dataSource = new MatTableDataSource<Contrato>(data);
     this.dataSource.paginator = this.paginator;
   }
@@ -102,4 +133,71 @@ export class ContratoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  crearTablaPagos(){
+    let detallePago: DetallePago[] = new Array();
+    let pagoACuenta: DetallePago = new DetallePago();
+    pagoACuenta.id = 0;
+    pagoACuenta.fechaPago = this.contratoSeleccionadoPago.fechaContrato;
+    pagoACuenta.comentario = "Pago a cuenta";
+    pagoACuenta.pago = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
+    pagoACuenta.estado = true;
+
+    detallePago.push(pagoACuenta);
+    detallePago = detallePago.concat(this.contratoSeleccionadoPago.detallePago);
+
+    detallePago.sort((a, b) => {
+      const fechaA = new Date(`${a.fechaPago}`).getTime();
+      const fechaB = new Date(`${b.fechaPago}`).getTime();
+      return fechaB - fechaA;
+    });
+    
+    this.dataSourcePagos = new MatTableDataSource<DetallePago>(detallePago);
+  }
+
+  getTotalPago() {
+    let totalPago = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
+    totalPago = UtilMethods.getFloatFixed(totalPago, 2);
+    if(this.contratoSeleccionadoPago.detallePago == null || this.contratoSeleccionadoPago.detallePago.length == undefined) {
+      this.contratoSeleccionadoPago.detallePago = new Array();
+    }
+    this.contratoSeleccionadoPago.detallePago.forEach(detallePago => {
+      if(detallePago.estado)
+        totalPago += UtilMethods.getFloatFixed(detallePago.pago, 2);
+    });
+
+    return totalPago;
+  }
+
+  nuevoDetallePago(detallePago?: DetallePago) {
+    let dtoPago: Contrato = new Contrato();
+    dtoPago = {...this.contratoSeleccionadoPago};
+    dtoPago.detallePago = new Array();
+
+    if(detallePago != null && detallePago.id != undefined) {      
+      dtoPago.detallePago.push(detallePago); 
+    }
+    
+    this.dialog.open(ContratoPagoEdicionComponent, {
+      data: dtoPago,
+      width: "800px"
+    });
+  }
+
+  cambiarEstadoDetallePago(detallePago: DetallePago) {
+    this.dialog.open(CambiarEstadoContratoPagoComponent, {
+      data: detallePago,
+      width: "500px"
+    });
+  }
+
+  regresarContratos() {
+    this.selectedIndex = 0;
+  }
+
+  verPagos(contrato: Contrato) {
+    this.contratoSeleccionadoPago = contrato;
+    this.crearTablaPagos();
+    this.selectedIndex = 1;
+  }
+  
 }

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.surrender.model.Contrato;
+import com.surrender.model.DetallePago;
 import com.surrender.repo.IClienteRepo;
 import com.surrender.repo.IContratoRepo;
+import com.surrender.repo.IDetallePagoRepo;
 import com.surrender.repo.IGenericRepo;
 import com.surrender.repo.IVendedorRepo;
 import com.surrender.service.IContratoService;
@@ -26,6 +28,9 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	
 	@Autowired
 	private IVendedorRepo repoVendedor;
+	
+	@Autowired
+	private IDetallePagoRepo repoDetallePago;
 
 	@Override
 	protected IGenericRepo<Contrato, Integer> getRepo() {
@@ -69,6 +74,27 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	@Override
 	public Contrato listarPorCodigo(String codigo) {
 		return repo.findByCodigo(codigo);
+	}
+
+	@Override
+	public DetallePago registrarDetallePago(DetallePago detallePago) {
+		int idVendedor = 0;
+		if(!detallePago.getObjContrato().getObjVendedorActualizacion().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
+			idVendedor = repoVendedor.findByCorreo(detallePago.getObjContrato().getObjVendedorActualizacion().getCorreo()).get().getId();
+			detallePago.setObjVendedorActualizacion(detallePago.getObjContrato().getObjVendedorActualizacion());
+			detallePago.getObjVendedorActualizacion().setId(idVendedor);
+		}
+		return repoDetallePago.save(detallePago);
+	}
+
+	@Override
+	public int actualizarEstadoDetallePagoPorId(Integer id, boolean estado, String correoVendedorActualizacion,
+			LocalDateTime fechaActualizacion) {
+		int idVendedor = 0;
+		if(!correoVendedorActualizacion.equalsIgnoreCase(StringUtils.EMPTY)) {
+			idVendedor = repoVendedor.findByCorreo(correoVendedorActualizacion).get().getId();
+		}
+		return repoDetallePago.updateEstadoById(id, estado, idVendedor, fechaActualizacion);
 	}
 
 }

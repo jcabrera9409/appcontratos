@@ -36,6 +36,18 @@ export class ContratoService extends GenericService<Contrato> {
     return this.http.get<Contrato>(`${this.url}/codigo/${codigo}`);
   }
 
+  registrarDetallePago(contrato: Contrato) {
+    return this.http.post(`${this.url}/pago`, contrato);
+  }
+
+  modificarDetallePago(contrato: Contrato) {
+    return this.http.put(`${this.url}/pago`, contrato);
+  }
+
+  cambiarEstadoDetallePago(changeStatusRequest: ChangeStatusRequest) {
+    return this.http.put(`${this.url}/pago/cambiar_estado`, changeStatusRequest);
+  }
+
   getContratoCambio() {
     return this.contratoCambio.asObservable();
   }

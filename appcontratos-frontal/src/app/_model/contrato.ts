@@ -1,5 +1,6 @@
 import { Cliente } from "./cliente";
 import { DetalleContrato } from "./detalle-contrato";
+import { DetallePago } from "./detalle-pago";
 import { Vendedor } from "./vendedor";
 
 export class Contrato {
@@ -23,6 +24,7 @@ export class Contrato {
     google_doc_id: String;
     google_pdf_id: String;
     detalleContrato: DetalleContrato[];
+    detallePago: DetallePago[];
     objVendedorActualizacion: Vendedor;
     fechaActualizacion: String;
 }   

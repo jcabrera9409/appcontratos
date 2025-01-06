@@ -1,0 +1,38 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmVendedor="ngForm" (ngSubmit)="operar()" >
+<mat-dialog-content class="mat-typography">
+    <div class="example-container">
+    
+        <div [hidden]="true">
+            <mat-form-field>
+                <input matInput placeholder="ID" formControlName="id" />
+            </mat-form-field>
+        </div>
+        <mat-form-field>
+            <mat-label>Fecha de Pago</mat-label>
+            <input formControlName="fechaPago" matInput [matDatepicker]="picker" required
+                [min]="fechaContrato" [max]="fechaActual">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Monto de Pago</mat-label>
+            <input formControlName="pago" matInput placeholder="Ingresar Monto de Pago" >
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Comentario</mat-label>
+            <input formControlName="comentario" matInput placeholder="Ingresar algun comentario" >
+        </mat-form-field>    
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" type="submit" [disabled]="frmVendedor.invalid">Guardar</button>
+</mat-dialog-actions>
+</form>

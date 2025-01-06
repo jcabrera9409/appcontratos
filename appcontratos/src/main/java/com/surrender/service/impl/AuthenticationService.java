@@ -129,6 +129,7 @@ public class AuthenticationService {
     	case "contrato":
     	case "plantilla-listar":
     	case "menu-listar-correo":
+    	case "detalle-pago":
     		metodoRol="VENDEDOR,ADMIN,ROOT";
     		break;
     	case "vendedor":

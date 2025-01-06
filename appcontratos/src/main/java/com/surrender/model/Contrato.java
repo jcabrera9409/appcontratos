@@ -83,6 +83,9 @@ public class Contrato {
 	@OneToMany(mappedBy = "objContrato", cascade = {CascadeType.ALL}, orphanRemoval = true)
 	private List<DetalleContrato> detalleContrato;
 	
+	@OneToMany(mappedBy = "objContrato", cascade = {CascadeType.ALL}, orphanRemoval = true)
+	private List<DetallePago> detallePago;
+	
 	@ManyToOne
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@JoinColumn(name = "id_vendedor_actualizacion", nullable = true)
@@ -198,6 +201,12 @@ public class Contrato {
 	}
 	public void setDetalleContrato(List<DetalleContrato> detalleContrato) {
 		this.detalleContrato = detalleContrato;
+	}
+	public List<DetallePago> getDetallePago() {
+		return detallePago;
+	}
+	public void setDetallePago(List<DetallePago> detallePago) {
+		this.detallePago = detallePago;
 	}
 	public String getGoogle_doc_id() {
 		return google_doc_id;
