@@ -21,6 +21,9 @@ public class Menu {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(nullable = false)
+	private int indice;
+	
 	@Column(length = 20)
 	private String icono;
 	
@@ -41,6 +44,14 @@ public class Menu {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public int getIndice() {
+		return indice;
+	}
+
+	public void setIndice(int indice) {
+		this.indice = indice;
 	}
 
 	public String getIcono() {

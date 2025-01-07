@@ -82,6 +82,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     
     this.menuService.listarPorCorreo(correo).subscribe({
       next: (data) => {
+        const sortedData = data.sort((a, b) => a.indice - b.indice);
         this.menuService.setMenuCambio(data);
       },
       error: (error) => {
