@@ -1,0 +1,26 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmDetalle="ngForm">
+<mat-dialog-content class="mat-typography">
+    <div class="example-container">
+        <div [hidden]="true">
+            <mat-form-field>
+                <input matInput placeholder="ID" formControlName="id" />
+            </mat-form-field>
+        </div>
+        <mat-form-field>
+            <mat-label>Nota al contador</mat-label>
+            <textarea formControlName="notaContador" matInput placeholder="Ingresar la nota al contador" required cdkTextareaAutosize cdkAutosizeMinRows="12" cdkAutosizeMaxRows="15"></textarea>
+        </mat-form-field>
+        <mat-slide-toggle formControlName="mostrarContrato" [color]="'primary'">
+            Mostrar Contrato
+        </mat-slide-toggle>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" [disabled]="frmDetalle.invalid" (click)="operar()">Enviar</button>
+</mat-dialog-actions>
+</form>

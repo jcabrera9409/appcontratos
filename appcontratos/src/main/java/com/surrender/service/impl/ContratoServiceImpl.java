@@ -18,7 +18,7 @@ import com.surrender.service.IContratoService;
 import jakarta.transaction.Transactional;
 
 @Service
-public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements IContratoService{
+public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements IContratoService {
 
 	@Autowired
 	private IContratoRepo repo;

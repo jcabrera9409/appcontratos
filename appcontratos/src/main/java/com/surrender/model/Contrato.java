@@ -3,6 +3,7 @@ package com.surrender.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -14,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -85,6 +87,10 @@ public class Contrato {
 	
 	@OneToMany(mappedBy = "objContrato", cascade = {CascadeType.ALL}, orphanRemoval = true)
 	private List<DetallePago> detallePago;
+	
+	@JsonIgnore
+	@OneToOne(mappedBy = "objContrato", cascade = CascadeType.ALL)
+	private Comprobante objComprobante;
 	
 	@ManyToOne
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

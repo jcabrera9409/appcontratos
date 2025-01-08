@@ -20,6 +20,7 @@ import { UtilMethods } from '../../util/util';
 import { DetallePago } from '../../_model/detalle-pago';
 import { ContratoPagoEdicionComponent } from './contrato-pago-edicion/contrato-pago-edicion.component';
 import { CambiarEstadoContratoPagoComponent } from './cambiar-estado-contrato-pago/cambiar-estado-contrato-pago.component';
+import { EnviarContadorContratoComponent } from './enviar-contador-contrato/enviar-contador-contrato.component';
 
 @Component({
   selector: 'app-contrato',
@@ -40,6 +41,7 @@ export class ContratoComponent implements OnInit {
   dataSource: MatTableDataSource<Contrato>;
   dataSourcePagos: MatTableDataSource<DetallePago>;
   contratoSeleccionadoPago: Contrato;
+  contratoSeleccionado: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -192,12 +194,21 @@ export class ContratoComponent implements OnInit {
 
   regresarContratos() {
     this.selectedIndex = 0;
+    this.contratoSeleccionado = false;
   }
 
   verPagos(contrato: Contrato) {
     this.contratoSeleccionadoPago = contrato;
     this.crearTablaPagos();
+    this.contratoSeleccionado = true;
     this.selectedIndex = 1;
+  }
+
+  enviarContador(contrato: Contrato) {
+    this.dialog.open(EnviarContadorContratoComponent, {
+      data: contrato,
+      width: "800px"
+    });
   }
   
 }

@@ -31,7 +31,7 @@ export const authGuard = (route: ActivatedRouteSnapshot, state: RouterStateSnaps
           }
         }
         
-        router.navigate(['/not-403']);
+        router.navigate(['/pages/not-403']);
         return false;
 
       }))

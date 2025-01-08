@@ -13,7 +13,6 @@ import { MenuService } from '../../_service/menu.service';
 import { Menu } from '../../_model/menu';
 import { CommonModule } from '@angular/common';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from '../../../environments/environment.development';
 import { LoginService } from '../../_service/login.service';
 import { UtilMethods } from '../../util/util';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -70,7 +69,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
 
     this.menuService.getMenuCambio().subscribe(data => {
-      this.menus = data;
+      const sortedData = data.sort((a, b) => a.indice - b.indice);
+      this.menus = sortedData;
     });
 
   }
@@ -83,7 +83,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.menuService.listarPorCorreo(correo).subscribe({
       next: (data) => {
         const sortedData = data.sort((a, b) => a.indice - b.indice);
-        this.menuService.setMenuCambio(data);
+        this.menuService.setMenuCambio(sortedData);
       },
       error: (error) => {
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Error al cargar los menus", error);

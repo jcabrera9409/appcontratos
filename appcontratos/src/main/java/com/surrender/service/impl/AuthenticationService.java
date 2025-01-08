@@ -130,6 +130,7 @@ public class AuthenticationService {
     	case "plantilla-listar":
     	case "menu-listar-correo":
     	case "detalle-pago":
+    	case "comprobante":
     		metodoRol="VENDEDOR,ADMIN,ROOT";
     		break;
     	case "vendedor":
