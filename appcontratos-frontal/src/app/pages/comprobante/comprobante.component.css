@@ -1,0 +1,41 @@
+/* Structure */
+table {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.tab-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.tab-labels {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f1f1f1;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tab-label {
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: white;
+}
+
+.tab-content {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+    /* Animación de transición */
+}
+
+.tab-pane {
+    width: 100%;
+    flex-shrink: 0;
+}
