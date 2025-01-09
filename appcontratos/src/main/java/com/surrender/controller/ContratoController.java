@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.surrender.exception.ModeloNotFoundException;
 import com.surrender.model.Contrato;
 import com.surrender.model.DetallePago;
-import com.surrender.model.Vendedor;
 import com.surrender.service.IContratoService;
 import com.surrender.util.DriveUtil;
 import com.surrender.util.EmailUtil;
@@ -37,6 +37,9 @@ import dto.ChangeStatusRequest;
 @PreAuthorize("@authenticationService.tieneAcceso('contrato')")
 public class ContratoController {
 
+	@Value("${drive.google.contratos.folder-id}")
+	private String folderIdContratos;
+	
 	@Autowired
 	private IContratoService service;
 	
@@ -81,10 +84,10 @@ public class ContratoController {
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
 		File file = wordGenerator.generateWordContrato(c);
-		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
+		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
 		String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
 		File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
-		String idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE); 
+		String idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdContratos); 
 		
 		c.setGoogle_doc_id(idConvertedDoc);
 		c.setGoogle_pdf_id(idConvertedPdf);
@@ -121,7 +124,7 @@ public class ContratoController {
 	public ResponseEntity<byte[]> previsualizarPdfContrato(@RequestBody Contrato c) throws Exception {
 		File file = wordGenerator.generateWordContrato(c);
 		
-		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
+		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
 		String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
 		File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
 		
@@ -145,7 +148,7 @@ public class ContratoController {
 			c.setObjVendedor(objBusqueda.getObjVendedor());
 			
 			File file = wordGenerator.generateWordContrato(c);
-			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE);
+			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
 			String idConvertedDoc = driveService.convertWordToGoogleDocAsNewVersion(idUploadFileWord, c.getGoogle_doc_id());
 			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
 			driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 

@@ -1,0 +1,35 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmVendedor="ngForm" (ngSubmit)="operar()">
+    <mat-dialog-content class="mat-typography">
+        <div class="example-container">
+            <mat-form-field>
+                <mat-label>Comentario</mat-label>
+                <input formControlName="comentario" matInput placeholder="Ingresar Comentario">
+            </mat-form-field>
+
+            <div class="file-upload" onclick="document.getElementById('filePDF').click()">
+                <button mat-raised-button color="primary" type="button">
+                    Cargar Archivo PDF
+                </button>
+                {{nombreArchivoPDF}}
+                <input [hidden]="true" type="file" id="filePDF" formControlName="filePDF" accept="application/pdf" (change)="onFileChange($event, 'PDF')">
+            </div>
+
+            <div class="file-upload" onclick="document.getElementById('fileZIP').click()">
+                <button mat-raised-button color="primary" type="button">
+                    Cargar Archivo ZIP
+                </button>
+                {{nombreArchivoZIP}}
+                <input [hidden]="true" type="file" id="fileZIP" formControlName="fileZIP" (change)="onFileChange($event, 'ZIP')">
+            </div>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button color="primary" type="submit" [disabled]="frmVendedor.invalid">Guardar</button>
+    </mat-dialog-actions>
+</form>

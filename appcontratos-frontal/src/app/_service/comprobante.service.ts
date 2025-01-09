@@ -25,6 +25,15 @@ export class ComprobanteService extends GenericService<Comprobante> {
     return this.http.get<Comprobante>(`${this.url}/contrato/${codigo}`);
   }
 
+  registrarDetalleComprobante(filePDF: File, fileZIP: File, comprobante: Comprobante) {
+    let formData = new FormData();
+    formData.append('filePDF', filePDF);
+    formData.append('fileZIP', fileZIP);
+    formData.append('comprobante', new Blob([JSON.stringify(comprobante)], {type: 'application/json'}));
+    
+    return this.http.post(`${this.url}/detalle`, formData);
+  }
+
   getComprobanteCambio() {
     return this.comprobanteCambio.asObservable();
   }

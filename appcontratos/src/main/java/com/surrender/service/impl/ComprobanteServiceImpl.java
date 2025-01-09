@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.surrender.model.Comprobante;
+import com.surrender.model.DetalleComprobante;
 import com.surrender.repo.IComprobanteRepo;
+import com.surrender.repo.IDetalleComprobanteRepo;
 import com.surrender.repo.IGenericRepo;
 import com.surrender.repo.IVendedorRepo;
 import com.surrender.service.IComprobanteService;
@@ -20,6 +22,9 @@ public class ComprobanteServiceImpl extends CRUDImpl<Comprobante, Integer> imple
 	
 	@Autowired
 	private IVendedorRepo repoVendedor;
+	
+	@Autowired
+	private IDetalleComprobanteRepo repoDetalle;
 	
 	@Override
 	protected IGenericRepo<Comprobante, Integer> getRepo() {
@@ -49,5 +54,15 @@ public class ComprobanteServiceImpl extends CRUDImpl<Comprobante, Integer> imple
 			c.getObjVendedorActualizacion().setId(idVendedor);
 		}
 		return repo.save(c);
+	}
+
+	@Override
+	public DetalleComprobante registrarDetalleComprobante(DetalleComprobante detalleComprobante) {
+		int idVendedor = 0;
+		if(!detalleComprobante.getObjVendedorActualizacion().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
+			idVendedor = repoVendedor.findByCorreo(detalleComprobante.getObjVendedorActualizacion().getCorreo()).get().getId();
+			detalleComprobante.getObjVendedorActualizacion().setId(idVendedor);
+		}
+		return repoDetalle.save(detalleComprobante);
 	}
 }

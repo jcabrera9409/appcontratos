@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.FileContent;
@@ -25,15 +26,12 @@ import com.google.auth.oauth2.GoogleCredentials;
 @Component
 public class DriveUtil {
 
-	@Value("${drive.google.contratos.folder-id}")
-	private String folderId;
-
 	@Value("${drive.google.credentials}")
 	private String pathCredentials;
 	
 	private final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-	
-	public String uploadFile(File file, String mimeType) throws FileNotFoundException, IOException, GeneralSecurityException {
+		
+	public String uploadFile(File file, String mimeType, String folderId) throws FileNotFoundException, IOException, GeneralSecurityException {
 		Drive service = createDriveService();
 		
 		com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
@@ -76,30 +74,24 @@ public class DriveUtil {
 	public String convertWordToGoogleDocAsNewVersion(String wordId, String existingFileId) throws IOException, GeneralSecurityException {
 	    Drive service = createDriveService();
 
-	    // Copiar el archivo Word como Google Doc
 	    com.google.api.services.drive.model.File convertedFile = service.files()
 	            .copy(wordId, new com.google.api.services.drive.model.File().setMimeType(GlobalVariables.DOC_DRIVE_MIME_TYPE))
 	            .setFields("id")
 	            .execute();
 
-	    // Nombre temporal del archivo exportado
 	    String tempFileName = UUID.randomUUID().toString() + ".docx";
 
-	    // Exportar el archivo Google Doc como un archivo Word (.docx)
 	    try (OutputStream outputStream = new FileOutputStream(tempFileName)) {
 	        service.files()
 	                .export(convertedFile.getId(), GlobalVariables.WORD_DOCUMENT_MIME_TYPE)
 	                .executeMediaAndDownloadTo(outputStream);
 	    }
 
-	    // Crear un archivo temporal
 	    File tempFile = new File(tempFileName);
 
-	    // Actualizar el archivo existente en Google Drive con el contenido del archivo temporal
 	    FileContent mediaContent = new FileContent(GlobalVariables.WORD_DOCUMENT_MIME_TYPE, tempFile);
 	    service.files().update(existingFileId, null, mediaContent).execute();
 
-	    // Eliminar el archivo temporal
 	    tempFile.delete();
 	    deleteFile(convertedFile.getId());
 
@@ -128,6 +120,14 @@ public class DriveUtil {
 		 File pdfFile = new File(pdfName);
 		 
 		 return pdfFile;
+	}
+	
+	public File convertMultipartFileToFile(MultipartFile multipartFile, String name) throws IOException {
+		File convFile = new File(name);
+		try (FileOutputStream fos = new FileOutputStream(convFile)) {
+			fos.write(multipartFile.getBytes());
+		}
+		return convFile;
 	}
 	
 	public Drive createDriveService() throws FileNotFoundException, IOException, GeneralSecurityException {

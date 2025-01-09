@@ -109,8 +109,6 @@ export class ContratoPagoEdicionComponent {
           this.isLoading = false;
         }
       });
-
-    this.dialogRef.close();
   }
 
 }

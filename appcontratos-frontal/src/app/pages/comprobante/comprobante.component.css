@@ -39,3 +39,7 @@ table {
     width: 100%;
     flex-shrink: 0;
 }
+
+.center-text {
+    text-align: center;
+}
