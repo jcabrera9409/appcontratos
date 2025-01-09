@@ -65,4 +65,14 @@ public class ComprobanteServiceImpl extends CRUDImpl<Comprobante, Integer> imple
 		}
 		return repoDetalle.save(detalleComprobante);
 	}
+
+	@Override
+	public void eliminarDetalleComprobante(Integer id) {
+		repoDetalle.deleteById(id);
+	}
+
+	@Override
+	public Optional<DetalleComprobante> buscarDetalleComprobantePorId(Integer id) {
+		return repoDetalle.findById(id);
+	}
 }

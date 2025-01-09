@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { Subject } from 'rxjs';
 import { Mensaje } from '../_model/Mensaje';
+import { DetalleComprobante } from '../_model/detalle-comprobante';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,11 @@ export class ComprobanteService extends GenericService<Comprobante> {
     formData.append('comprobante', new Blob([JSON.stringify(comprobante)], {type: 'application/json'}));
     
     return this.http.post(`${this.url}/detalle`, formData);
+  }
+
+  eliminarDetalleComprobante(id: number) {
+    console.log(id);
+    return this.http.delete(`${this.url}/detalle/${id}`);
   }
 
   getComprobanteCambio() {

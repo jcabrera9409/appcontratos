@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import com.surrender.service.IComprobanteService;
 import com.surrender.util.DriveUtil;
 import com.surrender.util.GlobalVariables;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -103,5 +105,23 @@ public class ComprobanteController {
 		return new ResponseEntity<DetalleComprobante>(obj, HttpStatus.OK);
 	}
 	
+	@DeleteMapping("/detalle/{id}")
+	public ResponseEntity<?> eliminarDetalleComprobante(@PathVariable Integer id) throws Exception {
+		
+		Optional<DetalleComprobante> opDetalle = service.buscarDetalleComprobantePorId(id);
+		
+		if(opDetalle.isPresent()) {
+			DetalleComprobante obj = opDetalle.get();
+			this.driveService.deleteFile(obj.getGoogle_pdf_id());
+			this.driveService.deleteFile(obj.getGoogle_zip_id());
+			
+			this.service.eliminarDetalleComprobante(obj.getId());
+			
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
+	}
 	
 }

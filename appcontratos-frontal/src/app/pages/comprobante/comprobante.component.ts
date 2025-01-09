@@ -17,6 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.component';
 import { DetalleComprobante } from '../../_model/detalle-comprobante';
 import { DetalleComprobanteEdicionComponent } from './detalle-comprobante-edicion/detalle-comprobante-edicion.component';
+import { EliminarDetalleComprobanteComponent } from './eliminar-detalle-comprobante/eliminar-detalle-comprobante.component';
 
 @Component({
   selector: 'app-comprobante',
@@ -101,7 +102,10 @@ export class ComprobanteComponent implements OnInit {
   }
 
   eliminarDetalleComprobante(detalleComprobante: DetalleComprobante) {
-    console.log(detalleComprobante);
+    this.dialog.open(EliminarDetalleComprobanteComponent, {
+      data: detalleComprobante,
+      width: '500px',
+    })
   }
 
   verComprobantes(comprobante: Comprobante) {
