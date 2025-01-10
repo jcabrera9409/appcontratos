@@ -34,7 +34,6 @@ public class Rol {
 	@ManyToMany(mappedBy = "roles")
 	private List<Menu> menu;
 	
-
 	public Integer getId() {
 		return id;
 	}

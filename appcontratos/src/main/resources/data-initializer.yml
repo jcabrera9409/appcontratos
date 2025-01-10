@@ -1,0 +1,57 @@
+data-initializer:
+ roles:
+  - nombre: ADMIN
+    descripcion: Administrador 
+  - nombre: VENDEDOR
+    descripcion: Vendedor
+  - nombre: CONTADOR
+    descripcion: Contador
+ menus:
+  - indice: 1
+    icono: post_add
+    nombre: Nuevo Contrato
+    url: /pages/contratos/nuevo
+    roles:
+     - nombre: ADMIN
+     - nombre: VENDEDOR
+  - indice: 2
+    icono: description
+    nombre: Contratos
+    url: /pages/contratos
+    roles:
+     - nombre: ADMIN
+     - nombre: VENDEDOR
+  - indice: 3
+    icono: receipt_long
+    nombre: Comprobantes
+    url: /pages/comprobantes
+    roles:
+     - nombre: ADMIN
+     - nombre: VENDEDOR
+     - nombre: CONTADOR
+  - indice: 4
+    icono: content_copy
+    nombre: Plantillas
+    url: /pages/plantillas
+    roles:
+     - nombre: ADMIN
+  - indice: 5
+    icono: person
+    nombre: Clientes
+    url: /pages/clientes
+    roles:
+     - nombre: ADMIN
+     - nombre: VENDEDOR
+  - indice: 6
+    icono: contact_mail
+    nombre: Vendedor
+    url: /pages/vendedores
+    roles:
+     - nombre: ADMIN
+ vendedores:
+  - nombres: Administrador
+    correo: admin@admin.com
+    password: $2a$10$r5VCsB6xQrwJzqyNCn0jD.7mcKDL1Z8kOpYEeY4RxjFklRzihzksK
+    estado: true
+    roles:
+     - nombre: ADMIN

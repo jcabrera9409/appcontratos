@@ -64,7 +64,7 @@ public class Vendedor implements UserDetails {
 	
 	@Column(nullable = true)
 	private LocalDateTime fechaActualizacion;
-	
+		
 	public Integer getId() {
 		return id;
 	}

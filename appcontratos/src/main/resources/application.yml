@@ -17,3 +17,5 @@ spring:
             required: true
         debug: true
     test-connection: false
+  config:
+    import: classpath:data-initializer.yml

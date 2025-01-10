@@ -37,7 +37,7 @@ public class Menu {
 	@JoinTable(name = "tbl_menu_rol", joinColumns = @JoinColumn(name="id_menu", referencedColumnName = "id"), 
 				inverseJoinColumns = @JoinColumn(name = "id_rol", referencedColumnName = "id"))
 	private List<Rol> roles;
-	
+			
 	public Integer getId() {
 		return id;
 	}
