@@ -1,0 +1,134 @@
+:root {
+    --primary-color: #913797;
+    --primary-color-light: #b366b3;
+    --primary-color-dark: #732e73;
+
+    --accent-color: #c861d1;
+    --accent-color-light: #ecc3f3;
+    --accent-color-dark: #a16c9e;
+
+    --warn-color: #c93a65;
+    --warn-color-light: #e0678a;
+    --warn-color-dark: #a02c4f;
+    
+    --background-color: #f7eef7;
+    --text-color: #3a223a;
+    
+    --disabled-color: #c0c0c0;
+
+    --mdc-filled-text-field-focus-active-indicator-color: var(--primary-color-light);
+    --mdc-outlined-text-field-focus-outline-color: var(--primary-color);
+
+}
+
+body {
+    height: 100%;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: var(--accent-color-dark);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--accent-color-light);
+}
+
+.mat-mdc-icon-button.mat-primary:not(:disabled),
+.mat-mdc-button.mat-primary:not(:disabled) {
+    color: var(--primary-color) !important;
+}
+
+button.mat-accent {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+}
+
+mat-toolbar {
+    background-color: var(--primary-color) !important;
+}
+
+mat-toolbar button,
+h1 {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+button:disabled {
+    color: var(--disabled-color) !important;
+}
+
+.mat-warn {
+    color: var(--warn-color) !important;
+}
+
+.mat-calendar-body-selected {
+    background-color: var(--accent-color-dark) !important;
+}
+
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    background-color: var(--accent-color-light) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label,
+.mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focuse .mdc-floating-label--float-above {
+    color: var(--primary-color-dark) !important;
+}
+
+.mat-mdc-radio-button.mat-primary {
+    --mdc-radio-selected-focus-icon-color: var(--primary-color-light) !important;
+    --mdc-radio-selected-hover-icon-color: var(--primary-color-light) !important;
+    --mdc-radio-selected-icon-color: var(--primary-color-light) !important;
+    --mdc-radio-selected-pressed-icon-color: var(--primary-color-light) !important;
+    --mat-radio-ripple-color: black;
+    --mat-radio-checked-ripple-color: var(--primary-color-light) !important;
+    --mat-radio-disabled-label-color: rgba(0, 0, 0, 0.38);
+}
+
+.mat-step-icon-state-edit,
+.mat-step-icon-selected {
+    background-color: var(--primary-color) !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+    --mdc-filled-button-container-color: var(--primary-color) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+    color: var(--primary-color-dark) !important;
+}
+
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after,
+.mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
+    color: var(--primary-color) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+    color: var(--primary-color) !important;
+}
+
+.mat-datepicker-toggle-active {
+    color: var(--primary-color) !important;
+}
+
+.mat-mdc-raised-button:not(:disabled) {
+    background-color: var(--primary-color) !important;
+}
+
+.mdc-switch:enabled .mdc-switch__track::after {
+    background: var(--primary-color-light) !important;
+}
+
+.mdc-switch.mdc-switch--selected:enabled .mdc-switch__handle::after {
+    background: var(--primary-color-dark) !important;
+}
+
+html .mat-mdc-icon-button.mat-primary {
+    --mat-icon-button-state-layer-color: var(--primary-color-light) !important;
+    --mat-icon-button-ripple-color: rgba(128, 63, 181, 0.1);
+}
