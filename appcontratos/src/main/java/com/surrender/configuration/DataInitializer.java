@@ -52,10 +52,13 @@ public class DataInitializer implements CommandLineRunner {
 			Optional<Vendedor> busqueda = repoVendedor.findByCorreo(vendedor.getCorreo());
 			if(!busqueda.isPresent()) {
 				vendedor.setPassword(passwordEncoder.encode(vendedor.getPassword()));
+				vendedor.setEstado(true);
 				Vendedor objNuevo = repoVendedor.save(vendedor);
 				vendedor.setId(objNuevo.getId());
 			} else {
 				vendedor.setId(busqueda.get().getId());
+				vendedor.setPassword(passwordEncoder.encode(vendedor.getPassword()));
+				vendedor.setEstado(busqueda.get().isEstado());
 				repoVendedor.save(vendedor);
 			}
 		}
