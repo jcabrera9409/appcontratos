@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - FOLDER_ID_COMPROBANTES=${FOLDER_ID_COMPROBANTES}
+      - FOLDER_ID_CONTRATOS=${FOLDER_ID_CONTRATOS}
+      - FRONT_END_RESTABLECER_PASSWORD_URL=${FRONT_END_RESTABLECER_PASSWORD_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - USERNAME_EMAIL=${USERNAME_EMAIL}
+      - PASSWORD_EMAIL=${PASSWORD_EMAIL}
+      - DOCUMENT_TEMPLATE_CONTRACT_PATH=${DOCUMENT_TEMPLATE_CONTRACT_PATH}
+      - GOOGLE_CREDENTIALS_PATH=${GOOGLE_CREDENTIALS_PATH}
+      - HOST_BD=${HOST_BD}
+      - PORT_BD=${PORT_BD}
+      - NAME_BD=${NAME_BD}
+      - USER_BD=${USER_BD}
+      - PASSWORD_BD=${PASSWORD_BD}
+
+  frontend:
+    build:
+      context: ./appcontratos-frontal
+    ports:
+      - "4200:80"
