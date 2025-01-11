@@ -59,6 +59,7 @@ export class PlantillaEdicionComponent implements OnInit {
     plantilla.nombre = this.form.value['nombre'];
     plantilla.descripcion = this.form.value['descripcion'];
     plantilla.precio = this.form.value['precio'];
+    plantilla.estado = true;
     plantilla.objVendedorActualizacion = new Vendedor();
     plantilla.objVendedorActualizacion.correo = UtilMethods.getFieldJwtToken("sub");
     plantilla.fechaActualizacion = moment().format("YYYY-MM-DDTHH:mm:ss");

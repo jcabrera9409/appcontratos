@@ -31,15 +31,28 @@
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="precio">
-                    <th mat-header-cell *matHeaderCellDef> Precio </th>
-                    <td mat-cell *matCellDef="let element"> {{element.precio}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="center-text"> Precio </th>
+                    <td mat-cell *matCellDef="let element" class="center-text"> {{element.precio}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="acciones">
-                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                    <td mat-cell *matCellDef="let element">
-                        <button mat-icon-button color="primary" aria-label="Editar" (click)="openDialog(element)">
+                    <th mat-header-cell *matHeaderCellDef class="center-text"> Acciones </th>
+                    <td mat-cell *matCellDef="let element" class="center-text">
+                        <button mat-icon-button color="primary" matTooltip="Editar Plantilla" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="primary" aria-label="Editar Plantilla" (click)="openDialog(element)">
                             <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="Deshabilitar Plantilla" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="warn" aria-label="Deshabilitar Plantilla" 
+                        *ngIf="element.estado"
+                        (click)="openDialogCambiarEstado(element)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="Habilitar Plantilla" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="primary" caria-label="Editar" 
+                        *ngIf="!element.estado"
+                        (click)="openDialogCambiarEstado(element)">
+                            <mat-icon>check_circle</mat-icon>
                         </button>
                     </td>
                 </ng-container>
@@ -52,7 +65,7 @@
                     <td class="mat-cell" colspan="4">No se encuentran coincidencias para "{{input.value}}"</td>
                 </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]"
+            <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"
                 showFirstLastButtons
                 aria-label="Selecciona página">
             </mat-paginator>

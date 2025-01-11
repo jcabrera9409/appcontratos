@@ -5,6 +5,7 @@ export class Plantilla {
     nombre: String;
     descripcion: String;
     precio: number;
+    estado: boolean;
     objVendedorActualizacion: Vendedor;
     fechaActualizacion: String;
 }

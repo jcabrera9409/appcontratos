@@ -51,7 +51,7 @@ data-initializer:
  vendedores:
   - nombres: Administrador
     correo: admin@admin.com
-    password: $2a$10$r5VCsB6xQrwJzqyNCn0jD.7mcKDL1Z8kOpYEeY4RxjFklRzihzksK
+    password: 12345678
     estado: true
     roles:
      - nombre: ADMIN

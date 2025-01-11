@@ -1,5 +1,8 @@
 package com.surrender.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,20 @@ public class PlantillaServiceImpl extends CRUDImpl<Plantilla, Integer> implement
 			plantilla.setObjVendedorActualizacion(repoVendedor.findByCorreo(plantilla.getObjVendedorActualizacion().getCorreo()).get());
 		}
 		return getRepo().save(plantilla);
+	}
+	
+	@Override
+	public int actualizarEstadoPorId(Integer id, boolean estado, String correoVendedorActualizacion, LocalDateTime fechaActualizacion) {
+		int idVendedor = 0;
+		if(!correoVendedorActualizacion.equalsIgnoreCase(StringUtils.EMPTY)) {
+			idVendedor = repoVendedor.findByCorreo(correoVendedorActualizacion).get().getId();
+		}
+		return repo.updateEstadoById(id, estado, idVendedor, fechaActualizacion);
+	}
+
+	@Override
+	public List<Plantilla> listarPlantillasActivas() {
+		return repo.findByEstadoTrue();
 	}
 
 }

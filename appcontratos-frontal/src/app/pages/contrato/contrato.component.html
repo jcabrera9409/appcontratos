@@ -70,18 +70,28 @@
                                     </button>
                                     <button mat-icon-button matTooltip="Editar" matTooltipPosition="above"
                                         matTooltipShowDelay="500" color="primary" aria-label="Editar"
-                                        (click)="editarContrato(element)" *ngIf="element.estado != ESTADO_ENTREGADO">
+                                        (click)="editarContrato(element)" *ngIf="!ESTADOS_FINALES.includes(element.estado)">
                                         <mat-icon>edit</mat-icon>
                                     </button>
                                     <button mat-icon-button matTooltip="Cambiar Estado" matTooltipPosition="above"
                                         matTooltipShowDelay="500" color="primary" aria-label="Cambiar Estado"
-                                        (click)="cambiarEstado(element)" *ngIf="element.estado != ESTADO_ENTREGADO">
+                                        (click)="cambiarEstado(element)" *ngIf="!ESTADOS_FINALES.includes(element.estado)">
                                         <mat-icon>manage_history</mat-icon>
                                     </button>
                                     <button mat-icon-button matTooltip="Enviar a Contador" matTooltipPosition="above"
                                         matTooltipShowDelay="500" color="primary" aria-label="Enviar a Contador"
-                                        (click)="enviarContador(element)" *ngIf="element.estado == ESTADO_ENTREGADO">
+                                        (click)="enviarContador(element)" *ngIf="ESTADOS_FINALES.includes(element.estado)">
                                         <mat-icon>contact_mail</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="Anular Contrato" matTooltipPosition="above"
+                                        matTooltipShowDelay="500" color="warn" aria-label="Anular Contrato"
+                                        (click)="anularContrato(element)" *ngIf="!ESTADOS_FINALES.includes(element.estado)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="Anular Contrato" matTooltipPosition="above"
+                                        matTooltipShowDelay="500" color="primary" aria-label="Anular Contrato"
+                                        (click)="activarContrato(element)" *ngIf="element.estado == ESTADOS_CONTRATO.ANULADO">
+                                        <mat-icon>post_add</mat-icon>
                                     </button>
                                 </td>
                             </ng-container>
@@ -95,7 +105,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons
+                        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
                             aria-label="Selecciona página">
                         </mat-paginator>
                     </div>

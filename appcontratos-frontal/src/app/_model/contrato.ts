@@ -34,5 +34,6 @@ export enum EstadoContrato {
     EN_PROCESO = 'En Proceso',
     PARA_ENTREGAR = 'Para Entregar',
     ENTREGADO = 'Entregado',
-    CANCELADO = 'Cancelado'
+    CANCELADO = 'Cancelado',
+    ANULADO = 'Anulado'
 }

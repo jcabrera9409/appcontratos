@@ -107,7 +107,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.codigoContrato = this.activateRoute.snapshot.paramMap.get('codigo') || '';
     
     this.contrato = new Contrato();
-    this.dataPlantillas$ = this.plantillaService.listar();
+    this.dataPlantillas$ = this.plantillaService.listarPlantillasActivas();
 
     if(this.codigoContrato != '') {
       this.buscarContrato(this.codigoContrato);

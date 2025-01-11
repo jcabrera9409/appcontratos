@@ -36,7 +36,11 @@ export class CambiarEstadoContratoComponent implements OnInit {
   ngOnInit(): void {
     this.contrato = { ...this.data }
 
-    if(this.contrato.estado == EstadoContrato.NUEVO) {
+    if(this.contrato.estado == EstadoContrato.ANULADO) {
+      this.tituloDialogo = `${this.tituloDialogo} ${EstadoContrato.ANULADO}`;
+      this.mensajeDialogo = `${this.mensajeDialogo} ${EstadoContrato.ANULADO}?`;
+      this.contrato.estado = EstadoContrato.ANULADO;
+    } else if(this.contrato.estado == EstadoContrato.NUEVO) {
       this.tituloDialogo = `${this.tituloDialogo} ${EstadoContrato.EN_PROCESO}`;
       this.mensajeDialogo = `${this.mensajeDialogo} ${EstadoContrato.EN_PROCESO}?`;
       this.contrato.estado = EstadoContrato.EN_PROCESO;

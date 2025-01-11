@@ -16,11 +16,11 @@ export class VendedorService extends GenericService<Vendedor> {
   private mensajeCambio: Subject<Mensaje> = new Subject<Mensaje>();
 
   constructor(protected override http: HttpClient) {
-      super(
-        http,
-        `${environment.HOST}/vendedores`
-      )
-    }
+    super(
+      http,
+      `${environment.HOST}/vendedores`
+    )
+  }
 
   cambiarEstado(changeStatusRequest: ChangeStatusRequest) {
     return this.http.put(`${this.url}/cambiar_estado`, changeStatusRequest);

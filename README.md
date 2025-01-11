@@ -124,14 +124,6 @@ ng serve
 
 4. Guarda los cambios y realiza un seguimiento del estado del contrato.
 
- 
-
-## Licencia
-
-  
-
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
-
   
 
 ## Contacto

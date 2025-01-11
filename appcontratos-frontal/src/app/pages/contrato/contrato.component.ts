@@ -34,7 +34,8 @@ export class ContratoComponent implements OnInit {
 
   selectedIndex = 0;
 
-  ESTADO_ENTREGADO: String = EstadoContrato.ENTREGADO
+  ESTADOS_FINALES: String[] = [EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
+  ESTADOS_CONTRATO = EstadoContrato;
 
   displayedColumns: string[] = ['codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
   displayedColumnsPagos: string[] = ['fechaPago', 'comentario', 'estado', 'pago', 'acciones'];
@@ -87,6 +88,24 @@ export class ContratoComponent implements OnInit {
     });
   }
 
+  anularContrato(contrato: Contrato) {
+    let obj = {...contrato};
+    obj.estado = EstadoContrato.ANULADO;
+    this.dialog.open(CambiarEstadoContratoComponent, {
+      data: obj,
+      width: "500px"
+    });
+  }
+
+  activarContrato(contrato: Contrato) {
+    let obj = {...contrato};
+    obj.estado = EstadoContrato.NUEVO;
+    this.dialog.open(CambiarEstadoContratoComponent, {
+      data: obj,
+      width: "500px"
+    });
+  }
+
   verContrato(contrato: Contrato) {
     this.dialog.open(VisualizarPdfComponent, {
       data: contrato.google_pdf_id
@@ -103,9 +122,9 @@ export class ContratoComponent implements OnInit {
 
   crearTabla(data: Contrato[]) {
     data.sort((a, b) => {
-      if (a.estado === this.ESTADO_ENTREGADO && b.estado !== this.ESTADO_ENTREGADO) {
+      if (this.ESTADOS_FINALES.includes(a.estado) && !this.ESTADOS_FINALES.includes(b.estado)) {
         return 1;
-      } else if (b.estado === this.ESTADO_ENTREGADO && a.estado !== this.ESTADO_ENTREGADO) {
+      } else if (this.ESTADOS_FINALES.includes(b.estado) && !this.ESTADOS_FINALES.includes(a.estado)) {
         return -1; 
       }
       const fechaA = new Date(`${a.fechaEntrega}`).getTime();

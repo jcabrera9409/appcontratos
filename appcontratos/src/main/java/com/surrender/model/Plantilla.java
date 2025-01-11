@@ -29,6 +29,9 @@ public class Plantilla {
 	
 	@Column(nullable = false)
 	public float precio;
+	
+	@Column(nullable = false)
+	public boolean estado;
 
 	@ManyToOne
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -64,6 +67,14 @@ public class Plantilla {
 
 	public float getPrecio() {
 		return precio;
+	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
 	}
 
 	public void setPrecio(float precio) {

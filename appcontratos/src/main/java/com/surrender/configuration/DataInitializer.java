@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.surrender.model.Menu;
@@ -28,6 +29,9 @@ public class DataInitializer implements CommandLineRunner {
 	@Autowired
 	private IVendedorRepo repoVendedor;	
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		inicializarRoles();
@@ -47,6 +51,7 @@ public class DataInitializer implements CommandLineRunner {
 			}
 			Optional<Vendedor> busqueda = repoVendedor.findByCorreo(vendedor.getCorreo());
 			if(!busqueda.isPresent()) {
+				vendedor.setPassword(passwordEncoder.encode(vendedor.getPassword()));
 				Vendedor objNuevo = repoVendedor.save(vendedor);
 				vendedor.setId(objNuevo.getId());
 			} else {
