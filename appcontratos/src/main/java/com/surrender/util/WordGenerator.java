@@ -30,7 +30,7 @@ public class WordGenerator {
 	@Value("${path.temp.files}")
 	private String pathTemp;
 	
-	public File generateWordContrato(Contrato contrato) throws Exception {
+	public File generateWordContrato(Contrato contrato) throws Exception {		
 		String outputWordFile = pathTemp + contrato.getCodigo()+".docx";
 		
 		FileInputStream fis = new FileInputStream(templateContrato);

@@ -83,16 +83,23 @@ public class ContratoController {
 	
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
-		File file = wordGenerator.generateWordContrato(c);
+		
+		c.setGoogle_doc_id("");
+		c.setGoogle_pdf_id("");
+		
+		Contrato obj = service.registrarContratoTransaccional(c);		
+		obj.setCodigo(obj.getCodigo() + "-" + obj.getId());
+		
+		File file = wordGenerator.generateWordContrato(obj);
 		String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
 		String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
-		File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
+		File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, obj.getCodigo() + ".pdf");
 		String idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdContratos); 
 		
-		c.setGoogle_doc_id(idConvertedDoc);
-		c.setGoogle_pdf_id(idConvertedPdf);
+		obj.setGoogle_doc_id(idConvertedDoc);
+		obj.setGoogle_pdf_id(idConvertedPdf);
 		
-		Contrato obj = service.registrarContratoTransaccional(c);
+		obj = service.modificar(obj);
 		
 		Mail mail = new Mail();
 		mail.setTo(obj.getCorreo());
