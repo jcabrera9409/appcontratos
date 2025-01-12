@@ -35,11 +35,17 @@ public class WordGenerator {
 		
 		FileInputStream fis = new FileInputStream(templateContrato);
         XWPFDocument document = new XWPFDocument(fis);
+        
+        String nombreCliente = contrato.getObjCliente().getNombreCliente() + " " + contrato.getObjCliente().getApellidosCliente();
+        
+        if(!contrato.getObjCliente().isEsPersonaNatural()) {
+        	nombreCliente = contrato.getObjCliente().getRazonSocial();
+        }
 		
         replaceText(document, "<CODIGO_CONTRATO>", contrato.getCodigo());
         replaceText(document, "<FECHA_CONTRATO>", contrato.getFechaContrato().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         replaceText(document, "<FECHA_ENTREGA>", contrato.getFechaEntrega().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        replaceText(document, "<NOMBRE_CLIENTE>", contrato.getObjCliente().getNombreCliente() + " " + contrato.getObjCliente().getApellidosCliente());
+        replaceText(document, "<NOMBRE_CLIENTE>", nombreCliente);
         replaceText(document, "<DOCUMENTO_CLIENTE>", contrato.getObjCliente().getDocumentoCliente());
         replaceText(document, "<TELEFONO_CLIENTE>", contrato.getTelefono());
         replaceText(document, "<CORREO_CLIENTE>", contrato.getCorreo());
