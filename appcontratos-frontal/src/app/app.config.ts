@@ -7,6 +7,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { environment } from '../environments/environment.development';
 import { JwtModule } from '@auth0/angular-jwt';
 import { UtilMethods } from './util/util';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const jwtConfig = {
   config: {
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideRouter(routes), 
     provideHttpClient(), 
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };

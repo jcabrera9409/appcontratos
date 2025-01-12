@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class AuthenticationController {
 
 	@Value("${frontend.restablecer.password.url}")
-    private String frontEndUrl;
+    private String frontEndHost;
 	
 	@Autowired
 	private AuthenticationService authService;
@@ -93,7 +93,7 @@ public class AuthenticationController {
 			mail.setSubject("Restablecer Contraseña");
 			mail.setTemplate("email/reset-password-template");
 			
-			String urlRestablecer = frontEndUrl + resetToken.getToken();
+			String urlRestablecer = frontEndHost + "/restablecer/" + resetToken.getToken();
 			
 			Map<String, Object> model = new HashMap<>();
 			model.put("nombreUsuario", vendedor.getNombres());

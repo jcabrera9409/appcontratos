@@ -29,6 +29,9 @@ public class DriveUtil {
 	@Value("${drive.google.credentials}")
 	private String pathCredentials;
 	
+	@Value("${path.temp.files}")
+	private String pathTemp;
+	
 	private final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 		
 	public String uploadFile(File file, String mimeType, String folderId) throws FileNotFoundException, IOException, GeneralSecurityException {
@@ -79,7 +82,7 @@ public class DriveUtil {
 	            .setFields("id")
 	            .execute();
 
-	    String tempFileName = UUID.randomUUID().toString() + ".docx";
+	    String tempFileName = pathTemp + UUID.randomUUID().toString() + ".docx";
 
 	    try (OutputStream outputStream = new FileOutputStream(tempFileName)) {
 	        service.files()
@@ -110,8 +113,8 @@ public class DriveUtil {
 	}
 	
 	public File converGoogleDocToPDF(String wordId, String pdfName) throws FileNotFoundException, IOException, GeneralSecurityException {
-		 Drive service = createDriveService();
-		 
+		 Drive service = createDriveService();		 
+		 pdfName = pathTemp + pdfName;		 
 		 try (OutputStream outputStream = new FileOutputStream(pdfName)) {
 			 service.files().export(wordId, GlobalVariables.PDF_MIME_TYPE)
                     .executeMediaAndDownloadTo(outputStream);
@@ -123,6 +126,7 @@ public class DriveUtil {
 	}
 	
 	public File convertMultipartFileToFile(MultipartFile multipartFile, String name) throws IOException {
+		name = pathTemp + name;
 		File convFile = new File(name);
 		try (FileOutputStream fos = new FileOutputStream(convFile)) {
 			fos.write(multipartFile.getBytes());

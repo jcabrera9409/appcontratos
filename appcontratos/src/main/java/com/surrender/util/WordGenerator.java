@@ -27,8 +27,11 @@ public class WordGenerator {
 	@Value("${document.word.template-contrato}")
 	private String templateContrato;
 	
+	@Value("${path.temp.files}")
+	private String pathTemp;
+	
 	public File generateWordContrato(Contrato contrato) throws Exception {
-		String outputWordFile = contrato.getCodigo()+".docx";
+		String outputWordFile = pathTemp + contrato.getCodigo()+".docx";
 		
 		FileInputStream fis = new FileInputStream(templateContrato);
         XWPFDocument document = new XWPFDocument(fis);
