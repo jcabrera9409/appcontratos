@@ -45,21 +45,32 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.development.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
+              "sourceMap": true
+            },
+            "calidad": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": false,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "replace": "src/environments/environment.development.ts",
+                  "with": "src/environments/environment.calidad.ts"
                 }
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -69,6 +80,9 @@
             },
             "development": {
               "buildTarget": "appcontratos-frontal:build:development"
+            },
+            "calidad": {
+              "buildTarget": "appcontratos-frontal:build:calidad"
             }
           },
           "defaultConfiguration": "development"

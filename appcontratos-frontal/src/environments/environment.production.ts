@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
+    production: true,
     HOST: "http://localhost:8080",
     TOKEN_NAME: "access_token"
 };
