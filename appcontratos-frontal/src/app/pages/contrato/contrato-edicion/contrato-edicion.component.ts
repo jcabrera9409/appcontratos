@@ -29,6 +29,7 @@ import { UtilMethods } from '../../../util/util';
 import { VisualizarPdfComponent } from '../../visualizar-pdf/visualizar-pdf.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import moment from 'moment';
+import { CargaMasivaDetalleContratoComponent } from './carga-masiva-detalle-contrato/carga-masiva-detalle-contrato.component';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -74,7 +75,7 @@ export class ContratoEdicionComponent implements OnInit {
         "tipoCliente": new FormControl('N'),
         "nombresCliente": new FormControl('', Validators.required),
         "apellidosCliente": new FormControl('', Validators.required),
-        "documentoCliente": new FormControl('', Validators.required),
+        "documentoCliente": new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{6,10}|[A-Z]{2,5}\d{6,10})$/)]),
         "razonSocial": new FormControl(''),
         "telefono": new FormControl('', Validators.required),
         "correo": new FormControl('', [Validators.required, Validators.email]),
@@ -240,7 +241,9 @@ export class ContratoEdicionComponent implements OnInit {
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, mensaje);
 
         setTimeout(() => {
-          this.router.navigate(["/pages/contratos"]);
+          this.router.navigate(['/pages/contratos']).then(() => {
+            window.location.reload();
+          });
         }, 3000);
       },
 
@@ -313,9 +316,10 @@ export class ContratoEdicionComponent implements OnInit {
 
     let total = this.dataDetalleContrato.reduce((total, item) => total + UtilMethods.getFloatFixed(item.precioTotal, 2), 0);
     let saldo = 0;
-    let recargo = UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2) || 0;
-    let aCuenta = UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2) || 0;
-    let movilidad = UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2) || 0;
+    
+    let recargo = this.tercerForm.value["recargo"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2);
+    let aCuenta = this.tercerForm.value["aCuenta"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2);
+    let movilidad = this.tercerForm.value["movilidad"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2);
 
     if(disableRecargo) this.tercerForm.controls["recargo"].disable();
     if(disableACuenta) this.tercerForm.controls["aCuenta"].disable();
@@ -510,6 +514,20 @@ export class ContratoEdicionComponent implements OnInit {
     });
   }
 
+  openDialogCargaMasiva() {
+    let dialogRef = this.dialog.open(CargaMasivaDetalleContratoComponent, {
+      width: "800px"
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if(result != null) {
+        this.dataDetalleContrato = [...result];
+        this.crearTabla();
+        this.actualizarTotal();
+      }
+    });
+  }
+
   eliminarDetalle(detalle: DetalleContrato) {
     this.dataDetalleContrato.splice(this.dataDetalleContrato.indexOf(detalle), 1);
     this.crearTabla()
@@ -517,5 +535,13 @@ export class ContratoEdicionComponent implements OnInit {
 
   replaceDescription(text, search, replace) {
     return text.replaceAll(search, replace);
+  }
+
+  convertirMayusculas() {
+    const control = this.primerForm.get('documentoCliente');
+    const valorActual = control?.value;
+    if (valorActual) {
+      control?.setValue(valorActual.toUpperCase(), { emitEvent: false });
+    }
   }
 }

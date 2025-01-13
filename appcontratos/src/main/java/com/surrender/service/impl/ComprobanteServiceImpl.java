@@ -75,4 +75,9 @@ public class ComprobanteServiceImpl extends CRUDImpl<Comprobante, Integer> imple
 	public Optional<DetalleComprobante> buscarDetalleComprobantePorId(Integer id) {
 		return repoDetalle.findById(id);
 	}
+
+	@Override
+	public void actualizarVecesEnviado(int id, int veces_enviado) {
+		repoDetalle.updateVecesEnviado(id, veces_enviado);
+	}
 }

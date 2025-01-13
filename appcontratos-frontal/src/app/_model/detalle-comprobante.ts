@@ -7,6 +7,7 @@ export class DetalleComprobante {
     google_zip_id: String;
     google_pdf_id: String;
     fechaCreacion: String;
+    veces_enviado: number;
     objComprobante: Comprobante;
     objVendedorActualizacion: Vendedor;
     fechaActualizacion: String;

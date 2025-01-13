@@ -4,27 +4,27 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { catchError, EMPTY, switchMap } from 'rxjs';
 import { DetalleComprobante } from '../../../_model/detalle-comprobante';
 import { ComprobanteService } from '../../../_service/comprobante.service';
-import { catchError, EMPTY, switchMap } from 'rxjs';
+import { SendEmailDetalleComprobanteRequest } from '../../../_model/dto';
 import { Mensaje } from '../../../_model/Mensaje';
 
 @Component({
-  selector: 'app-eliminar-detalle-comprobante',
+  selector: 'app-enviar-detalle-comprobante',
   standalone: true,
   imports: [MatProgressSpinner, MatDialogModule, MatButtonModule, CommonModule],
-  templateUrl: './eliminar-detalle-comprobante.component.html',
-  styleUrl: './eliminar-detalle-comprobante.component.css'
+  templateUrl: './enviar-detalle-comprobante.component.html',
+  styleUrl: './enviar-detalle-comprobante.component.css'
 })
-export class EliminarDetalleComprobanteComponent implements OnInit {
-
-  tituloDialogo: String = "Eliminar Comprobante";
-  mensajeDialogo: String = "¿Desea eliminar permanentemente este comprobante?";
+export class EnviarDetalleComprobanteComponent implements OnInit {
+  tituloDialogo: String = "Enviar Comprobante";
+  mensajeDialogo: String = "¿Desea enviar el comprobante al cliente?";
   isLoading: boolean = false;
   detalleComprobante: DetalleComprobante;
 
   constructor(
-    private dialogRef: MatDialogRef<EliminarDetalleComprobanteComponent>,
+    private dialogRef: MatDialogRef<EnviarDetalleComprobanteComponent>,
     @Inject(MAT_DIALOG_DATA) private data: DetalleComprobante,
     private comprobanteService: ComprobanteService
   ) { }
@@ -33,14 +33,17 @@ export class EliminarDetalleComprobanteComponent implements OnInit {
     this.detalleComprobante = { ...this.data }
   }
 
-  eliminar() {
-    let id: number = this.detalleComprobante.id;
+  enviar() {
+    let dto: SendEmailDetalleComprobanteRequest = {
+      id_contrato: this.detalleComprobante.objComprobante.objContrato.id,
+      id_detalleComprobante: this.detalleComprobante.id
+    };
 
     this.isLoading = true;
 
-    this.comprobanteService.eliminarDetalleComprobante(id).pipe(
+    this.comprobanteService.enviarComprobanteCliente(dto).pipe(
       catchError(error => {
-        console.log("Error en la operación (eliminar):", error);
+        console.log("Error en la operación (enviar comprobante):", error);
         this.comprobanteService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema en la operación", error));
         this.isLoading = false;
         return EMPTY;
@@ -55,7 +58,7 @@ export class EliminarDetalleComprobanteComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.comprobanteService.setComprobanteCambio(data);
-          this.comprobanteService.setMensajeCambio(new Mensaje("OK", "Comprobante eliminado correctamente"));
+          this.comprobanteService.setMensajeCambio(new Mensaje("OK", "Comprobante enviado correctamente"));
           this.isLoading = false;
           this.dialogRef.close();
         },

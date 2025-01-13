@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTableDataSource , MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -21,6 +21,7 @@ import { DetallePago } from '../../_model/detalle-pago';
 import { ContratoPagoEdicionComponent } from './contrato-pago-edicion/contrato-pago-edicion.component';
 import { CambiarEstadoContratoPagoComponent } from './cambiar-estado-contrato-pago/cambiar-estado-contrato-pago.component';
 import { EnviarContadorContratoComponent } from './enviar-contador-contrato/enviar-contador-contrato.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-contrato',
@@ -28,7 +29,7 @@ import { EnviarContadorContratoComponent } from './enviar-contador-contrato/envi
   imports: [MatCardModule, MatIconModule, MatInputModule, MatFormFieldModule, MatTableModule, MatPaginatorModule, MatButtonModule, CommonModule, MatTooltipModule],
   templateUrl: './contrato.component.html',
   styleUrl: './contrato.component.css',
-  providers: [{provide: MatPaginatorIntl, useClass: MatPaginatorImpl}]
+  providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorImpl }]
 })
 export class ContratoComponent implements OnInit {
 
@@ -37,7 +38,7 @@ export class ContratoComponent implements OnInit {
   ESTADOS_FINALES: String[] = [EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
   ESTADOS_CONTRATO = EstadoContrato;
 
-  displayedColumns: string[] = ['codigo', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
+  displayedColumns: string[] = ['codigo', 'documentoCliente', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
   displayedColumnsPagos: string[] = ['fechaPago', 'comentario', 'estado', 'pago', 'acciones'];
   dataSource: MatTableDataSource<Contrato>;
   dataSourcePagos: MatTableDataSource<DetallePago>;
@@ -59,19 +60,22 @@ export class ContratoComponent implements OnInit {
     });
 
     this.contratoService.getContratoCambio().subscribe(data => {
-      if(this.contratoSeleccionadoPago.id != undefined && this.contratoSeleccionadoPago.id != null) {
+      if (this.contratoSeleccionadoPago != undefined && this.contratoSeleccionadoPago.id != undefined && this.contratoSeleccionadoPago.id != null) {
         data.forEach(contrato => {
-          if(contrato.id == this.contratoSeleccionadoPago.id) {
-            this.contratoSeleccionadoPago = contrato;
+          if (contrato.id == this.contratoSeleccionadoPago.id) {
+            this.contratoSeleccionadoPago = {...contrato};
+            return;
           }
         });
+        this.crearTablaPagos();
       }
       this.crearTabla(data);
-      this.crearTablaPagos();
+      
     })
 
+
     this.contratoService.getMensajeCambio().subscribe(data => {
-      if(data.estado == "OK") {
+      if (data.estado == "OK") {
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, data.mensaje);
       } else {
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, data.mensaje, data.error);
@@ -89,7 +93,7 @@ export class ContratoComponent implements OnInit {
   }
 
   anularContrato(contrato: Contrato) {
-    let obj = {...contrato};
+    let obj = { ...contrato };
     obj.estado = EstadoContrato.ANULADO;
     this.dialog.open(CambiarEstadoContratoComponent, {
       data: obj,
@@ -98,7 +102,7 @@ export class ContratoComponent implements OnInit {
   }
 
   activarContrato(contrato: Contrato) {
-    let obj = {...contrato};
+    let obj = { ...contrato };
     obj.estado = EstadoContrato.NUEVO;
     this.dialog.open(CambiarEstadoContratoComponent, {
       data: obj,
@@ -125,36 +129,47 @@ export class ContratoComponent implements OnInit {
       if (this.ESTADOS_FINALES.includes(a.estado) && !this.ESTADOS_FINALES.includes(b.estado)) {
         return 1;
       } else if (this.ESTADOS_FINALES.includes(b.estado) && !this.ESTADOS_FINALES.includes(a.estado)) {
-        return -1; 
+        return -1;
       }
       const fechaA = new Date(`${a.fechaEntrega}`).getTime();
       const fechaB = new Date(`${b.fechaEntrega}`).getTime();
       return fechaA - fechaB;
     });
 
-    data.forEach(contrato => {
-      let totalPagado = 0;
-      if(contrato.detallePago != null && contrato.detallePago.length > 0) {
-        contrato.detallePago.forEach(detallePago => {
-          if(detallePago.estado)
-            totalPagado += UtilMethods.getFloatFixed(detallePago.pago, 2);
-        });
-      }
-
-      contrato.saldo = UtilMethods.getFloatFixed(contrato.saldo - totalPagado, 2);
-      
-    });
-
     this.dataSource = new MatTableDataSource<Contrato>(data);
     this.dataSource.paginator = this.paginator;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  calcularTotalPagado(contrato: Contrato) {
+    let totalPagado = 0;
+    if (contrato.detallePago != null && contrato.detallePago.length > 0) {
+      contrato.detallePago.forEach(detallePago => {
+        if (detallePago.estado)
+          totalPagado += UtilMethods.getFloatFixed(detallePago.pago, 2);
+      });
+    }
+    return totalPagado;
   }
 
-  crearTablaPagos(){
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const values = Object.values(data); 
+  
+      return values.some(value => {
+        if (value && typeof value === 'object' && value.hasOwnProperty('documentoCliente')) {
+          return value["documentoCliente"].toString().toLowerCase().includes(filter);
+        }
+  
+        return (value ? value.toString().toLowerCase() : '').includes(filter);
+      });
+    };
+  
+    this.dataSource.filter = filterValue;
+  }
+
+  crearTablaPagos() {
     let detallePago: DetallePago[] = new Array();
     let pagoACuenta: DetallePago = new DetallePago();
     pagoACuenta.id = 0;
@@ -171,18 +186,18 @@ export class ContratoComponent implements OnInit {
       const fechaB = new Date(`${b.fechaPago}`).getTime();
       return fechaB - fechaA;
     });
-    
+
     this.dataSourcePagos = new MatTableDataSource<DetallePago>(detallePago);
   }
 
   getTotalPago() {
     let totalPago = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
     totalPago = UtilMethods.getFloatFixed(totalPago, 2);
-    if(this.contratoSeleccionadoPago.detallePago == null || this.contratoSeleccionadoPago.detallePago.length == undefined) {
+    if (this.contratoSeleccionadoPago.detallePago == null || this.contratoSeleccionadoPago.detallePago.length == undefined) {
       this.contratoSeleccionadoPago.detallePago = new Array();
     }
     this.contratoSeleccionadoPago.detallePago.forEach(detallePago => {
-      if(detallePago.estado)
+      if (detallePago.estado)
         totalPago += UtilMethods.getFloatFixed(detallePago.pago, 2);
     });
 
@@ -191,13 +206,15 @@ export class ContratoComponent implements OnInit {
 
   nuevoDetallePago(detallePago?: DetallePago) {
     let dtoPago: Contrato = new Contrato();
-    dtoPago = {...this.contratoSeleccionadoPago};
+    dtoPago = { ...this.contratoSeleccionadoPago };
+    dtoPago.saldo = dtoPago.saldo - this.calcularTotalPagado(this.contratoSeleccionadoPago);
     dtoPago.detallePago = new Array();
 
-    if(detallePago != null && detallePago.id != undefined) {      
-      dtoPago.detallePago.push(detallePago); 
+    if (detallePago != null && detallePago.id != undefined) {
+      dtoPago.detallePago.push(detallePago);
     }
-    
+
+
     this.dialog.open(ContratoPagoEdicionComponent, {
       data: dtoPago,
       width: "800px"
@@ -217,7 +234,7 @@ export class ContratoComponent implements OnInit {
   }
 
   verPagos(contrato: Contrato) {
-    this.contratoSeleccionadoPago = contrato;
+    this.contratoSeleccionadoPago = {...contrato};
     this.crearTablaPagos();
     this.contratoSeleccionado = true;
     this.selectedIndex = 1;
@@ -229,5 +246,5 @@ export class ContratoComponent implements OnInit {
       width: "800px"
     });
   }
-  
+
 }

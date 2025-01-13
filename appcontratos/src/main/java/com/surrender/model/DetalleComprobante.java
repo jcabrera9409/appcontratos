@@ -31,6 +31,9 @@ public class DetalleComprobante {
 	private String google_pdf_id;
 	
 	@Column(nullable = false)
+	private int veces_enviado;
+	
+	@Column(nullable = false)
 	private LocalDateTime fechaCreacion;
 	
 	@JsonIgnore
@@ -76,6 +79,14 @@ public class DetalleComprobante {
 
 	public void setGoogle_pdf_id(String google_pdf_id) {
 		this.google_pdf_id = google_pdf_id;
+	}
+
+	public int getVeces_enviado() {
+		return veces_enviado;
+	}
+
+	public void setVeces_enviado(int veces_enviado) {
+		this.veces_enviado = veces_enviado;
 	}
 
 	public LocalDateTime getFechaCreacion() {

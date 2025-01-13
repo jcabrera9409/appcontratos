@@ -1,5 +1,6 @@
 package com.surrender.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -40,10 +41,12 @@ public class EmailUtil {
 			helper.setCc(mail.getCc().stream().toArray(String[]::new));
 		}
 		
-		if(mail.getFileToAttach() != null) {
-			String fileName = mail.getFileToAttach().getName();
-			byte[] fileBytes = Files.readAllBytes(mail.getFileToAttach().toPath());
-			helper.addAttachment(fileName, new ByteArrayResource(fileBytes));
+		if(mail.getFileToAttach() != null && mail.getFileToAttach().size() > 0) {
+			for(File file : mail.getFileToAttach()) {
+				String fileName = file.getName();
+				byte[] fileBytes = Files.readAllBytes(file.toPath());
+				helper.addAttachment(fileName, new ByteArrayResource(fileBytes));
+			}			
 		}
 		
 		emailSender.send(message);

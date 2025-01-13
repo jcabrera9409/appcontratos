@@ -18,6 +18,7 @@ import { VisualizarPdfComponent } from '../visualizar-pdf/visualizar-pdf.compone
 import { DetalleComprobante } from '../../_model/detalle-comprobante';
 import { DetalleComprobanteEdicionComponent } from './detalle-comprobante-edicion/detalle-comprobante-edicion.component';
 import { EliminarDetalleComprobanteComponent } from './eliminar-detalle-comprobante/eliminar-detalle-comprobante.component';
+import { EnviarDetalleComprobanteComponent } from './enviar-detalle-comprobante/enviar-detalle-comprobante.component';
 
 @Component({
   selector: 'app-comprobante',
@@ -32,7 +33,7 @@ export class ComprobanteComponent implements OnInit {
   selectedIndex = 0;
 
   displayedColumns: string[] = ['codigo', 'notaContador', 'nroComprobantes', 'acciones'];
-  displayedColumnsDetalleComprobante: string[] = ['fechaCreacion', 'comentario', 'google_pdf_id', 'google_zip_id', 'acciones'];
+  displayedColumnsDetalleComprobante: string[] = ['fechaCreacion', 'comentario', 'google_pdf_id', 'google_zip_id', "veces_enviado", 'acciones'];
   dataSource: MatTableDataSource<Comprobante>;
   dataSourceDetalleComprobante: MatTableDataSource<DetalleComprobante>;
 
@@ -106,6 +107,16 @@ export class ComprobanteComponent implements OnInit {
       data: detalleComprobante,
       width: '500px',
     })
+  }
+
+  enviarDetalleComprobante(detalleComprobante: DetalleComprobante) {
+    let data = {...detalleComprobante};
+    data.objComprobante = {...this.comprobanteSeleccionadoDetalle};
+
+    this.dialog.open(EnviarDetalleComprobanteComponent, {
+      data: data,
+      width: '500px',
+    });
   }
 
   verComprobantes(comprobante: Comprobante) {

@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment.development';
 import { Subject } from 'rxjs';
 import { Mensaje } from '../_model/Mensaje';
 import { DetalleComprobante } from '../_model/detalle-comprobante';
+import { SendEmailDetalleComprobanteRequest } from '../_model/dto';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,10 @@ export class ComprobanteService extends GenericService<Comprobante> {
   eliminarDetalleComprobante(id: number) {
     console.log(id);
     return this.http.delete(`${this.url}/detalle/${id}`);
+  }
+
+  enviarComprobanteCliente(dto: SendEmailDetalleComprobanteRequest) {
+    return this.http.post(`${this.url}/enviar/cliente`, dto);
   }
 
   getComprobanteCambio() {

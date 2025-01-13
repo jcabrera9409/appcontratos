@@ -12,3 +12,8 @@ export interface ChangeStatusRequest {
     objVendedor: Vendedor;
 	fechaActualizacion: String;
 }
+
+export interface SendEmailDetalleComprobanteRequest {
+    id_contrato: number;
+    id_detalleComprobante: number;
+}

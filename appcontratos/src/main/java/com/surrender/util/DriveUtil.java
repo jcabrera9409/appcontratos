@@ -101,6 +101,19 @@ public class DriveUtil {
 	    return existingFileId;
 	}
 	
+	public File downloadFile(String fileId, String nombre) throws IOException, GeneralSecurityException {
+	    Drive service = createDriveService();
+
+	    String pathFile = pathTemp + nombre;
+	    File file = new File(pathFile);
+
+	    try (OutputStream outputStream = new FileOutputStream(file)) {
+	        service.files().get(fileId).executeMediaAndDownloadTo(outputStream);
+	    }
+
+	    return file;
+	}
+	
 	public boolean deleteFile(String fileId) {
 		try {
 			Drive service = createDriveService();

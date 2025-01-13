@@ -96,6 +96,7 @@ export class ContratoPagoEdicionComponent {
       )
       .subscribe({
         next: (data) => {
+          console.log(data);
           this.contratoService.setContratoCambio(data); 
           const mensaje = detallePago.id != null && detallePago.id > 0
             ? "Pago Actualizado"

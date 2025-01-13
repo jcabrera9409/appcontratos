@@ -54,7 +54,7 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 
 	@Transactional
 	@Override
-	public Contrato modificarContratoTransaccional(Contrato contrato) {
+	public Contrato modificarContratoTransaccional(Contrato contrato) {		
 		if(!contrato.getObjVendedorActualizacion().getCorreo().equalsIgnoreCase(StringUtils.EMPTY)) {
 			contrato.setObjVendedorActualizacion(repoVendedor.findByCorreo(contrato.getObjVendedorActualizacion().getCorreo()).get());
 		}		

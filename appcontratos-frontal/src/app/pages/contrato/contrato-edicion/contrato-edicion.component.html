@@ -31,7 +31,7 @@
                         <mat-form-field>
                             <mat-label>Número de Documento/RUC</mat-label>
                             <input formControlName="documentoCliente" matInput placeholder="Ingresar Documento/RUC"
-                                (blur)="buscarCliente()" (keydown.enter)="buscarCliente()">
+                                (blur)="buscarCliente()" (keydown.enter)="buscarCliente()" (input)="convertirMayusculas()">
                         </mat-form-field>
                         <div *ngIf="isPersonaNatural">
                             <mat-form-field>
@@ -77,18 +77,20 @@
                 <form [formGroup]="segundoForm" (submit)="segundoPaso()">
                     <ng-template matStepLabel>Detalle</ng-template>
                     <div class="example-container">
-                        <mat-form-field>
-                            <mat-label>Plantilla</mat-label>
-                            <mat-select formControlName="cmbPlantilla">
-                                <mat-option>-- Selecciona una Plantilla --</mat-option>
-                                <mat-option *ngFor="let p of(dataPlantillas$ | async)"
-                                    [value]="p">{{p.nombre}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <span class="spacer"></span>
-                        <button mat-flat-button color="primary" type="button" class="botonAgregarDetalle"
-                            (click)="openDialog()">Agregar</button>
-                        <br />
+                        <div class="container-detalle-select">
+                            <mat-form-field>
+                                <mat-label>Plantilla</mat-label>
+                                <mat-select formControlName="cmbPlantilla">
+                                    <mat-option>-- Selecciona una Plantilla --</mat-option>
+                                    <mat-option *ngFor="let p of(dataPlantillas$ | async)"
+                                        [value]="p">{{p.nombre}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <button mat-flat-button color="primary" type="button" class="botonAgregarDetalle"
+                                (click)="openDialog()">Agregar</button>
+                            <button mat-flat-button color="primary" type="button" class="botonCargaMasiva"
+                                (click)="openDialogCargaMasiva()">Carga Masiva</button>
+                        </div>
                         <div class="responsive-table">
                             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                                 <ng-container matColumnDef="cantidad">
@@ -128,7 +130,8 @@
                     </div>
                     <div class="stepper-buttons">
                         <button mat-button matStepperPrevious>Anterior</button>
-                        <button mat-button matStepperNext [disabled]="segundoForm.invalid || this.dataDetalleContrato.length == 0"
+                        <button mat-button matStepperNext
+                            [disabled]="segundoForm.invalid || this.dataDetalleContrato.length == 0"
                             type="submit">Siguiente</button>
                     </div>
                 </form>
@@ -187,8 +190,10 @@
                     <div class="stepper-buttons">
                         <button mat-button matStepperPrevious>Anterior</button>
                         <span class="spacer"></span>
-                        <button mat-button [disabled]="tercerForm.invalid" type="button" (click)="previsualizarContrato()">Previsualizar</button>
-                        <button mat-button [disabled]="tercerForm.invalid" type="submit" color="primary">Enviar Contrato</button>
+                        <button mat-button [disabled]="tercerForm.invalid" type="button"
+                            (click)="previsualizarContrato()">Previsualizar</button>
+                        <button mat-button [disabled]="tercerForm.invalid" type="submit" color="primary">Enviar
+                            Contrato</button>
                     </div>
                 </form>
             </mat-step>

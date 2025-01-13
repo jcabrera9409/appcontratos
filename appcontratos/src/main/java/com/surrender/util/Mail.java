@@ -12,11 +12,11 @@ public class Mail {
 	private String subject;
 	private String template;
 	private Map<String, Object> model;
-	private File fileToAttach;
+	private List<File> fileToAttach;
 	
 	public Mail() {}
 	
-	public Mail(String from, String to, String subject, String template, Map<String, Object> model, File fileToAttach, List<String> cc) {
+	public Mail(String from, String to, String subject, String template, Map<String, Object> model, List<File> fileToAttach, List<String> cc) {
 		this.to = to;
 		this.cc = cc;
 		this.subject = subject;
@@ -72,11 +72,17 @@ public class Mail {
 		this.model = model;
 	}
 
-	public File getFileToAttach() {
+	public List<File> getFileToAttach() {
 		return fileToAttach;
 	}
 
 	public void setFileToAttach(File fileToAttach) {
+		if(this.fileToAttach == null)
+			this.fileToAttach = new ArrayList<>();
+		this.fileToAttach.add(fileToAttach);
+	}
+	
+	public void setFileToAttach(List<File> fileToAttach) {
 		this.fileToAttach = fileToAttach;
 	}
 	

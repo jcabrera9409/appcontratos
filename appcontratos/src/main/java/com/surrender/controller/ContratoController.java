@@ -2,6 +2,7 @@ package com.surrender.controller;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,6 +150,7 @@ public class ContratoController {
 	public ResponseEntity<?> modificar(@RequestBody Contrato c) throws Exception {
 		Contrato objBusqueda = service.listarPorId(c.getId());
 		if(objBusqueda != null) {
+			c.setEstado(objBusqueda.getEstado());
 			c.setGoogle_doc_id(objBusqueda.getGoogle_doc_id());
 			c.setGoogle_pdf_id(objBusqueda.getGoogle_pdf_id());
 			c.setFechaContrato(objBusqueda.getFechaContrato());
@@ -160,6 +162,7 @@ public class ContratoController {
 			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
 			driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 
 			
+			c.setDetallePago(objBusqueda.getDetallePago());
 			Contrato obj = service.modificarContratoTransaccional(c);
 			
 			Mail mail = new Mail();

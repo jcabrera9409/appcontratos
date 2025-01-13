@@ -1,0 +1,23 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="example-container">
+        <span>Recuerda que esta acción sobrescribirá los items que hayas cargado antes.</span> <br>
+        <span>Las cabeceras deben estar en el orden Plantilla, Cantidad, Descripcion, Precio Unitario</span>
+        <div class="file-upload" onclick="document.getElementById('fileCSV').click()">
+            <button mat-raised-button color="primary" type="button">
+                Cargar Archivo Excel
+            </button>
+            {{nombreArchivoCSV}}
+            <input [hidden]="true" type="file" id="fileCSV" formControlName="fileCSV" accept=".xlsx, .xls"
+                (change)="onFileChange($event)">
+        </div>
+        <span>{{mensajeDialogo}}</span>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" type="button" (click)="operar()">Agregar</button>
+</mat-dialog-actions>

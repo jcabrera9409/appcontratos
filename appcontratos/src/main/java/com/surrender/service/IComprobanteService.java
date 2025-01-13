@@ -11,4 +11,5 @@ public interface IComprobanteService extends ICRUD<Comprobante, Integer> {
 	DetalleComprobante registrarDetalleComprobante(DetalleComprobante detalleComprobante);
 	void eliminarDetalleComprobante(Integer id);
 	Optional<DetalleComprobante> buscarDetalleComprobantePorId(Integer id);
+	void actualizarVecesEnviado(int id, int veces_enviado);
 }

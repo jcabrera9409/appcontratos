@@ -1,7 +1,9 @@
 package com.surrender.controller;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +13,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.surrender.model.Comprobante;
+import com.surrender.model.Contrato;
 import com.surrender.model.DetalleComprobante;
 import com.surrender.service.IComprobanteService;
+import com.surrender.service.IContratoService;
 import com.surrender.util.DriveUtil;
+import com.surrender.util.EmailUtil;
 import com.surrender.util.GlobalVariables;
+import com.surrender.util.Mail;
+
+import dto.SendEmailDetalleComprobanteRequest;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +49,12 @@ public class ComprobanteController {
 	
 	@Autowired
 	private IComprobanteService service;
+	
+	@Autowired
+	private IContratoService serviceContrato;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 	
 	@GetMapping
 	public ResponseEntity<?> listar() throws Exception {
@@ -104,6 +117,49 @@ public class ComprobanteController {
 		
 		return new ResponseEntity<DetalleComprobante>(obj, HttpStatus.OK);
 	}
+	
+	@PostMapping("/enviar/cliente")
+	public ResponseEntity<?> enviarDetalleCliente(@RequestBody SendEmailDetalleComprobanteRequest request) throws Exception {
+		Optional<DetalleComprobante> detalle = service.buscarDetalleComprobantePorId(request.getId_detalleComprobante());
+		Contrato contrato = serviceContrato.listarPorId(request.getId_contrato());
+		
+		if(detalle.isPresent() && contrato != null) {
+			File pdfFile = driveService.downloadFile(detalle.get().getGoogle_pdf_id(), "comprobante.pdf");
+			File zipFile = driveService.downloadFile(detalle.get().getGoogle_zip_id(), "comprobante.zip");
+			
+			Mail mail = new Mail();
+			mail.setTo(contrato.getCorreo());
+			mail.setSubject("Te enviamos el comprobante de tu compra " + contrato.getCodigo() + "!");
+			mail.setTemplate("email/comprobante-template");
+			mail.addCc(contrato.getObjVendedor().getCorreo());
+			
+			String nombreUsuario = contrato.getObjCliente().getNombreCliente();
+			if(!contrato.getObjCliente().isEsPersonaNatural()) {
+				nombreUsuario = contrato.getObjCliente().getRazonSocial();
+			}
+			
+			Map<String, Object> model = new HashMap<>();
+			model.put("nombreUsuario", nombreUsuario);
+			
+			mail.setModel(model);
+			mail.setFileToAttach(pdfFile);
+			mail.setFileToAttach(zipFile);
+			
+			emailUtil.enviarMail(mail);
+			
+			pdfFile.delete();
+			zipFile.delete();
+			
+			service.actualizarVecesEnviado(detalle.get().getId(), detalle.get().getVeces_enviado() + 1);
+			
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		}
+		
+		
+	}
+	
 	
 	@DeleteMapping("/detalle/{id}")
 	public ResponseEntity<?> eliminarDetalleComprobante(@PathVariable Integer id) throws Exception {
