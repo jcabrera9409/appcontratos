@@ -75,7 +75,7 @@ export class ContratoEdicionComponent implements OnInit {
         "tipoCliente": new FormControl('N'),
         "nombresCliente": new FormControl('', Validators.required),
         "apellidosCliente": new FormControl('', Validators.required),
-        "documentoCliente": new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{6,10}|[A-Z]{2,5}\d{6,10})$/)]),
+        "documentoCliente": new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{6,11}|[A-Z]{2,5}\d{6,10})$/)]),
         "razonSocial": new FormControl(''),
         "telefono": new FormControl('', Validators.required),
         "correo": new FormControl('', [Validators.required, Validators.email]),

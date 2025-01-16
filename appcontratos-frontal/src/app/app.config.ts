@@ -12,7 +12,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 const jwtConfig = {
   config: {
     tokenGetter: UtilMethods.getJwtToken,
-    allowedDomains: [environment.HOST.substring(7)], 
+    allowedDomains: environment.DOMAIN, 
     disallowedRoutes: [`${environment.HOST}/auth/login`], 
   }
 };

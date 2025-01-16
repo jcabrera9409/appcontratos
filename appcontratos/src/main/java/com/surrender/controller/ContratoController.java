@@ -2,7 +2,6 @@ package com.surrender.controller;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,11 +155,35 @@ public class ContratoController {
 			c.setFechaContrato(objBusqueda.getFechaContrato());
 			c.setObjVendedor(objBusqueda.getObjVendedor());
 			
+			/*File file = wordGenerator.generateWordContrato(obj);
+			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
+			String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
+			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, obj.getCodigo() + ".pdf");
+			String idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdContratos); 
+			
+			obj.setGoogle_doc_id(idConvertedDoc);
+			obj.setGoogle_pdf_id(idConvertedPdf);*/
+			
+			
 			File file = wordGenerator.generateWordContrato(c);
 			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
-			String idConvertedDoc = driveService.convertWordToGoogleDocAsNewVersion(idUploadFileWord, c.getGoogle_doc_id());
+			
+			String idConvertedDoc = c.getGoogle_doc_id();			
+			if(idConvertedDoc == null || idConvertedDoc.isEmpty()) {
+				idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
+				c.setGoogle_doc_id(idConvertedDoc);
+			} else {
+				idConvertedDoc = driveService.convertWordToGoogleDocAsNewVersion(idUploadFileWord, c.getGoogle_doc_id());				
+			}	
 			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, c.getCodigo() + ".pdf");
-			driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 
+			
+			String idConvertedPdf = c.getGoogle_pdf_id();
+			if(idConvertedPdf == null || idConvertedPdf.isEmpty()) {
+				idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdContratos); 
+				c.setGoogle_pdf_id(idConvertedPdf);
+			} else {
+				driveService.uploadFileAsNewVersion(pdfFile, GlobalVariables.PDF_MIME_TYPE, c.getGoogle_pdf_id()); 		
+			}
 			
 			c.setDetallePago(objBusqueda.getDetallePago());
 			Contrato obj = service.modificarContratoTransaccional(c);

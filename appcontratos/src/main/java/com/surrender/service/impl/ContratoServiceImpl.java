@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.surrender.model.Cliente;
 import com.surrender.model.Contrato;
 import com.surrender.model.DetallePago;
 import com.surrender.repo.IClienteRepo;
@@ -41,6 +42,10 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	@Override
 	public Contrato registrarContratoTransaccional(Contrato contrato) {
 		if(contrato.getObjCliente().getId() <= 0) {
+			Cliente cliente = repoCliente.findByDocumentoCliente(contrato.getObjCliente().getDocumentoCliente());
+			if(cliente != null) {
+				contrato.getObjCliente().setId(cliente.getId());
+			}
 			contrato.setObjCliente(repoCliente.save(contrato.getObjCliente()));
 		}
 		

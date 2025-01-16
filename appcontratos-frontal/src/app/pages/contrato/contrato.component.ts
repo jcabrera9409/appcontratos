@@ -35,6 +35,7 @@ export class ContratoComponent implements OnInit {
 
   selectedIndex = 0;
 
+  ESTADOS_NOTA: String[] = [EstadoContrato.PARA_ENTREGAR, EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
   ESTADOS_FINALES: String[] = [EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
   ESTADOS_CONTRATO = EstadoContrato;
 

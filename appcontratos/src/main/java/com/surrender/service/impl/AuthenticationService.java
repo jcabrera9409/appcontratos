@@ -131,7 +131,7 @@ public class AuthenticationService {
     	case "menu-listar-correo":
     	case "detalle-pago":
     	case "comprobante":
-    		metodoRol="VENDEDOR,ADMIN,ROOT";
+    		metodoRol="CONTADOR,VENDEDOR,ADMIN,ROOT";
     		break;
     	case "vendedor":
     	case "plantilla":
