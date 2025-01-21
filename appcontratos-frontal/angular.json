@@ -58,6 +58,17 @@
                   "with": "src/environments/environment.calidad.ts"
                 }
               ]
+            },
+            "ephemeral": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.development.ts",
+                  "with": "src/environments/environment.ephemeral.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "development"
@@ -104,5 +115,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

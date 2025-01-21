@@ -1,27 +1,52 @@
-version: '3.8'
+version: '2'
 
 services:
-  backend:
-    build: .
+  contratosdb:
+    image: mysql:8.0
+    container_name: contratosdb
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: $NAME_BD
+      MYSQL_USER: $USER_BD
+      MYSQL_PASSWORD: $PASSWORD_BD
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  contratosback:
+    build: 
+      context: .
+      dockerfile: Dockerfile.back
+    container_name: contratosback
+    restart: always
+    environment:
+      DOCUMENT_TEMPLATE_CONTRACT_PATH: /usr/local/files/plantilla_contrato.docx
+      FOLDER_ID_COMPROBANTES: $FOLDER_ID_COMPROBANTES
+      FOLDER_ID_CONTRATOS: $FOLDER_ID_CONTRATOS
+      FRONT_END_RESTABLECER_PASSWORD_URL: http://contratosfront/#
+      GOOGLE_CREDENTIALS_PATH: /usr/local/files/credentials.json
+      HOST_BD: contratosdb
+      JWT_SECRET_KEY: $JWT_SECRET_KEY
+      NAME_BD: $NAME_BD
+      PASSWORD_BD: $PASSWORD_BD
+      PATH_TEMP: /usr/local/tomcat/logs/
+      PORT_BD: $PORT_BD
+      USER_BD: $USER_BD
+      USERNAME_EMAIL: $USERNAME_EMAIL
+      PASSWORD_EMAIL: $PASSWORD_EMAIL
     ports:
       - "8080:8080"
-    environment:
-      - FOLDER_ID_COMPROBANTES=${FOLDER_ID_COMPROBANTES}
-      - FOLDER_ID_CONTRATOS=${FOLDER_ID_CONTRATOS}
-      - FRONT_END_RESTABLECER_PASSWORD_URL=${FRONT_END_RESTABLECER_PASSWORD_URL}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - USERNAME_EMAIL=${USERNAME_EMAIL}
-      - PASSWORD_EMAIL=${PASSWORD_EMAIL}
-      - DOCUMENT_TEMPLATE_CONTRACT_PATH=${DOCUMENT_TEMPLATE_CONTRACT_PATH}
-      - GOOGLE_CREDENTIALS_PATH=${GOOGLE_CREDENTIALS_PATH}
-      - HOST_BD=${HOST_BD}
-      - PORT_BD=${PORT_BD}
-      - NAME_BD=${NAME_BD}
-      - USER_BD=${USER_BD}
-      - PASSWORD_BD=${PASSWORD_BD}
+    volumes:
+      - /home/surrender/proyectos/appcontratos/logs:/usr/local/tomcat/logs
 
-  frontend:
+  contratosfront:
     build:
-      context: ./appcontratos-frontal
+      context: .
+      dockerfile: Dockerfile.front
+    container_name: contratosfront
+    restart: always
     ports:
-      - "4200:80"
+      - "80:8080"
+
+volumes:
+  mysql-data:

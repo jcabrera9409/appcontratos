@@ -1,0 +1,12 @@
+FROM tomcat:10-jdk21
+
+RUN mkdir /usr/local/files
+
+COPY ./appcontratos/plantilla_contrato.docx /usr/local/files/plantilla_contrato.docx
+COPY ./credentials.json /usr/local/files/credentials.json
+
+COPY ./appcontratos/target/*.war /usr/local/tomcat/webapps/appcontratos.war
+
+
+CMD ["catalina.sh", "run"]
+

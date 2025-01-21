@@ -1,0 +1,6 @@
+FROM tomcat:10-jdk21
+
+COPY ./appcontratos-frontal/dist/appcontratos-frontal/browser/ /usr/local/tomcat/webapps/ROOT/
+
+CMD ["catalina.sh", "run"]
+
