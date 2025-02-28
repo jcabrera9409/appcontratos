@@ -87,7 +87,7 @@ public class ComprobanteController {
 	@PostMapping(value = "/detalle", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> registrarDetalleComprobante(
 			@RequestPart("filePDF") MultipartFile filePDF,
-			@RequestPart("fileZIP") MultipartFile fileZIP,
+			@RequestPart(value = "fileZIP", required = false) MultipartFile fileZIP,
 			@RequestPart("comprobante") Comprobante c) throws Exception {
 		DetalleComprobante detalle = c.getDetalleComprobante().get(0);
 		detalle.setComentario(c.getDetalleComprobante().get(0).getComentario());
@@ -97,20 +97,19 @@ public class ComprobanteController {
 		
 		DetalleComprobante obj = service.registrarDetalleComprobante(detalle);
 		
-		String filePDFName = c.getObjContrato().getCodigo() + "-" + obj.getId() + ".pdf";
-		String fileZIPName = c.getObjContrato().getCodigo() + "-" + obj.getId() + ".zip";
-		
-		File pdfFile = driveService.convertMultipartFileToFile(filePDF, filePDFName);
-		File zipFile = driveService.convertMultipartFileToFile(fileZIP, fileZIPName);
-		
-		String idUploadPDF = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdComprobantes); 
-		String idUploadZIP = driveService.uploadFile(zipFile, GlobalVariables.ZIP_MIME_TYPE, folderIdComprobantes); 
-		
+		String filePDFName = c.getObjContrato().getCodigo() + "-" + obj.getId() + ".pdf";		
+		File pdfFile = driveService.convertMultipartFileToFile(filePDF, filePDFName);		
+		String idUploadPDF = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdComprobantes); 		
 		pdfFile.delete();
-		zipFile.delete();
-		
 		obj.setGoogle_pdf_id(idUploadPDF);
-		obj.setGoogle_zip_id(idUploadZIP);
+		
+		if(fileZIP != null && !fileZIP.isEmpty()) {
+			String fileZIPName = c.getObjContrato().getCodigo() + "-" + obj.getId() + ".zip";
+			File zipFile = driveService.convertMultipartFileToFile(fileZIP, fileZIPName);
+			String idUploadZIP = driveService.uploadFile(zipFile, GlobalVariables.ZIP_MIME_TYPE, folderIdComprobantes); 
+			zipFile.delete();
+			obj.setGoogle_zip_id(idUploadZIP);
+		}
 		
 		obj = service.registrarDetalleComprobante(obj);
 		
@@ -124,7 +123,10 @@ public class ComprobanteController {
 		
 		if(detalle.isPresent() && contrato != null) {
 			File pdfFile = driveService.downloadFile(detalle.get().getGoogle_pdf_id(), "comprobante.pdf");
-			File zipFile = driveService.downloadFile(detalle.get().getGoogle_zip_id(), "comprobante.zip");
+			File zipFile = null;
+			if(!detalle.get().getGoogle_zip_id().equalsIgnoreCase("")) {
+				zipFile = driveService.downloadFile(detalle.get().getGoogle_zip_id(), "comprobante.zip");
+			}
 			
 			Mail mail = new Mail();
 			mail.setTo(contrato.getCorreo());
@@ -142,12 +144,12 @@ public class ComprobanteController {
 			
 			mail.setModel(model);
 			mail.setFileToAttach(pdfFile);
-			mail.setFileToAttach(zipFile);
+			if(zipFile != null) mail.setFileToAttach(zipFile);
 			
 			emailUtil.enviarMail(mail);
 			
 			pdfFile.delete();
-			zipFile.delete();
+			if(zipFile != null) zipFile.delete();
 			
 			service.actualizarVecesEnviado(detalle.get().getId(), detalle.get().getVeces_enviado() + 1);
 			

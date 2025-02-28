@@ -31,7 +31,7 @@ export class DetalleComprobanteEdicionComponent implements OnInit {
   nombreArchivoPDF: String = "Seleccionar archivo...";
   nombreArchivoZIP: String = "Seleccionar archivo...";
   filePDFSeleccionado: File;
-  fileZIPSeleccionado: File;
+  fileZIPSeleccionado: File | null = null;
 
   isLoading: boolean = false;
   tituloDialogo: String = "Agregar Comprobante";
@@ -48,7 +48,7 @@ export class DetalleComprobanteEdicionComponent implements OnInit {
     this.form = new FormGroup({
       "comentario": new FormControl(''),
       "filePDF": new FormControl(null, [Validators.required]),
-      "fileZIP": new FormControl(null, [Validators.required]),
+      "fileZIP": new FormControl(null),
     });
   }
 

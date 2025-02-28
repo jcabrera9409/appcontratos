@@ -30,7 +30,7 @@ export class ComprobanteService extends GenericService<Comprobante> {
   registrarDetalleComprobante(filePDF: File, fileZIP: File, comprobante: Comprobante) {
     let formData = new FormData();
     formData.append('filePDF', filePDF);
-    formData.append('fileZIP', fileZIP);
+    if(fileZIP) formData.append('fileZIP', fileZIP);
     formData.append('comprobante', new Blob([JSON.stringify(comprobante)], {type: 'application/json'}));
     
     return this.http.post(`${this.url}/detalle`, formData);
