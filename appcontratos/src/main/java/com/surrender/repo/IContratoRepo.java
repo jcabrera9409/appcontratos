@@ -1,6 +1,7 @@
 package com.surrender.repo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,6 @@ public interface IContratoRepo extends IGenericRepo<Contrato, Integer> {
 	    );
 	
 	Contrato findByCodigo(String codigo);
+	
+	List<Contrato> findByEstadoNot(String estado);
 }

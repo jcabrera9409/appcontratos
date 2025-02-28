@@ -21,14 +21,37 @@
         </mat-form-field>
 
         <mat-form-field>
+            <mat-label>Tipo Abono</mat-label>
+            <mat-select formControlName="tipoAbono"
+                (selectionChange)="onChangeTipoAbono($event)">
+                <mat-option *ngFor="let abono of tipoAbonoPago" [value]="abono">
+                    {{ abono.nombre }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Recargo</mat-label>
+            <input formControlName="recargo" matInput placeholder="Ingresar Recargo" type="number"
+                required value="0" (input)="actualizarTotal()" />
+        </mat-form-field>
+
+        <mat-form-field>
             <mat-label>Monto de Pago</mat-label>
-            <input formControlName="pago" matInput placeholder="Ingresar Monto de Pago" >
+            <input formControlName="pago" matInput placeholder="Ingresar Monto de Pago" type="number"
+            (input)="actualizarTotal()" >
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Comentario</mat-label>
             <input formControlName="comentario" matInput placeholder="Ingresar algun comentario" >
-        </mat-form-field>    
+        </mat-form-field>   
+        
+        <mat-form-field>
+            <mat-label>Total</mat-label>
+            <input formControlName="total" matInput placeholder="Ingresar Total" type="number" required
+                value="0" />
+        </mat-form-field>
 </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

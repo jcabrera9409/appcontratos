@@ -31,7 +31,8 @@
                         <mat-form-field>
                             <mat-label>Número de Documento/RUC</mat-label>
                             <input formControlName="documentoCliente" matInput placeholder="Ingresar Documento/RUC"
-                                (blur)="buscarCliente()" (keydown.enter)="buscarCliente()" (input)="convertirMayusculas()">
+                                (blur)="buscarCliente()" (keydown.enter)="buscarCliente()"
+                                (input)="convertirMayusculas()">
                         </mat-form-field>
                         <div *ngIf="isPersonaNatural">
                             <mat-form-field>
@@ -160,15 +161,11 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Tipo Abono</mat-label>
-                            <mat-select formControlName="cmbTipoAbono" (valueChange)="onChangeTipoAbono($event)">
-                                <mat-option value="PLIN">PLIN</mat-option>
-                                <mat-option value="YAPE">YAPE</mat-option>
-                                <mat-option value="Scotiabank">Scotiabank</mat-option>
-                                <mat-option value="Interbank">Interbank</mat-option>
-                                <mat-option value="BCP">BCP</mat-option>
-                                <mat-option value="BBVA">BBVA</mat-option>
-                                <mat-option value="Efectivo">Efectivo</mat-option>
-                                <mat-option value="Niubiz">Niubiz</mat-option>
+                            <mat-select formControlName="cmbTipoAbono"
+                                (selectionChange)="onChangeTipoAbono($event)">
+                                <mat-option *ngFor="let abono of tipoAbonoContrato" [value]="abono">
+                                    {{ abono.nombre }}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field>

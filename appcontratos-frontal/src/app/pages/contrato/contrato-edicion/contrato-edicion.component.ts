@@ -14,7 +14,7 @@ import { ClienteService } from '../../../_service/cliente.service';
 import { Cliente } from '../../../_model/cliente';
 import { PlantillaService } from '../../../_service/plantilla.service';
 import { Plantilla } from '../../../_model/plantilla';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DetalleEdicionComponent } from './detalle-edicion/detalle-edicion.component';
@@ -30,6 +30,7 @@ import { VisualizarPdfComponent } from '../../visualizar-pdf/visualizar-pdf.comp
 import { Router, ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { CargaMasivaDetalleContratoComponent } from './carga-masiva-detalle-contrato/carga-masiva-detalle-contrato.component';
+import { tipoAbono } from '../../../_model/tipo-abono';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -58,6 +59,8 @@ export class ContratoEdicionComponent implements OnInit {
   segundoForm: FormGroup;
   tercerForm: FormGroup;
 
+  tipoAbonoContrato = [...tipoAbono];
+
   @ViewChild('stepper') stepper!: MatStepper;
 
   constructor(
@@ -67,50 +70,50 @@ export class ContratoEdicionComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,
-    private activateRoute: ActivatedRoute) { 
+    private activateRoute: ActivatedRoute) {
 
-      this.primerForm = new FormGroup({
-        "id": new FormControl(0),
-        "idCliente": new FormControl(0),
-        "tipoCliente": new FormControl('N'),
-        "nombresCliente": new FormControl('', Validators.required),
-        "apellidosCliente": new FormControl('', Validators.required),
-        "documentoCliente": new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{6,11}|[A-Z]{2,5}\d{6,10})$/)]),
-        "razonSocial": new FormControl(''),
-        "telefono": new FormControl('', Validators.required),
-        "correo": new FormControl('', [Validators.required, Validators.email]),
-        "direccion": new FormControl('', Validators.required),
-        "referencia": new FormControl(''),
-      });
-  
-      this.segundoForm = new FormGroup({
-        "cmbPlantilla": new FormControl('')
-      });
-  
-      let fechaNueva = new Date(this.fechaActual);
-      fechaNueva.setDate(fechaNueva.getDate() + 7);
-  
-      this.tercerForm = new FormGroup({
-        "fechaEntrega": new FormControl(fechaNueva),
-        "movilidad": new FormControl(0),
-        "aCuenta": new FormControl(0),
-        "cmbTipoAbono": new FormControl('PLIN'),
-        "recargo": new FormControl({ value: 0, disabled: true }),
-        "saldo": new FormControl({ value: 0, disabled: true }),
-        "total": new FormControl({ value: 0, disabled: true })
-      });
-  
-      this.crearTabla();
+    this.primerForm = new FormGroup({
+      "id": new FormControl(0),
+      "idCliente": new FormControl(0),
+      "tipoCliente": new FormControl('N'),
+      "nombresCliente": new FormControl('', Validators.required),
+      "apellidosCliente": new FormControl('', Validators.required),
+      "documentoCliente": new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{6,11}|[A-Z]{2,5}\d{6,10})$/)]),
+      "razonSocial": new FormControl(''),
+      "telefono": new FormControl('', Validators.required),
+      "correo": new FormControl('', [Validators.required, Validators.email]),
+      "direccion": new FormControl('', Validators.required),
+      "referencia": new FormControl(''),
+    });
 
-    }
+    this.segundoForm = new FormGroup({
+      "cmbPlantilla": new FormControl('')
+    });
+
+    let fechaNueva = new Date(this.fechaActual);
+    fechaNueva.setDate(fechaNueva.getDate() + 7);
+
+    this.tercerForm = new FormGroup({
+      "fechaEntrega": new FormControl(fechaNueva),
+      "movilidad": new FormControl(0),
+      "aCuenta": new FormControl(0),
+      "cmbTipoAbono": new FormControl('', Validators.required),
+      "recargo": new FormControl({ value: 0, disabled: true }),
+      "saldo": new FormControl({ value: 0, disabled: true }),
+      "total": new FormControl({ value: 0, disabled: true })
+    });
+
+    this.crearTabla();
+
+  }
 
   ngOnInit(): void {
     this.codigoContrato = this.activateRoute.snapshot.paramMap.get('codigo') || '';
-    
+
     this.contrato = new Contrato();
     this.dataPlantillas$ = this.plantillaService.listarPlantillasActivas();
 
-    if(this.codigoContrato != '') {
+    if (this.codigoContrato != '') {
       this.buscarContrato(this.codigoContrato);
     }
   }
@@ -148,7 +151,7 @@ export class ContratoEdicionComponent implements OnInit {
       this.primerForm.controls["razonSocial"].disable();
     }
 
-    if(disableDocumentoCliente) this.primerForm.controls["documentoCliente"].disable();
+    if (disableDocumentoCliente) this.primerForm.controls["documentoCliente"].disable();
 
     this.contrato.telefono = this.primerForm.value["telefono"];
     this.contrato.direccionEntrega = this.primerForm.value["direccion"];
@@ -178,7 +181,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.fechaEntrega = moment(this.tercerForm.value["fechaEntrega"]).format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.movilidad = UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2);
     this.contrato.aCuenta = UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2);
-    this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"];
+    this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"].nombre;
     this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2) : 0;
     this.contrato.estado = EstadoContrato.NUEVO;
     this.contrato.codigo = UtilMethods.generateRandomCode();
@@ -187,11 +190,11 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.objVendedorActualizacion = null;
     this.contrato.fechaActualizacion = null;
 
-    if(disableACuenta) this.tercerForm.controls["aCuenta"].disable();
-    if(disableRecargo) this.tercerForm.controls["recargo"].disable();
-    if(disableTipoAbono) this.tercerForm.controls["cmbTipoAbono"].disable();
+    if (disableACuenta) this.tercerForm.controls["aCuenta"].disable();
+    if (disableRecargo) this.tercerForm.controls["recargo"].disable();
+    if (disableTipoAbono) this.tercerForm.controls["cmbTipoAbono"].disable();
 
-    if(this.codigoContrato != '') {
+    if (this.codigoContrato != '') {
       this.contrato.id = this.primerForm.controls["id"].value;
       this.contrato.codigo = this.codigoContrato;
       this.contrato.objVendedorActualizacion = new Vendedor();
@@ -227,27 +230,35 @@ export class ContratoEdicionComponent implements OnInit {
   guardarContrato() {
     this.isLoading = true;
 
-    const operacion = (this.contrato.id != null && this.contrato.id > 0)
-      ? this.contratoService.modificar(this.contrato)
-      : this.contratoService.registrar(this.contrato);
-      
-    operacion.subscribe({
-      next: (data) => {
+    const isNew = (this.contrato.id != null && this.contrato.id > 0) ? false : true;
+
+    const operacion$ = isNew
+      ? this.contratoService.registrar(this.contrato)
+      : this.contratoService.modificar(this.contrato);
+
+    operacion$.pipe(
+      switchMap(data => {
         this.limpiarFormulario();
+        const mensaje = isNew
+          ? "Contrato Registrado"
+          : "Contrato Actualizado";
+
+        return this.contratoService.enviarContratoCliente(data["codigo"], isNew ? "1" : "0")
+          .pipe(
+            map(() => ({ mensaje, success: true })), // Si el envío es exitoso
+            catchError(error => of({ mensaje: mensaje + ", pero no se pudo enviar el correo al cliente", success: false, error })) // Captura error sin detener flujo
+          );
+      })
+    ).subscribe({
+      next: ({ mensaje, success }) => {
         this.isLoading = false;
-        const mensaje = this.contrato.id != null && this.contrato.id > 0
-            ? "Contrato Actualizado"
-            : "Contrato Registrado";
-        UtilMethods.printHttpMessageSnackBar(this.snackBar, "success-snackbar", 5000, mensaje);
+        const tipoSnackBar = success ? "success-snackbar" : "warning-snackbar";
 
-        setTimeout(() => {
-          this.router.navigate(['/pages/contratos']).then(() => {
-            window.location.reload();
-          });
-        }, 3000);
+        UtilMethods.printHttpMessageSnackBar(this.snackBar, tipoSnackBar, 5000, mensaje);
+
+        setTimeout(() => this.router.navigate(['/pages/contratos']), 3000);
       },
-
-      error: (error) => {
+      error: error => {
         this.isLoading = false;
         UtilMethods.printHttpMessageSnackBar(this.snackBar, "error-snackbar", 5000, "Error al realizar la operación", error);
       }
@@ -296,7 +307,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.tercerForm.controls["movilidad"].setValue(0);
     this.tercerForm.controls["aCuenta"].setValue(0);
     this.tercerForm.controls["aCuenta"].setErrors(null);
-    this.tercerForm.controls["cmbTipoAbono"].setValue('PLIN');
+    this.tercerForm.controls["cmbTipoAbono"].setValue(null);
     this.tercerForm.controls["recargo"].setValue(0, { disabled: true });
     this.tercerForm.controls["saldo"].setValue(0, { disabled: true });
     this.tercerForm.controls["total"].setValue(0, { disabled: true });
@@ -316,14 +327,14 @@ export class ContratoEdicionComponent implements OnInit {
 
     let total = this.dataDetalleContrato.reduce((total, item) => total + UtilMethods.getFloatFixed(item.precioTotal, 2), 0);
     let saldo = 0;
-    
+
     let recargo = this.tercerForm.value["recargo"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2);
     let aCuenta = this.tercerForm.value["aCuenta"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2);
     let movilidad = this.tercerForm.value["movilidad"] == null ? 0 : UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2);
 
-    if(disableRecargo) this.tercerForm.controls["recargo"].disable();
-    if(disableACuenta) this.tercerForm.controls["aCuenta"].disable();
-    if(disableMovilidad) this.tercerForm.controls["movilidad"].disable();
+    if (disableRecargo) this.tercerForm.controls["recargo"].disable();
+    if (disableACuenta) this.tercerForm.controls["aCuenta"].disable();
+    if (disableMovilidad) this.tercerForm.controls["movilidad"].disable();
 
     recargo = UtilMethods.getFloatFixed(((recargo / 100) * aCuenta), 2);
     total = total += UtilMethods.getFloatFixed((movilidad + recargo), 2);
@@ -368,8 +379,8 @@ export class ContratoEdicionComponent implements OnInit {
       next: (data) => {
         this.contrato = data;
         this.isLoading = false;
-        
-        if(this.contrato.estado == EstadoContrato.ENTREGADO) {
+
+        if (this.contrato.estado == EstadoContrato.ENTREGADO) {
           this.router.navigate(["/not-404"]);
         } else {
           this.modificarCamposBusquedaContrato();
@@ -421,7 +432,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.primerForm.controls["nombresCliente"].setValue(this.contrato.objCliente.nombreCliente);
     this.primerForm.controls["apellidosCliente"].setValue(this.contrato.objCliente.apellidosCliente);
     this.primerForm.controls["razonSocial"].setValue(this.contrato.objCliente.razonSocial);
-    
+
     this.primerForm.controls["telefono"].setValue(this.contrato.telefono);
     this.primerForm.controls["correo"].setValue(this.contrato.correo);
     this.primerForm.controls["direccion"].setValue(this.contrato.direccionEntrega);
@@ -436,10 +447,12 @@ export class ContratoEdicionComponent implements OnInit {
     this.dataDetalleContrato = [... this.contrato.detalleContrato]
     this.crearTabla();
 
+    const tipoAbonoSeleccionado = this.tipoAbonoContrato.find(tipo => tipo.nombre == this.contrato.tipoAbono);
+
     this.tercerForm.controls["fechaEntrega"].setValue(this.contrato.fechaEntrega);
     this.tercerForm.controls["movilidad"].setValue(UtilMethods.getFloatFixed(this.contrato.movilidad, 2));
     this.tercerForm.controls["aCuenta"].setValue(UtilMethods.getFloatFixed(this.contrato.aCuenta, 2));
-    this.tercerForm.controls["cmbTipoAbono"].setValue(this.contrato.tipoAbono);
+    this.tercerForm.controls["cmbTipoAbono"].setValue(tipoAbonoSeleccionado);
     this.tercerForm.controls["recargo"].setValue(UtilMethods.getFloatFixed(this.contrato.recargo, 2));
     this.tercerForm.controls["saldo"].setValue(UtilMethods.getFloatFixed(this.contrato.saldo, 2));
     this.tercerForm.controls["total"].setValue(UtilMethods.getFloatFixed(this.contrato.total, 2));
@@ -469,9 +482,9 @@ export class ContratoEdicionComponent implements OnInit {
   }
 
   onChangeTipoAbono(event) {
-    if (event == "Niubiz") {
+    if (event.value.comision > 0) {
       this.tercerForm.controls["recargo"].enable();
-      this.tercerForm.controls["recargo"].setValue(4.5);
+      this.tercerForm.controls["recargo"].setValue(event.value.comision);
     } else {
       this.tercerForm.controls["recargo"].disable();
       this.tercerForm.controls["recargo"].setValue(0);
@@ -520,7 +533,7 @@ export class ContratoEdicionComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if(result != null) {
+      if (result != null) {
         this.dataDetalleContrato = [...result];
         this.crearTabla();
         this.actualizarTotal();

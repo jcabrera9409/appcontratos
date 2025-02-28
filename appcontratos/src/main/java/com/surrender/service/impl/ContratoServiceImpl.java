@@ -1,6 +1,7 @@
 package com.surrender.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,11 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 			idVendedor = repoVendedor.findByCorreo(correoVendedorActualizacion).get().getId();
 		}
 		return repoDetallePago.updateEstadoById(id, estado, idVendedor, fechaActualizacion);
+	}
+
+	@Override
+	public List<Contrato> listarEstadoDiferente(String estado) {
+		return repo.findByEstadoNot(estado);
 	}
 
 }

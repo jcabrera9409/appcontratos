@@ -44,6 +44,10 @@ export class ContratoService extends GenericService<Contrato> {
     return this.http.put(`${this.url}/pago`, contrato);
   }
 
+  enviarContratoCliente(codigo: String, isNew: String) {
+    return this.http.get(`${this.url}/enviar/cliente?codigo=${codigo}&isNew=${isNew}`);
+  }
+
   cambiarEstadoDetallePago(changeStatusRequest: ChangeStatusRequest) {
     return this.http.put(`${this.url}/pago/cambiar_estado`, changeStatusRequest);
   }

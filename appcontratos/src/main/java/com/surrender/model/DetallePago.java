@@ -28,8 +28,17 @@ public class DetallePago {
 	@Column(nullable = false)
 	private String comentario;
 	
+	@Column(nullable = false, length = 10)
+	private String tipoAbono;
+	
+	@Column(nullable = false)
+	private Float recargo;
+	
 	@Column(nullable = false)
 	private float pago;
+	
+	@Column(nullable = false)
+	private float total;
 	
 	@Column(nullable = false)
 	private String comprobante;
@@ -76,6 +85,30 @@ public class DetallePago {
 
 	public float getPago() {
 		return pago;
+	}
+
+	public String getTipoAbono() {
+		return tipoAbono;
+	}
+
+	public void setTipoAbono(String tipoAbono) {
+		this.tipoAbono = tipoAbono;
+	}
+
+	public Float getRecargo() {
+		return recargo;
+	}
+
+	public void setRecargo(Float recargo) {
+		this.recargo = recargo;
+	}
+
+	public float getTotal() {
+		return total;
+	}
+
+	public void setTotal(float total) {
+		this.total = total;
 	}
 
 	public void setPago(float pago) {

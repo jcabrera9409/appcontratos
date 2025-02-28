@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.surrender.exception.ModeloNotFoundException;
@@ -58,6 +59,12 @@ public class ContratoController {
 		return new ResponseEntity<List<Contrato>>(lista, HttpStatus.OK);
 	}
 	
+	@GetMapping("/no-entregados")
+	public ResponseEntity<?> listarPorNoEntregados() throws Exception {
+		List<Contrato> lista = service.listarEstadoDiferente("Entregado");
+		return new ResponseEntity<List<Contrato>>(lista, HttpStatus.OK);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> listarPorId(@PathVariable Integer id) throws Exception {
 		Contrato obj = service.listarPorId(id);
@@ -80,6 +87,42 @@ public class ContratoController {
 		return new ResponseEntity<Contrato>(obj, HttpStatus.OK);
 	}
 	
+	@GetMapping("/enviar/cliente")
+	public ResponseEntity<?> enviarContratoCliente(@RequestParam String codigo, @RequestParam String isNew) throws Exception {
+		Contrato obj = service.listarPorCodigo(codigo);
+		
+		if(obj == null ) {
+			throw new ModeloNotFoundException("Contrato no encontrado " + codigo);
+		} else {
+			File pdfFile = driveService.downloadFile(obj.getGoogle_pdf_id(), obj.getCodigo() + ".pdf");
+			
+			String subject = isNew.equalsIgnoreCase("1") ? "Te enviamos tu contrato!" : "Te enviamos tu contrato actualizado!";
+			
+			Mail mail = new Mail();
+			mail.setTo(obj.getCorreo());
+			mail.setSubject(subject);
+			mail.setTemplate("email/contrato-template");
+			mail.addCc(obj.getObjVendedor().getCorreo());
+			
+			String nombreUsuario = obj.getObjCliente().getNombreCliente();
+			if(!obj.getObjCliente().isEsPersonaNatural()) {
+				nombreUsuario = obj.getObjCliente().getRazonSocial();
+			}
+			
+			Map<String, Object> model = new HashMap<>();
+			model.put("nombreUsuario", nombreUsuario);
+			
+			mail.setModel(model);
+			mail.setFileToAttach(pdfFile);	
+			
+			emailUtil.enviarMail(mail);
+			
+			pdfFile.delete();
+			
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}
+		
+	}
 	
 	@PostMapping
 	public ResponseEntity<?> registrar(@RequestBody Contrato c) throws Exception {
@@ -100,25 +143,6 @@ public class ContratoController {
 		obj.setGoogle_pdf_id(idConvertedPdf);
 		
 		obj = service.modificar(obj);
-		
-		Mail mail = new Mail();
-		mail.setTo(obj.getCorreo());
-		mail.setSubject("Te enviamos tu contrato!");
-		mail.setTemplate("email/contrato-template");
-		mail.addCc(obj.getObjVendedor().getCorreo());
-		
-		String nombreUsuario = obj.getObjCliente().getNombreCliente();
-		if(!obj.getObjCliente().isEsPersonaNatural()) {
-			nombreUsuario = obj.getObjCliente().getRazonSocial();
-		}
-		
-		Map<String, Object> model = new HashMap<>();
-		model.put("nombreUsuario", nombreUsuario);
-		
-		mail.setModel(model);
-		mail.setFileToAttach(pdfFile);	
-		
-		emailUtil.enviarMail(mail);
 		
 		file.delete();
 		pdfFile.delete();
@@ -187,26 +211,6 @@ public class ContratoController {
 			
 			c.setDetallePago(objBusqueda.getDetallePago());
 			Contrato obj = service.modificarContratoTransaccional(c);
-			
-			Mail mail = new Mail();
-			mail.setTo(obj.getCorreo());
-			mail.setSubject("Te enviamos tu contrato actualizado!");
-			mail.setTemplate("email/contrato-template");
-			mail.addCc(obj.getObjVendedor().getCorreo());
-			mail.addCc(obj.getObjVendedorActualizacion().getCorreo());
-			
-			String nombreUsuario = obj.getObjCliente().getNombreCliente();
-			if(!obj.getObjCliente().isEsPersonaNatural()) {
-				nombreUsuario = obj.getObjCliente().getRazonSocial();
-			}
-			
-			Map<String, Object> model = new HashMap<>();
-			model.put("nombreUsuario", nombreUsuario);
-			
-			mail.setModel(model);
-			mail.setFileToAttach(pdfFile);	
-			
-			emailUtil.enviarMail(mail);
 			
 			file.delete();
 			pdfFile.delete();

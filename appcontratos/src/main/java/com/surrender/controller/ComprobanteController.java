@@ -60,8 +60,7 @@ public class ComprobanteController {
 	public ResponseEntity<?> listar() throws Exception {
 		List<Comprobante> lista = service.listar();
 		return new ResponseEntity<List<Comprobante>>(lista, HttpStatus.OK);
-	}
-	
+	}	
 	
 	@GetMapping("/contrato/{codigo}")
 	public ResponseEntity<?> buscarPorCodigoContrato(@PathVariable String codigo) throws Exception {
@@ -156,8 +155,6 @@ public class ComprobanteController {
 		} else {
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
-		
-		
 	}
 	
 	

@@ -40,7 +40,7 @@ export class ContratoComponent implements OnInit {
   ESTADOS_CONTRATO = EstadoContrato;
 
   displayedColumns: string[] = ['codigo', 'documentoCliente', 'fechaEntrega', 'saldo', 'total', 'estado', 'acciones'];
-  displayedColumnsPagos: string[] = ['fechaPago', 'comentario', 'estado', 'pago', 'acciones'];
+  displayedColumnsPagos: string[] = ['fechaPago', 'comentario', 'estado', 'pago', 'recargo', 'total', 'acciones'];
   dataSource: MatTableDataSource<Contrato>;
   dataSourcePagos: MatTableDataSource<DetallePago>;
   contratoSeleccionadoPago: Contrato;
@@ -176,7 +176,9 @@ export class ContratoComponent implements OnInit {
     pagoACuenta.id = 0;
     pagoACuenta.fechaPago = this.contratoSeleccionadoPago.fechaContrato;
     pagoACuenta.comentario = "Pago a cuenta";
-    pagoACuenta.pago = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
+    pagoACuenta.recargo = this.contratoSeleccionadoPago.recargo;
+    pagoACuenta.pago = this.contratoSeleccionadoPago.aCuenta;
+    pagoACuenta.total = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
     pagoACuenta.estado = true;
 
     detallePago.push(pagoACuenta);
@@ -199,7 +201,7 @@ export class ContratoComponent implements OnInit {
     }
     this.contratoSeleccionadoPago.detallePago.forEach(detallePago => {
       if (detallePago.estado)
-        totalPago += UtilMethods.getFloatFixed(detallePago.pago, 2);
+        totalPago += UtilMethods.getFloatFixed(detallePago.total, 2);
     });
 
     return totalPago;

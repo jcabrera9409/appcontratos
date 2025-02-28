@@ -1,6 +1,7 @@
 package com.surrender.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.surrender.model.Contrato;
 import com.surrender.model.DetallePago;
@@ -12,4 +13,5 @@ public interface IContratoService extends ICRUD<Contrato, Integer> {
 	Contrato listarPorCodigo(String codigo);
 	DetallePago registrarDetallePago(DetallePago detallePago);
 	int actualizarEstadoDetallePagoPorId(Integer id, boolean estado, String correoVendedorActualizacion, LocalDateTime fechaActualizacion);
+	List<Contrato> listarEstadoDiferente(String estado);
 }
