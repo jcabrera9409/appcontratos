@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.surrender.model.Cliente;
@@ -106,6 +108,11 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	@Override
 	public List<Contrato> listarEstadoDiferente(String estado) {
 		return repo.findByEstadoNot(estado);
+	}
+
+	@Override
+	public Page<Contrato> listarPageable(String keyword, Pageable pageable) {
+		return repo.findOrderPageable(keyword, pageable);
 	}
 
 }

@@ -1,3 +1,6 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
 <div class="tab-container">
     <!-- Contenido de las pestañas -->
     <div class="tab-content" [ngStyle]="{ 'transform': 'translateX(' + (-selectedIndex * 100) + '%)' }">
@@ -14,7 +17,7 @@
                 <mat-card-content>
                     <mat-form-field>
                         <mat-label>Buscar</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="" #input [formControl]="filtroTablaContratos" />
                     </mat-form-field>
                     <div class="responsive-table">
                         <table mat-table [dataSource]="dataSource">
@@ -112,7 +115,8 @@
                             </tr>
                         </table>
                         <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
-                            aria-label="Selecciona página">
+                            aria-label="Selecciona página"
+                            (page)="cambiarPagina($event)" [length]="totalRegistros" [pageSize]="pageSize" [pageIndex]="pageIndex">
                         </mat-paginator>
                     </div>
                 </mat-card-content>

@@ -8,6 +8,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +57,9 @@ public class ContratoController {
 	
 	@Autowired
 	private EmailUtil emailUtil;
+	
+	@Autowired
+	private PagedResourcesAssembler<Contrato> pagedAssembler;
 
 	@GetMapping
 	public ResponseEntity<?> listar() throws Exception {
@@ -179,16 +187,6 @@ public class ContratoController {
 			c.setFechaContrato(objBusqueda.getFechaContrato());
 			c.setObjVendedor(objBusqueda.getObjVendedor());
 			
-			/*File file = wordGenerator.generateWordContrato(obj);
-			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
-			String idConvertedDoc = driveService.convertWordToGoogleDoc(idUploadFileWord);
-			File pdfFile = driveService.converGoogleDocToPDF(idConvertedDoc, obj.getCodigo() + ".pdf");
-			String idConvertedPdf = driveService.uploadFile(pdfFile, GlobalVariables.PDF_MIME_TYPE, folderIdContratos); 
-			
-			obj.setGoogle_doc_id(idConvertedDoc);
-			obj.setGoogle_pdf_id(idConvertedPdf);*/
-			
-			
 			File file = wordGenerator.generateWordContrato(c);
 			String idUploadFileWord  = driveService.uploadFile(file, GlobalVariables.WORD_DOCUMENT_MIME_TYPE, folderIdContratos);
 			
@@ -261,5 +259,12 @@ public class ContratoController {
 		}
 		else
 			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+	
+	@GetMapping("/pageable")
+	public ResponseEntity<PagedModel<EntityModel<Contrato>>> listarPageable(@RequestParam(required = false, defaultValue = "") String filtro, Pageable pageable) throws Exception {
+		Page<Contrato> contratos = service.listarPageable(filtro, pageable);
+		PagedModel<EntityModel<Contrato>> pagedModel = pagedAssembler.toModel(contratos);
+		return new ResponseEntity<PagedModel<EntityModel<Contrato>>>(pagedModel, HttpStatus.OK);
 	}
 }

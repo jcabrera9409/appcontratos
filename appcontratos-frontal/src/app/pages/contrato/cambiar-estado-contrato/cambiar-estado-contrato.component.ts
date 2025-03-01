@@ -75,7 +75,7 @@ export class CambiarEstadoContratoComponent implements OnInit {
         this.isLoading = false;
         return EMPTY;
       }),
-      switchMap(() => this.contratoService.listar()),
+      switchMap(() => this.contratoService.listarPaginado("", 0, 10)),
       catchError(error => {
         console.log("Error al listar contratos:", error);
         this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los contratos", error));

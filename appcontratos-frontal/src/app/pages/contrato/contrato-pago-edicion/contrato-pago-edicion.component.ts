@@ -144,7 +144,7 @@ export class ContratoPagoEdicionComponent {
           this.isLoading = false;
           return EMPTY;
         }),
-        switchMap(() => this.contratoService.listar()),
+        switchMap(() => this.contratoService.listarPaginado("", 0, 10)),
         catchError(error => {
           console.log("Error al listar pagos:", error);
           this.contratoService.setMensajeCambio(new Mensaje("ERROR", "Ocurrió un problema al listar los contratos", error));

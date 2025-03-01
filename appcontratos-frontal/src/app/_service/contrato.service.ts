@@ -32,6 +32,10 @@ export class ContratoService extends GenericService<Contrato> {
     return this.http.put(`${this.url}/cambiar_estado`, changeStatusRequest);
   }
 
+  listarPaginado(filtro: string, page: number, size: number) {
+    return this.http.get<any>(`${this.url}/pageable?filtro=${filtro}&page=${page}&size=${size}`);
+  }
+
   listarPorCodigo(codigo: String) {
     return this.http.get<Contrato>(`${this.url}/codigo/${codigo}`);
   }
@@ -56,7 +60,7 @@ export class ContratoService extends GenericService<Contrato> {
     return this.contratoCambio.asObservable();
   }
 
-  setContratoCambio(lista: Contrato[]) {
+  setContratoCambio(lista) {
     this.contratoCambio.next(lista);
   }
 

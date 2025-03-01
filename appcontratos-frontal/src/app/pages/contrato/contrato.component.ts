@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorImpl } from '../../material/mat-paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { Contrato, EstadoContrato } from '../../_model/contrato';
 import { ContratoService } from '../../_service/contrato.service';
@@ -21,12 +22,12 @@ import { DetallePago } from '../../_model/detalle-pago';
 import { ContratoPagoEdicionComponent } from './contrato-pago-edicion/contrato-pago-edicion.component';
 import { CambiarEstadoContratoPagoComponent } from './cambiar-estado-contrato-pago/cambiar-estado-contrato-pago.component';
 import { EnviarContadorContratoComponent } from './enviar-contador-contrato/enviar-contador-contrato.component';
-import { take } from 'rxjs';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contrato',
   standalone: true,
-  imports: [MatCardModule, MatIconModule, MatInputModule, MatFormFieldModule, MatTableModule, MatPaginatorModule, MatButtonModule, CommonModule, MatTooltipModule],
+  imports: [MatCardModule, MatIconModule, MatInputModule, MatFormFieldModule, MatTableModule, MatPaginatorModule, MatButtonModule, CommonModule, MatTooltipModule, MatProgressSpinner, ReactiveFormsModule],
   templateUrl: './contrato.component.html',
   styleUrl: './contrato.component.css',
   providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorImpl }]
@@ -34,6 +35,8 @@ import { take } from 'rxjs';
 export class ContratoComponent implements OnInit {
 
   selectedIndex = 0;
+
+  isLoading: boolean = false;
 
   ESTADOS_NOTA: String[] = [EstadoContrato.PARA_ENTREGAR, EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
   ESTADOS_FINALES: String[] = [EstadoContrato.ENTREGADO, EstadoContrato.ANULADO];
@@ -46,7 +49,12 @@ export class ContratoComponent implements OnInit {
   contratoSeleccionadoPago: Contrato;
   contratoSeleccionado: boolean = false;
 
+  totalRegistros: number = 0;
+  pageSize: number = 0;
+  pageIndex: number = 0;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  filtroTablaContratos = new FormControl("");
 
   constructor(
     private contratoService: ContratoService,
@@ -56,22 +64,20 @@ export class ContratoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.contratoService.listar().subscribe(data => {
-      this.crearTabla(data);
-    });
+    this.listarContratosPaginado(0, 10);
 
     this.contratoService.getContratoCambio().subscribe(data => {
+      const contratos = data["_embedded"].contratoList || [];
       if (this.contratoSeleccionadoPago != undefined && this.contratoSeleccionadoPago.id != undefined && this.contratoSeleccionadoPago.id != null) {
-        data.forEach(contrato => {
+        contratos.forEach(contrato => {
           if (contrato.id == this.contratoSeleccionadoPago.id) {
-            this.contratoSeleccionadoPago = {...contrato};
+            this.contratoSeleccionadoPago = { ...contrato };
             return;
           }
         });
         this.crearTablaPagos();
       }
       this.crearTabla(data);
-      
     })
 
 
@@ -125,20 +131,12 @@ export class ContratoComponent implements OnInit {
     this.router.navigate(['/pages/contratos/nuevo']);
   }
 
-  crearTabla(data: Contrato[]) {
-    data.sort((a, b) => {
-      if (this.ESTADOS_FINALES.includes(a.estado) && !this.ESTADOS_FINALES.includes(b.estado)) {
-        return 1;
-      } else if (this.ESTADOS_FINALES.includes(b.estado) && !this.ESTADOS_FINALES.includes(a.estado)) {
-        return -1;
-      }
-      const fechaA = new Date(`${a.fechaEntrega}`).getTime();
-      const fechaB = new Date(`${b.fechaEntrega}`).getTime();
-      return fechaA - fechaB;
-    });
-
-    this.dataSource = new MatTableDataSource<Contrato>(data);
-    this.dataSource.paginator = this.paginator;
+  crearTabla(data) {
+    const contratos = data._embedded?.contratoList || [];
+    this.pageIndex = data["page"].number;
+    this.pageSize = data["page"].size;
+    this.totalRegistros = data["page"].totalElements;
+    this.dataSource = new MatTableDataSource<Contrato>(contratos);
   }
 
   calcularTotalPagado(contrato: Contrato) {
@@ -153,21 +151,9 @@ export class ContratoComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-
-    this.dataSource.filterPredicate = (data: any, filter: string) => {
-      const values = Object.values(data); 
-  
-      return values.some(value => {
-        if (value && typeof value === 'object' && value.hasOwnProperty('documentoCliente')) {
-          return value["documentoCliente"].toString().toLowerCase().includes(filter);
-        }
-  
-        return (value ? value.toString().toLowerCase() : '').includes(filter);
-      });
-    };
-  
-    this.dataSource.filter = filterValue;
+    if(event["code"] === 'Enter') {
+      this.listarContratosPaginado(0, 10);
+    }
   }
 
   crearTablaPagos() {
@@ -237,7 +223,7 @@ export class ContratoComponent implements OnInit {
   }
 
   verPagos(contrato: Contrato) {
-    this.contratoSeleccionadoPago = {...contrato};
+    this.contratoSeleccionadoPago = { ...contrato };
     this.crearTablaPagos();
     this.contratoSeleccionado = true;
     this.selectedIndex = 1;
@@ -250,4 +236,16 @@ export class ContratoComponent implements OnInit {
     });
   }
 
+  listarContratosPaginado(pagina: number, registros: number) {
+    this.isLoading = true;
+    const filtroValue = this.filtroTablaContratos.value.trim().toLowerCase() || "";
+    this.contratoService.listarPaginado(filtroValue, pagina, registros).subscribe(data => {
+      this.crearTabla(data);
+      this.isLoading = false;
+    });
+  }
+
+  cambiarPagina(event: any) {
+    this.listarContratosPaginado(event.pageIndex, event.pageSize);
+  }
 }
