@@ -9,12 +9,16 @@ import com.surrender.model.Cliente;
 import com.surrender.repo.IClienteRepo;
 import com.surrender.repo.IGenericRepo;
 import com.surrender.service.IClienteService;
+import com.surrender.util.UtilMethods;
 
 @Service
 public class ClienteServiceImpl extends CRUDImpl<Cliente, Integer> implements IClienteService {
 
 	@Autowired
 	private IClienteRepo repo = null;
+	
+	@Autowired
+    private ApiPeruService apiPeruService;
 	
 	@Override
 	protected IGenericRepo<Cliente, Integer> getRepo() {
@@ -23,7 +27,22 @@ public class ClienteServiceImpl extends CRUDImpl<Cliente, Integer> implements IC
 
 	@Override
 	public Cliente listarPorDocumentoCliente(String documentoCliente) {
-		return repo.findByDocumentoCliente(documentoCliente);
+		Cliente cliente = repo.findByDocumentoCliente(documentoCliente);
+		
+		if(cliente == null) {
+			if(UtilMethods.esDni(documentoCliente)) {
+				cliente = apiPeruService.obtenerClientePorDNI(documentoCliente);
+			}
+			else if (UtilMethods.esRuc(documentoCliente)) {
+				cliente = apiPeruService.obtenerClientePorRUC(documentoCliente);
+			}
+			
+			if(cliente != null) {
+				cliente = repo.save(cliente);
+			}
+		}
+		
+		return cliente;
 	}
 
 	@Override

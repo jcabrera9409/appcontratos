@@ -2,6 +2,7 @@ package com.surrender.controller;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,10 @@ public class ContratoController {
 	
 	@GetMapping("/no-entregados")
 	public ResponseEntity<?> listarPorNoEntregados() throws Exception {
-		List<Contrato> lista = service.listarEstadoDiferente("Entregado");
+		List<String> estados = new ArrayList<>();
+		estados.add("Entregado");
+		estados.add("Anulado");
+		List<Contrato> lista = service.listarEstadoDiferente(estados);
 		return new ResponseEntity<List<Contrato>>(lista, HttpStatus.OK);
 	}
 	

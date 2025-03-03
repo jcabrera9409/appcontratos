@@ -359,13 +359,16 @@ export class ContratoEdicionComponent implements OnInit {
   buscarCliente() {
     let documentoCliente = this.primerForm.value["documentoCliente"]
     if (this.valorActualDocumento != documentoCliente) {
+      this.isLoading = true;
       this.modificarCamposBusquedaCliente(true, null);
       this.clienteService.listarPorDocumentoCliente(documentoCliente).subscribe({
         next: (data) => {
           this.modificarCamposBusquedaCliente(true, data);
+          this.isLoading = false;
         },
         error: (err) => {
           this.modificarCamposBusquedaCliente(false, null);
+          this.isLoading = false;
         }
       });
       this.valorActualDocumento = documentoCliente;

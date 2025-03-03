@@ -42,5 +42,5 @@ public interface IContratoRepo extends IGenericRepo<Contrato, Integer> {
 	
 	Contrato findByCodigo(String codigo);
 	
-	List<Contrato> findByEstadoNot(String estado);
+	List<Contrato> findByEstadoNotIn(List<String> estados);
 }

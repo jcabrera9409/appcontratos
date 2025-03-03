@@ -16,6 +16,6 @@ public interface IContratoService extends ICRUD<Contrato, Integer> {
 	Contrato listarPorCodigo(String codigo);
 	DetallePago registrarDetallePago(DetallePago detallePago);
 	int actualizarEstadoDetallePagoPorId(Integer id, boolean estado, String correoVendedorActualizacion, LocalDateTime fechaActualizacion);
-	List<Contrato> listarEstadoDiferente(String estado);
+	List<Contrato> listarEstadoDiferente(List<String> estados);
 	Page<Contrato> listarPageable(String keyword, Pageable pageable);
 }

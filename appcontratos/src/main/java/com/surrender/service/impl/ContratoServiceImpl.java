@@ -106,8 +106,8 @@ public class ContratoServiceImpl extends CRUDImpl<Contrato, Integer> implements 
 	}
 
 	@Override
-	public List<Contrato> listarEstadoDiferente(String estado) {
-		return repo.findByEstadoNot(estado);
+	public List<Contrato> listarEstadoDiferente(List<String> estados) {
+		return repo.findByEstadoNotIn(estados);
 	}
 
 	@Override
