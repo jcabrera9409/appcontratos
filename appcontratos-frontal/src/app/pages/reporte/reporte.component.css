@@ -1,0 +1,65 @@
+.report-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.report-content mat-card {
+  box-shadow: none !important; 
+  border: none !important;
+}
+
+.chart {
+  height: auto;
+}
+
+.chart mat-card-header {
+  display: block;
+}
+
+.chart mat-card-header mat-card-title {
+  text-align: center;
+}
+
+.chart mat-card-content div {
+  height: 500px!important;
+}
+
+.chart-50 {
+  padding-top: 10px;
+  width: 50%;
+}
+
+.chart-100 {
+  padding-top: 10px;
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.filters mat-form-field {
+  margin-right: 10px;
+  width: 50%;
+}
+
+@media (max-width: 1090px) {
+
+  .chart-50,
+  .chart-100 {
+    width: 100%;
+  }
+
+  .chart mat-card-content div {
+    height: 250px!important;
+  }
+
+  .filters mat-form-field {
+    width: 100%;
+  }
+
+}

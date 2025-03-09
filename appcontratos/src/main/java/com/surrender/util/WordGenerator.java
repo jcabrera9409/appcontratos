@@ -41,6 +41,12 @@ public class WordGenerator {
         if(!contrato.getObjCliente().isEsPersonaNatural()) {
         	nombreCliente = contrato.getObjCliente().getRazonSocial();
         }
+        
+        String tipoAbono = "";
+        
+        if(!contrato.getTipoAbono().isEmpty() && contrato.getaCuenta() > 0) {
+        	tipoAbono = "POR " + contrato.getTipoAbono();
+        }
 		
         replaceText(document, "<CODIGO_CONTRATO>", contrato.getCodigo());
         replaceText(document, "<FECHA_CONTRATO>", contrato.getFechaContrato().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -51,7 +57,7 @@ public class WordGenerator {
         replaceText(document, "<CORREO_CLIENTE>", contrato.getCorreo());
         replaceText(document, "<DIRECCION_ENTREGA>", contrato.getDireccionEntrega());
         replaceText(document, "<REFERENCIA_ENTREGA>", contrato.getReferencia());
-        replaceText(document, "<TIPO_ABONO>", contrato.getTipoAbono());
+        replaceText(document, "<TIPO_ABONO>", tipoAbono);
         replaceText(document, "<A_CUENTA>", String.format("%.2f", contrato.getaCuenta()));
         replaceText(document, "<SALDO>", String.format("%.2f", contrato.getSaldo()));
         replaceText(document, "<TOTAL>", String.format("%.2f", contrato.getTotal()));

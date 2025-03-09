@@ -167,7 +167,10 @@ export class ContratoComponent implements OnInit {
     pagoACuenta.total = this.contratoSeleccionadoPago.aCuenta + (this.contratoSeleccionadoPago.aCuenta * (this.contratoSeleccionadoPago.recargo / 100));
     pagoACuenta.estado = true;
 
-    detallePago.push(pagoACuenta);
+    if(pagoACuenta.total > 0){
+      detallePago.push(pagoACuenta);
+    }
+
     detallePago = detallePago.concat(this.contratoSeleccionadoPago.detallePago);
 
     detallePago.sort((a, b) => {

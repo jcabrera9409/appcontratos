@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -270,5 +271,12 @@ public class ContratoController {
 		Page<Contrato> contratos = service.listarPageable(filtro, pageable);
 		PagedModel<EntityModel<Contrato>> pagedModel = pagedAssembler.toModel(contratos);
 		return new ResponseEntity<PagedModel<EntityModel<Contrato>>>(pagedModel, HttpStatus.OK);
+	}
+	
+	@DeleteMapping
+	@PreAuthorize("@authenticationService.tieneAcceso('contrato-admin')")
+	public ResponseEntity<?> eliminacionFisicaContrato(@RequestParam int id) throws Exception {
+		this.service.eliminar(id);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.surrender.exception.ModeloNotFoundException;
 import com.surrender.model.Plantilla;
-import com.surrender.model.Vendedor;
 import com.surrender.service.IPlantillaService;
 
 import dto.ChangeStatusRequest;

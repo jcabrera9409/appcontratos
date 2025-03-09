@@ -9,7 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOption, MatSelectModule } from '@angular/material/select';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { DetallePago } from '../../../_model/detalle-pago';
 import { ContratoService } from '../../../_service/contrato.service';
 import { Contrato } from '../../../_model/contrato';
@@ -19,6 +19,7 @@ import { catchError, EMPTY, switchMap } from 'rxjs';
 import { Mensaje } from '../../../_model/Mensaje';
 import moment from 'moment';
 import { tipoAbono } from '../../../_model/tipo-abono';
+import { CustomDateAdapter } from '../../../material/custom-date-adapter';
 
 @Component({
   selector: 'app-contrato-pago-edicion',
@@ -26,7 +27,10 @@ import { tipoAbono } from '../../../_model/tipo-abono';
   imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, CommonModule, MatDialogModule, MatProgressSpinnerModule, MatIconModule, MatDatepickerModule, MatOption, MatSelectModule],
   templateUrl: './contrato-pago-edicion.component.html',
   styleUrl: './contrato-pago-edicion.component.css',
-  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" }]
+  providers: [
+    provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" },
+    {provide: DateAdapter, useClass: CustomDateAdapter}
+  ]
 })
 export class ContratoPagoEdicionComponent {
 
@@ -128,8 +132,6 @@ export class ContratoPagoEdicionComponent {
 
     if (disableRecargo) this.form.controls["recargo"].disable();
     this.form.controls["total"].disable();
-
-    console.log(contrato);
 
     this.isLoading = true;
     const operacion = (detallePago.id != null && detallePago.id > 0)

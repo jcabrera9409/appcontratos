@@ -6,6 +6,8 @@ data-initializer:
     descripcion: Vendedor
   - nombre: CONTADOR
     descripcion: Contador
+  - nombre: REPORTER
+    descripcion: Ver Reportes
  menus:
   - indice: 1
     icono: post_add
@@ -48,6 +50,13 @@ data-initializer:
     url: /pages/vendedores
     roles:
      - nombre: ADMIN
+  - indice: 7
+    icono: bar_chart
+    nombre: Reportes
+    url: /pages/reportes
+    roles:
+     - nombre: ADMIN
+     - nombre: REPORTER
  vendedores:
   - nombres: Administrador
     correo: admin@admin.com

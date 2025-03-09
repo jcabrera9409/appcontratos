@@ -136,11 +136,14 @@ public class AuthenticationService {
     	case "vendedor":
     	case "plantilla":
     	case "rol-listar":
+    	case "contrato-admin":
     		metodoRol="ADMIN,ROOT";
     		break;
     	case "menu":
     	case "rol":
     		metodoRol="ROOT";
+    	case "reporte":
+    		metodoRol="ADMIN,ROOT,REPORTER";
     		break;
     	}
     	

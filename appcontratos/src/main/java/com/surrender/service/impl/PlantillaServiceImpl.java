@@ -1,5 +1,6 @@
 package com.surrender.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import com.surrender.repo.IGenericRepo;
 import com.surrender.repo.IPlantillaRepo;
 import com.surrender.repo.IVendedorRepo;
 import com.surrender.service.IPlantillaService;
+
+import dto.ReportePlantillaIngresosDTO;
 
 @Service
 public class PlantillaServiceImpl extends CRUDImpl<Plantilla, Integer> implements IPlantillaService {
@@ -55,6 +58,11 @@ public class PlantillaServiceImpl extends CRUDImpl<Plantilla, Integer> implement
 	@Override
 	public List<Plantilla> listarPlantillasActivas() {
 		return repo.findByEstadoTrue();
+	}
+
+	@Override
+	public List<ReportePlantillaIngresosDTO> obtenerReporteIngresosPorPlantilla(LocalDate fechaInicio, LocalDate fechaFin) {
+		return repo.obtenerReportePorPlantilla(fechaInicio, fechaFin);
 	}
 
 }

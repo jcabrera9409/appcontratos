@@ -1,0 +1,62 @@
+<mat-card class="mat-card-page-style">
+    <mat-card-header class="mat-card-header-style">
+        <mat-card-title>Reportes</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="report-content">
+
+        <div class="filters">
+            <mat-form-field class="example-form-field">
+                <mat-label>Selecciona el periodo</mat-label>
+                <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="filtroFecha">
+                    <input matStartDate placeholder="Fecha de inicio" formControlName="fechaInicio" (keydown.enter)="actualizarPeriodo()">
+                    <input matEndDate placeholder="Fecha de fin" formControlName="fechaFin" (keydown.enter)="actualizarPeriodo()">
+                </mat-date-range-input>
+                <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                <mat-date-range-picker #rangePicker>
+                    <mat-date-range-picker-actions>
+                        <button mat-button matDateRangePickerCancel>Cancelar</button>
+                        <button mat-raised-button color="primary" matDateRangePickerApply (click)="actualizarPeriodo()">Aplicar</button>
+                    </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+            </mat-form-field>
+        </div>
+
+        <mat-card class="chart chart-50">
+            <mat-card-header>
+                <mat-card-title>Contratos por periodo</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div id="chart1"></div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart chart-50">
+            <mat-card-header>
+                <mat-card-title>Ingresos por periodo</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div id="chart2"></div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart chart-50">
+            <mat-card-header>
+                <mat-card-title>Uso por Plantilla</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div id="chart3"></div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="chart chart-50">
+            <mat-card-header>
+                <mat-card-title>Ingresos por método de pago</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div id="chart4"></div>
+            </mat-card-content>
+        </mat-card>
+
+    </mat-card-content>
+</mat-card>

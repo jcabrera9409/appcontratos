@@ -17,3 +17,19 @@ export interface SendEmailDetalleComprobanteRequest {
     id_contrato: number;
     id_detalleComprobante: number;
 }
+
+export interface ReporteContratosIngresos {
+    fechaContrato: Date;
+    nroContratos: number;
+    totalIngresos: number;
+}
+
+export interface ReporteTipoAbonoDTO {
+    tipoAbono: String;
+    totalIngresos: number;
+}
+
+export interface ReportePlantillaIngresosDTO {
+    nombre: String;
+    cantidad: number;
+}

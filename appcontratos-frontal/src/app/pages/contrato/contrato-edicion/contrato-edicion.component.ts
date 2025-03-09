@@ -19,7 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DetalleEdicionComponent } from './detalle-edicion/detalle-edicion.component';
 import { DetalleContrato } from '../../../_model/detalle-contrato';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Contrato, EstadoContrato } from '../../../_model/contrato';
@@ -31,6 +31,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { CargaMasivaDetalleContratoComponent } from './carga-masiva-detalle-contrato/carga-masiva-detalle-contrato.component';
 import { tipoAbono } from '../../../_model/tipo-abono';
+import { CustomDateAdapter } from '../../../material/custom-date-adapter';
+import { ConfirmacionComponent } from '../../confirmacion/confirmacion.component';
 
 @Component({
   selector: 'app-contrato-edicion',
@@ -38,7 +40,10 @@ import { tipoAbono } from '../../../_model/tipo-abono';
   imports: [MatCardModule, MatStepperModule, MatIconModule, MatFormFieldModule, FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatRadioModule, MatDatepickerModule, CommonModule, MatSelectModule, MatOption, MatTableModule, MatProgressSpinnerModule],
   templateUrl: './contrato-edicion.component.html',
   styleUrl: './contrato-edicion.component.css',
-  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" }]
+  providers: [
+    provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" },
+    {provide: DateAdapter, useClass: CustomDateAdapter}
+  ]
 })
 export class ContratoEdicionComponent implements OnInit {
 
@@ -97,7 +102,7 @@ export class ContratoEdicionComponent implements OnInit {
       "fechaEntrega": new FormControl(fechaNueva),
       "movilidad": new FormControl(0),
       "aCuenta": new FormControl(0),
-      "cmbTipoAbono": new FormControl('', Validators.required),
+      "cmbTipoAbono": new FormControl(''),
       "recargo": new FormControl({ value: 0, disabled: true }),
       "saldo": new FormControl({ value: 0, disabled: true }),
       "total": new FormControl({ value: 0, disabled: true })
@@ -181,7 +186,7 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.fechaEntrega = moment(this.tercerForm.value["fechaEntrega"]).format("YYYY-MM-DDTHH:mm:ss");
     this.contrato.movilidad = UtilMethods.getFloatFixed(this.tercerForm.value["movilidad"], 2);
     this.contrato.aCuenta = UtilMethods.getFloatFixed(this.tercerForm.value["aCuenta"], 2);
-    this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"].nombre;
+    this.contrato.tipoAbono = this.tercerForm.value["cmbTipoAbono"].nombre || "";
     this.contrato.recargo = this.tercerForm.value["recargo"] != undefined ? UtilMethods.getFloatFixed(this.tercerForm.value["recargo"], 2) : 0;
     this.contrato.estado = EstadoContrato.NUEVO;
     this.contrato.codigo = UtilMethods.generateRandomCode();
@@ -189,6 +194,12 @@ export class ContratoEdicionComponent implements OnInit {
     this.contrato.objVendedor.correo = UtilMethods.getFieldJwtToken("sub");
     this.contrato.objVendedorActualizacion = null;
     this.contrato.fechaActualizacion = null;
+
+    if(this.contrato.tipoAbono == "" || this.contrato.aCuenta <= 0) {
+      this.contrato.tipoAbono = "";
+      this.contrato.aCuenta = 0;
+      this.contrato.recargo = 0;
+    }
 
     if (disableACuenta) this.tercerForm.controls["aCuenta"].disable();
     if (disableRecargo) this.tercerForm.controls["recargo"].disable();
@@ -203,7 +214,20 @@ export class ContratoEdicionComponent implements OnInit {
     }
 
     if (guardar) {
-      this.guardarContrato();
+      if(this.contrato.tipoAbono == "" || this.contrato.aCuenta <= 0) {
+        const dialogRef = this.dialog.open(ConfirmacionComponent, {
+          width: "500px",
+          data: "Estas guardando un contrato sin monto <strong>A Cuenta</strong> o sin seleccionar el <strong>Tipo de Abono</strong>, ¿Desea continuar?"
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) {
+            this.guardarContrato();
+          }
+        });
+      } else{
+        this.guardarContrato();
+      }
     }
   }
 
@@ -211,6 +235,8 @@ export class ContratoEdicionComponent implements OnInit {
     this.tercerPaso(false);
 
     this.isLoading = true;
+
+    console.log(this.contrato);
 
     this.contratoService.generarPdfPreview(this.contrato).subscribe({
       next: (data) => {
