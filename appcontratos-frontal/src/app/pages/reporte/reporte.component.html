@@ -22,6 +22,23 @@
             </mat-form-field>
         </div>
 
+        <mat-card class="chart chart-100">
+            <div class="container">
+                <div class="card">
+                    <p>Total Contratos</p>
+                    <div class="count">{{ totalContratos }}</div>
+                </div>
+                <div class="card">
+                    <p>Total Ingresos</p>
+                    <div class="count">S/. {{ totalIngresosContratos | number:'1.2-2' }}</div>
+                </div>
+                <div class="card">
+                    <p>Pagos Registrados</p>
+                    <div class="count">S/. {{ totalPagosRegistrado | number:'1.2-2' }}</div>
+                </div>
+            </div>
+        </mat-card>
+
         <mat-card class="chart chart-50">
             <mat-card-header>
                 <mat-card-title>Contratos por periodo</mat-card-title>

@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import * as am5 from "@amcharts/amcharts5";
@@ -22,7 +23,7 @@ import { V } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-reporte',
   standalone: true,
-  imports: [MatCardModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule, ReactiveFormsModule],
+  imports: [MatCardModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule, ReactiveFormsModule, CommonModule],
   providers: [
     provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: "es-ES" },
     { provide: DateAdapter, useClass: CustomDateAdapter }
@@ -31,6 +32,10 @@ import { V } from '@angular/cdk/keycodes';
   styleUrl: './reporte.component.css'
 })
 export class ReporteComponent implements OnInit {
+
+  totalContratos: number = 0;
+  totalIngresosContratos: number = 0;
+  totalPagosRegistrado: number = 0;
 
   constructor(
     private reporteService: ReporteService
@@ -86,6 +91,8 @@ export class ReporteComponent implements OnInit {
         data = [];
       }
 
+      this.totalPagosRegistrado = data.reduce((total, reporte) => total + (reporte.totalIngresos ?? 0), 0);
+
       const dataGraficoTipoAbono = this.convertirDatosParaGraficoTipoAbono(data);
 
       this.generarGraficoPie("chart4", dataGraficoTipoAbono, "{category}: S/. {value.formatNumber('#,###.00')}");
@@ -94,10 +101,12 @@ export class ReporteComponent implements OnInit {
   }
 
   private convertirDatosParaGraficoTipoAbono(data: any[]): { category: string; value: number }[] {
-    return data.map(reporte => ({
-      category: reporte.tipoAbono,
-      value: reporte.totalIngresos ?? 0
-    }));
+    return data
+      .filter(reporte => reporte.tipoAbono?.trim())
+      .map(reporte => ({
+        category: reporte.tipoAbono,
+        value: reporte.totalIngresos ?? 0
+      }));
   }
 
   llenarGraficoContratoIngresos(fechaInicio: Date, fechaFin: Date): void {
@@ -109,6 +118,9 @@ export class ReporteComponent implements OnInit {
 
       const dataGraficoContratos = this.convertirDatosParaGrafico(data, "nroContratos");
       const dataGraficoIngresos = this.convertirDatosParaGrafico(data, "totalIngresos");
+
+      this.totalContratos = dataGraficoContratos.reduce((total, reporte) => total + (reporte.value ?? 0), 0);
+      this.totalIngresosContratos = dataGraficoIngresos.reduce((total, reporte) => total + (reporte.value ?? 0), 0);
 
       this.generarGraficoBarras("chart1", this.completarFechas(dataGraficoContratos), "{valueY} contratos");
       this.generarGraficoBarras("chart2", this.completarFechas(dataGraficoIngresos), "S/. {value.formatNumber('#,###.00')}");
