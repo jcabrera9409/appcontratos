@@ -1,0 +1,44 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+}
+
+.zoom-button-fixed {
+  position: absolute;
+  top: 40%;
+  right: 10px;
+  z-index: 1000;
+  background-color: rgb(0 0 0 / 64%);
+  border-radius: 8px !important;
+}
+
+.discount-span-fixed {
+  position: absolute;
+  top: 5%;
+  left: 5px;
+  z-index: 1000;
+  background-color: rgb(0 0 0 / 64%);
+  padding: 3px 10px 3px 10px;
+  color: white;
+  font-size: 20px;
+}
+
+.zoom-button-fixed:hover {
+  color: #ffffff85
+}
+
+.slide {
+  /* height: 229px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.slide img {
+  /* max-height: 300px; */
+  max-width: 100%;
+  object-fit: contain;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}

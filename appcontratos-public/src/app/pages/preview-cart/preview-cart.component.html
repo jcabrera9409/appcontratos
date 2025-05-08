@@ -1,0 +1,28 @@
+<mat-dialog-content class="dialog-container">
+    <div class="content-list">
+        @for(item of carrito.detalle; track item.producto.id) {
+            <div class="producto-item">
+                <img
+                    src="{{item.producto.imagenes[0].url}}" />
+                <div class="info">
+                    <h5><a [routerLink]="['/producto/', item.producto.slug]" (click)="cerrarDialogo()">{{item.producto.nombre}}</a></h5>
+                    <p class="material">{{item.material.nombre}} {{item.detalleMaterial.nombre}} <img src="{{item.detalleMaterial.url}}" /></p>
+                    <p>S/ {{item.producto.precioFinal | number: '1.2-2'}} x {{item.cantidad}} und</p>
+                </div>
+                <button mat-icon-button aria-label="Eliminar" class="close-btn" (click)="eliminarItem(item)">
+                    <mat-icon matBadge="15" matBadgeColor="primary" aria-hidden="false">delete</mat-icon>
+                </button>
+            </div>
+        }
+    </div>
+
+    <div class="content-footer">
+        <div class="subtotal-content">
+            <span><strong>Subtotal:</strong> S/ {{montoTotal | number: '1.2-2'}}</span>
+        </div>
+        <div class="action-content">
+            <button mat-button type="button" class="finalizar-btn" (click)="verCarrito()">Ver Carrito</button>
+            <button mat-button type="button" class="finalizar-btn" (click)="finalizarCompra()">Finalizar compra</button>
+        </div>
+    </div>
+</mat-dialog-content>

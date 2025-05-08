@@ -1,0 +1,17 @@
+<div class="carousel-container">
+    <!-- Botón lupa fijo sobre el carrusel -->
+    @if(producto.descuento > 0) {
+    <span class="discount-span-fixed">{{producto.descuento}}% DCTO</span>
+    }
+    <button mat-mini-fab class="zoom-button-fixed" matTooltip="Vista Rápida" matTooltipPosition="left"
+        (click)="preview()">
+        <mat-icon>search</mat-icon>
+    </button>
+    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        @for (slide of slides; track slide) {
+        <div ngxSlickItem class="slide">
+            <a routerLink="/producto/{{producto.slug}}"><img src="{{ slide }}" alt="Imagen referencial" width="100%"></a>
+        </div>
+        }
+    </ngx-slick-carousel>
+</div>

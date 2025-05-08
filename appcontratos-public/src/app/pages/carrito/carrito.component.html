@@ -1,0 +1,64 @@
+<div class="container-cart">
+    <div class="container">
+        <div class="cart-items">
+            @for(item of carrito.detalle; track item.producto.id) {
+                <div class="item-cart">
+                    <img src="{{item.producto.imagenes[0].url}}" />
+                    <div>
+                        <div class="title">
+                            <div class="nombre">
+                                <h5><a [routerLink]="['/producto/', item.producto.slug]">{{item.producto.nombre}}</a></h5>
+                                <p class="material">{{item.material.nombre}} {{item.detalleMaterial.nombre}} <img src="{{item.detalleMaterial.url}}" /></p>
+                            </div>
+                            <div class="cantidad">
+                                <label>Cant.</label>
+                                <input type="number" [(ngModel)]="item.cantidad" (ngModelChange)="marcarCambio()" min="1" />
+                            </div>
+                            <div class="amount">
+                                <ins>S/ {{item.producto.precioFinal | number: '1.2-2'}}</ins>
+                                @if(item.producto.descuento > 0) {
+                                    <del>S/ {{item.producto.precio | number: '1.2-2'}}</del>
+                                }
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <button mat-button aria-label="Quitar" class="remove-btn" (click)="eliminarItem(item)">Quitar</button>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="item-actions">
+                <div class="cupon">
+                    <mat-form-field class="example-full-width" style="display: none;">
+                        <input matInput placeholder="Código de cupon" type="text" [(ngModel)]="codigoDescuento" />
+                    </mat-form-field>
+                    <button mat-button (click)="aplicarDescuento()" style="display: none;">Aplicar Cupón</button>
+                </div>
+                <div class="actualizar">
+                    <button mat-button [disabled]="!carritoModificado" (click)="actualizarCarrito()">Atualizar carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-total">
+            <h1>Total carrito</h1>
+            <div>
+                <span>SubTotal</span>
+                <span>S/ {{subTotal | number: '1.2-2'}}</span>
+            </div>
+            @if(descuento > 0) {
+                <div>
+                    <span>Descuento</span>
+                    <span>S/ {{descuento | number: '1.2-2'}}</span>
+                </div>
+            }
+            <div>
+                <span>Total</span>
+                <span>S/ {{montoTotal | number: '1.2-2'}}</span>
+            </div>
+            <a mat-button [routerLink]="'/finalizar'" class="finalizar-btn">Realizar contrato</a>
+        </div>
+    </div>
+</div>
+
+<app-footer classBorder="border-top"></app-footer>

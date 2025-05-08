@@ -1,0 +1,126 @@
+.footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0px;
+    padding-top: 10px;
+}
+
+.footer.border-top {
+    border-top-style: solid;
+}
+
+.footer p {
+    margin: 0px;
+}
+
+.footer h2 {
+    margin: 0px;
+}
+
+.content-footer {
+    display: flex;
+    max-width: 85%;
+    gap: 50px;
+    justify-content: center;
+}
+
+.content-footer .footer-logo {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.content-footer .footer-logo img {
+    width: 100%;
+}
+
+.content-footer .footer-logo .social-networks {
+    display: flex;
+    gap: 20%;
+    justify-content: center;
+}
+
+.content-footer .footer-logo .social-networks .icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-footer .content-pages {
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.content-footer .content-pages .list-pages {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.content-footer .content-terms {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.content-footer .content-terms img {
+    width: 100%;
+    align-self: center;
+}
+
+.content-footer .content-contact {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.content-footer .content-contact p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+@media (max-width: 1090px) {
+    .footer {
+        flex-direction: column;
+        align-items: center;
+        justify-content: none;
+    }
+
+    .content-footer {
+        display: block;
+        max-width: 90%;
+    }
+
+    .content-footer .footer-logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .content-footer .footer-logo img {
+        width: 70%;
+    }
+
+    .content-footer .content-pages {
+        width: 50%;
+        float: left;
+    }
+
+    .content-footer .content-terms {
+        width: 50%;
+    }
+
+    .content-footer .content-contact {
+        width: 100%;
+    }
+}

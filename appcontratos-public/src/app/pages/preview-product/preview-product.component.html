@@ -1,0 +1,35 @@
+<mat-dialog-content>
+    <div class="product-detail">
+        <div class="product-images">
+            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                @for (slide of slides; track slide) {
+                <div ngxSlickItem class="slide">
+                    <a routerLink="/producto/{{producto.slug}}" routerLinkActive="router-link-active" (click)="verProducto()"><img src="{{ slide }}" alt="Imagen referencial" width="100%"></a>
+                </div>
+                }
+            </ngx-slick-carousel>
+        </div>
+
+        <div class="product-info">
+            <h1><a routerLink="/producto/{{producto.slug}}" routerLinkActive="router-link-active"  (click)="verProducto()">{{producto.nombre}}</a></h1>
+            @if (producto.descuento > 0) {
+                <p class="old-price">S/ {{producto.precio | number: '1.2-2'}}</p>
+                <p class="new-price">S/ {{producto.precioFinal | number: '1.2-2'}}</p>
+            }
+            <div class="description" [innerHTML]="producto.descripcion"></div>
+
+            <div class="material-defecto"><strong>Material: </strong> {{nombreMaterialSeleccionado}}</div>
+            <div class="material-defecto">{{colorSeleccionado}} <img src="{{colorURLSeleccionado}}" style="border-radius: 5px;"/></div>
+
+            <div class="cart-action">
+                <input matInput type="number" value="1" min="1" [(ngModel)]="cantidad">
+                <button mat-button type="button" (click)="agregarItem()">Añadir al carrito
+                    <mat-icon iconPositionEnd *ngIf="itemAgregado">check</mat-icon>
+                </button>
+                <div>
+                    <a [routerLink]="'/carrito'" (click)="cerrarPreview()" *ngIf="itemAgregado">Ver Carrito</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

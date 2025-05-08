@@ -1,0 +1,264 @@
+.container-cart {
+    display: flex;
+    justify-content: center;
+}
+
+.container-cart>.container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 1230px;
+}
+
+.cart-items {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 1px solid #c0c0c0;
+}
+
+.cart-items .item-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    align-items: center;
+}
+
+.item-actions .cupon mat-form-field {
+    margin-right: 5px;
+}
+
+.item-actions .actualizar button,
+.item-actions .cupon button {
+        background-color: #000;
+        color: white;
+        padding: 0.75rem;
+        font-size: 15px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+}
+
+.item-actions .actualizar button:hover,
+.item-actions .cupon button:hover {
+    background-color: #111;
+}
+
+.item-actions .actualizar button:disabled,
+.item-actions .cupon button:disabled {
+    background-color: #adadad;
+}
+
+
+.item-cart {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    border-bottom: 1px solid #c0c0c0;
+    align-items: center;
+}
+
+.item-cart>img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.item-cart .title .material {
+    display: flex;
+    align-items: center;
+    color: #000000;
+    gap: 5px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.item-cart .title .material img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+}
+
+.title {
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    min-width: 645px;
+}
+
+.title>.cantidad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title>.amount {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    min-width: 130px;
+}
+
+.title>.amount>ins {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.title>.amount>del {
+    text-decoration: line-through;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 0.3rem;
+}
+
+.title .nombre {
+    min-width: 50%;
+}
+
+.title .nombre h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.title .nombre h5 a {
+    text-decoration: none;
+    color: #000;
+}
+
+.title .nombre h5 a:visited {
+    color: #000;
+}
+
+.title label {
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.title input[type='number'] {
+    width: 60px;
+    padding: 4px;
+    margin-top: 0.3rem;
+}
+
+.footer {
+    margin-top: 1rem;
+    display: block;
+    text-align: right;
+}
+
+.footer button {
+    color: #ffffff;
+    background: #970042;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.footer .details {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #444;
+}
+
+.cart-total {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    height: fit-content;
+}
+
+.cart-total h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.cart-total div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.finalizar-btn {
+    width: 100%;
+    background-color: #000;
+    color: white;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.finalizar-btn:hover {
+    background-color: #111;
+}
+
+@media (max-width: 1090px) {
+    
+    .item-cart,
+    .item-cart .title,
+    .item-cart .title .cantidad,
+    .cart-items .item-actions .cupon
+    .item-actions,
+    .container-cart,
+    .container-cart .container {
+        display: block;
+        text-align: center;
+    }
+
+    .item-cart .title {
+        min-width: auto;
+    }
+
+    .item-cart .title .cantidad label {
+        margin-right: 10px;
+    }
+
+
+    .item-cart .title .cantidad input {
+        text-align: center;
+    }
+
+    .item-cart .footer {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .cart-items .item-actions {
+        display: block;
+    }
+
+    .cart-items .item-actions .cupon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .item-actions .cupon mat-form-field {
+        width: 50%;
+    }
+
+    .cart-total {
+        margin-top: 10px;
+    }
+
+    .cart-total div {
+        font-size: 20px;
+    }
+}
+

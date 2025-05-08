@@ -1,0 +1,108 @@
+<mat-toolbar [class.hidden]="isHidden">
+
+  <div class="logo-container">
+    <a href="/" class="logo-link">
+      <img src="assets/logo.png" alt="Logo" class="logo-img" />
+    </a>
+  </div>
+
+  <span class="example-spacer" style="flex:0.2 1 auto"></span>
+
+  <button mat-button [matMenuTriggerFor]="categoriasMenu" style="background-color: rgb(170, 170, 170); font-weight: bold;">
+    Categorías<mat-icon iconPositionEnd>
+      arrow_drop_down
+    </mat-icon>
+  </button>
+
+  <mat-menu #categoriasMenu="matMenu">
+    <ng-container *ngFor="let categoria of categorias">
+      <button mat-menu-item [matMenuTriggerFor]="subMenuMap.get(categoria)" *ngIf="hasSubCategorias(categoria)">
+        {{ categoria.nombre }}
+      </button>
+      <button mat-menu-item *ngIf="!hasSubCategorias(categoria)">
+        {{ categoria.nombre }}
+      </button>
+  
+      <!-- Submenú de la categoría -->
+      <mat-menu #subMenu="matMenu">
+        <ng-container *ngFor="let sub of categoria.subCategorias">
+          <button mat-menu-item (click)="hacerAccion(sub)">{{ sub.nombre }}</button>
+        </ng-container>
+      </mat-menu>
+  
+      <!-- Asociamos el submenu dinámicamente -->
+      <ng-container *ngIf="!subMenuMap.has(categoria)">
+        {{ subMenuMap.set(categoria, subMenu) }}
+      </ng-container>
+    </ng-container>
+  </mat-menu>
+
+  <!--<button mat-button [matMenuTriggerFor]="categorias" style="background-color: rgb(170, 170, 170); font-weight: bold;">
+    Categorías<mat-icon iconPositionEnd>
+      arrow_drop_down
+    </mat-icon>
+  </button>
+  <mat-menu #categorias="matMenu">
+    <button mat-menu-item [matMenuTriggerFor]="sala">Sala</button>
+    <button mat-menu-item [matMenuTriggerFor]="dormitorio">Dormitorio</button>
+  </mat-menu>
+  <mat-menu #sala="matMenu">
+    <button mat-menu-item>Seccional</button>
+    <button mat-menu-item>Sofá Cama</button>
+  </mat-menu>
+  <mat-menu #dormitorio="matMenu">
+    <button mat-menu-item>Cabecera</button>
+    <button mat-menu-item>Banqueta</button>
+    <button mat-menu-item>Box Tarima</button>
+  </mat-menu>-->
+
+  <span class="example-spacer" style="flex:1 1 auto"></span>
+
+  <div class="menu-default">
+    <a mat-button routerLink="/conocenos" routerLinkActive="active">Conócenos</a>
+    <a mat-button routerLink="/">Servicios</a>
+    <a mat-button routerLink="/">Blog</a>
+    <a mat-button routerLink="/">Contacto</a>
+    <a mat-button routerLink="/tienda" routerLinkActive="active">Tienda</a>
+    <a mat-button routerLink="/">Catálogo</a>
+  </div>
+
+  <span class="example-spacer"></span>
+
+  <span class="menu-mobile">
+    <button #r="matMenuTrigger" mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon (mouseover)="open(r)">menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" [overlapTrigger]="false">
+      <button mat-menu-item>
+        <a mat-button routerLink="/conocenos" routerLinkActive="active">Conócenos</a>
+      </button>
+      <button mat-menu-item>
+        <span>Servicios</span>
+      </button>
+      <button mat-menu-item>
+        <span>Blog</span>
+      </button>
+      <button mat-menu-item>
+        <span>Contacto</span>
+      </button>
+      <button mat-menu-item>
+        <a mat-button routerLink="/tienda" routerLinkActive="active">Tienda</a>
+      </button>
+      <button mat-menu-item>
+        <span>Catálogo</span>
+      </button>
+    </mat-menu>
+  </span>
+
+  <button mat-icon-button aria-label="Carrito" (click)="openPreviewCart()">
+    <mat-icon matBadge="{{devolverCantidadItemsCarrito()}}" matBadgeColor="primary" aria-hidden="false">shopping_cart</mat-icon>
+  </button>
+
+  <span class="example-spacer" style="flex:0.4 1 auto"></span>
+
+</mat-toolbar>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+

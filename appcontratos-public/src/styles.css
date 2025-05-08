@@ -1,0 +1,188 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: auto;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-bottom-align::before {
+  height: 0px !important;
+}
+
+/* Overlay para bloquear la pantalla */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Fondo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  /* Se coloca al frente de todo */
+}
+
+/* Centrar el spinner */
+.spinner {
+  z-index: 10001;
+}
+
+.g-bubble-container {
+  display: flex;
+  gap: 4px;
+}
+
+a,
+a:visited {
+  color: inherit;
+  /* o el color que quieras */
+  text-decoration: none;
+}
+
+.g-bubble {
+  background-color: #919191;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.g-bubble:hover {
+  background-color: #b6b6b6;
+  color: white;
+}
+
+.g-bubble__active {
+  background-color: #000000;
+  color: white;
+}
+
+/* .g-bubble__disabled {
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+    color: 919191;
+  } */
+
+/* TODO(mdc-migration): The following rule targets internal classes of paginator that may no longer apply for the MDC version. */
+mat-paginator {
+  background: transparent !important;
+}
+
+.mat-mdc-paginator-range-actions {
+  margin-right: 12px !important;
+}
+
+.mat-mdc-paginator-range-label {
+  display: none !important;
+}
+
+mat-stepper.stepper-cart .mat-horizontal-stepper-header {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px
+}
+
+
+mat-stepper.stepper-cart .mat-horizontal-stepper-header .mat-step-icon-state-edit,
+mat-stepper.stepper-cart .mat-horizontal-stepper-header .mat-step-icon-selected {
+  background-color: #000000;
+}
+
+mat-stepper.stepper-cart .mat-horizontal-stepper-header .mat-step-label,
+mat-stepper.stepper-cart .mat-horizontal-stepper-header .mat-step-icon {
+  text-align: center;
+  margin: 0;
+}
+
+mat-stepper.stepper-cart button.mat-stepper-previous {
+  float: left;
+  padding: 25px;
+}
+
+mat-stepper.stepper-cart button.mat-stepper-next {
+  float: right;
+  background-color: #000;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  padding: 25px;
+  font-weight: 400;
+}
+
+mat-stepper.stepper-cart button.mat-stepper-next:disabled {
+  background-color: #00000082;
+}
+
+mat-radio-group.tipo-envio .mat-mdc-radio-button.mat-accent {
+  --mdc-radio-selected-focus-icon-color: #000000;
+  --mdc-radio-selected-hover-icon-color: #000000;
+  --mdc-radio-selected-icon-color: #000000;
+  --mdc-radio-selected-pressed-icon-color: #000000;
+  --mat-radio-checked-ripple-color: #000000;
+}
+
+mat-button-toggle-group.detalles-material-group {
+  box-shadow: none !important;
+}
+
+mat-button-toggle-group.detalles-material-group .mat-pseudo-checkbox {
+  display: none;
+}
+
+mat-button-toggle-group.detalles-material-group mat-button-toggle>button>span {
+  padding: 5px;
+}
+
+mat-button-toggle-group.detalles-material-group mat-button-toggle.mat-button-toggle-checked {
+  border-style: solid;
+  border-width: 1px;
+  background-color: #9137974f;
+  border-radius: 8px;
+}
+
+mat-button-toggle-group.detalles-material-group mat-button-toggle img {
+  border-radius: 8px;
+}
+
+@media (max-width: 1090px) {
+
+  .g-bubble-container {
+    gap: 0px;
+  }
+
+  .g-bubble {
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
+  }
+
+  mat-stepper.stepper-cart button.mat-stepper-previous,
+  mat-stepper.stepper-cart button.mat-stepper-next {
+    float: none;
+    padding: 20px;
+    font-size: 15px;
+  }
+
+  mat-stepper.stepper-cart .mat-horizontal-content-container {
+    padding: 0 10px 10px 10px;
+  }
+
+}

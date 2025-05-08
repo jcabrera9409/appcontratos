@@ -1,0 +1,71 @@
+<app-banner [backgroundImage]="'/assets/banner/conocenos.png'" [breadcrumb]="pathProducto"
+    [title]="productoSeleccionado?.nombre"></app-banner>
+
+<div class="container-product">
+    <div class="container-blocks">
+        <div class="block-carousel">
+            <div class="carousel">
+                <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                    @for (slide of slides; track slide) {
+                    <div ngxSlickItem class="slide">
+                        <a routerLink="/tienda"><img src="{{ slide }}" alt="Imagen referencial" width="100%"></a>
+                    </div>
+                    }
+                </ngx-slick-carousel>
+            </div>
+        </div>
+        <div class="block-details">
+            <h1>{{productoSeleccionado?.nombre}}</h1>
+            <div class="description" [innerHTML]="productoSeleccionado?.descripcion">
+            </div>
+            <div class="material">
+                <h2>Material: </h2>
+                <mat-form-field style="width: 100%;" class="search-label-responsive">
+                    <mat-select name="cmbMateriales" [(ngModel)]="valorSeleccionadoMaterial"
+                        (selectionChange)="cambiarMaterial($event.value)">
+                        @for (item of productoSeleccionado?.materiales; track item.id) {
+                        <mat-option [value]="item">{{item.nombre}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <button mat-button color="primary" (click)="verCatalogo()">Catálogo</button>
+            </div>
+            <div class="detalles-material">
+                <mat-button-toggle-group [(ngModel)]="valorSeleccionadoDetalleMaterial" appearance="legacy"
+                    style="overflow-x: auto;" class="detalles-material-group">
+                    @for(item of valorSeleccionadoMaterial?.detalles; track item.id) {
+                    <mat-button-toggle [value]="item" matTooltip="{{item.nombre}}" matTooltipPosition="below">
+                        <img src="{{item.url}}" width="50" />
+                    </mat-button-toggle>
+                    }
+                </mat-button-toggle-group>
+            </div>
+            <p class="price">
+                @if(productoSeleccionado?.descuento > 0) {
+                <del>S/ {{productoSeleccionado?.precio | number: '1.2-2'}}</del>
+                }
+                <ins>S/ {{productoSeleccionado?.precioFinal | number: '1.2-2'}}</ins>
+            </p>
+            <div class="add-to-cart">
+                <label for="quantity" class="quantity-label">Cantidad</label>
+                <input matInput type="number" id="quantity" class="quantity-input" [(ngModel)]="cantidadSeleccionada" min="1" value="1">
+                <button mat-button (click)="agregarItemCarrito()">
+                    AÑADIR AL CARRITO
+                    <mat-icon iconPositionEnd *ngIf="itemAgregado">check</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="block-technical">
+            <div class="technical-card">
+                <div class="title-content">
+                    <div class="title">DESCRIPCIÓN</div>
+                </div>
+                <hr />
+                <div class="content" [innerHTML]="productoSeleccionado?.descripcionTecnica">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer classBorder="border-top"></app-footer>

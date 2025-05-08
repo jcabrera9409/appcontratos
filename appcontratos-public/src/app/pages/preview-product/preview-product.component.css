@@ -1,0 +1,104 @@
+.product-detail {
+    display: flex;
+    gap: 20px;
+    max-width: 900px;
+    font-family: sans-serif;
+    max-height: 460px;
+    color: black;
+}
+
+.product-images {
+    max-width: 40%;
+}
+
+.product-info {
+    max-width: 60%;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.product-info .material-defecto {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-info .material-defecto img {
+    width: 30px;
+    height: 30px;
+}
+
+.product-info h1 {
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: gray;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.new-price {
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.description {
+    margin: 15px 0;
+}
+
+.cart-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.cart-action input {
+    width: 50px;
+    padding: 5px;
+}
+
+.cart-action button {
+    padding: 8px 16px;
+    background-color: #333;
+    color: white;
+    border: none;
+}
+
+@media (max-width: 1090px) {
+
+    .product-detail {
+        display: block;
+        max-width: 100%;
+        max-height: none;
+    }
+
+    .product-images {
+        max-width: 100%;
+    }
+
+    .product-info {
+        max-width: 100%;
+        overflow-y: auto;
+    }
+    
+    .cart-action {
+        display: block;
+    }
+    
+    .cart-action>button {
+        padding: 10px 5px;
+        line-height: normal;
+        margin-left: 5px;
+    }
+
+    .cart-action>div {
+        margin-top: 5px;
+        text-align: center;
+    }
+}

@@ -1,0 +1,185 @@
+.container-product {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.container-blocks {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1140px;
+    width: 100%;
+}
+
+.container-blocks .block-carousel {
+    width: 50%;
+}
+
+.block-carousel>.carousel {
+    padding-right: 30px;
+}
+
+.container-blocks .block-details {
+    width: 50%;
+    margin-bottom: 100px;
+}
+
+.block-details h1 {
+    color: #191919 !important;
+    font-size: 35px;
+    font-weight: 500;
+}
+
+.block-details .description {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #777777;
+}
+
+.block-details .material {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-content: center;
+}
+
+.block-details .detalles-material {
+    margin-bottom: 15px;
+    text-align: center;
+    display: flex;
+}
+
+.block-details .material h2 {
+    margin-bottom: 0px;
+}
+
+.block-details .price {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.block-details .add-to-cart {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.add-to-cart .quantity-label {
+    font-size: 20px;
+}
+
+.add-to-cart .quantity-input {
+    width: 60px;
+    padding: 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.add-to-cart button {
+    padding: 10px 25px;
+    background-color: #262626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.add-to-cart button:hover {
+    background-color: #000;
+}
+
+
+
+.price>del {
+    color: #B5B5B5;
+    margin-right: 5px;
+}
+
+.container-blocks .block-technical {
+    width: 100%;
+}
+
+
+.block-technical .technical-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+    max-width: 100%;
+}
+
+.technical-card>.title-content {
+    text-align: center;
+}
+
+.technical-card>.title-content>.title {
+    background-color: #ccc;
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.technical-card>hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.technical-card .content {
+    margin-bottom: 12px;
+    font-size: 17px;
+    font-weight: 350;
+    color: #777777;
+    line-height: 1.5;
+}
+
+@media (max-width: 1090px) {
+    .container-blocks .block-carousel {
+        width: 100%;
+    }
+
+    .block-carousel>.carousel {
+        padding-right: 0px;
+    }
+
+    .container-blocks .block-technical {
+        margin: 0px 10px;
+    }
+
+    .container-blocks .block-details {
+        width: 100%;
+        margin: 0px 10px 10px 10px;
+    }
+
+    .add-to-cart .quantity-label {
+        font-size: 15px;
+    }
+
+    .add-to-cart .quantity-input {
+        width: 40px;
+        padding: 10px 10px;
+        font-size: 15px;
+    }
+
+    .add-to-cart button {
+        font-size: 12px;
+    }
+
+    .block-details .price {
+        font-size: 25px;
+    }
+}
