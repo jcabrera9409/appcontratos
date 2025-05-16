@@ -1,0 +1,23 @@
+<mat-dialog-content>
+    <div class="catalogo-content">
+        <div class="catalogo-header">
+            <h1>Catálogo de Materiales</h1>
+            <p>Busca el material que deseas ver</p>
+        </div>
+        <div class="material-list">
+            <form [formGroup]="formGroup">
+                <input type="text" matInput placeholder="Buscar material" style="display: none;">
+                <mat-form-field class="col-100">
+                    <mat-label>Material</mat-label>
+                    <input type="text" matInput [matAutocomplete]="autoMaterial" formControlName="material" tabindex="-1">
+                    <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayMaterial">
+                        <mat-option *ngFor="let d of( dataMateriales$ | async)"
+                            [value]="d">{{d.nombre}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <p><strong>Descripción:</strong> {{materialSeleccionado?.descripcion}}</p>
+            </form>
+        </div>
+    </div>
+</mat-dialog-content>

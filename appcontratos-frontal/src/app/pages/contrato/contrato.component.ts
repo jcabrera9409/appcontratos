@@ -151,7 +151,7 @@ export class ContratoComponent implements OnInit {
   }
 
   applyFilter(event: Event) {
-    if(event["code"] === 'Enter') {
+    if(event["keyCode"] === 13) {
       this.listarContratosPaginado(0, 10);
     }
   }

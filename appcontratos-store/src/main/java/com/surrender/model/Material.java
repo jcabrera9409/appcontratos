@@ -28,6 +28,9 @@ public class Material {
 	@Column(nullable = false)
 	private String descripcion;
 	
+	@Column(nullable = false)
+	private boolean estado;
+	
 	@OneToMany(mappedBy = "objMaterial", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<DetalleMaterial> detalles;
 	
@@ -57,6 +60,14 @@ public class Material {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
 	}
 
 	public List<DetalleMaterial> getDetalles() {

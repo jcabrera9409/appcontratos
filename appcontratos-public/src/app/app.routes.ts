@@ -7,6 +7,7 @@ import { FinalizarContratoComponent } from './pages/finalizar-contrato/finalizar
 import { PrivacityPolicyComponent } from './pages/privacity-policy/privacity-policy.component';
 import { DiscriminationPolicyComponent } from './pages/discrimination-policy/discrimination-policy.component';
 import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-and-conditions.component';
+import { LibroReclemacionComponent } from './pages/libro-reclemacion/libro-reclemacion.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'conocenos', pathMatch: 'full' },
@@ -19,4 +20,5 @@ export const routes: Routes = [
     { path: 'politica-privacidad', component: PrivacityPolicyComponent },
     { path: 'politica-de-no-discriminacion', component: DiscriminationPolicyComponent },
     { path: 'terminos-y-condiciones', component: TermsAndConditionsComponent },
+    { path: 'libro-de-reclamaciones', component: LibroReclemacionComponent }
 ];

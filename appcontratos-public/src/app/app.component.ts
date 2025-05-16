@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Categoria } from './_model/categoria';
 import { CategoriaService } from './_service/categoria.service';
 import { CarritoService } from './_service/carrito.service';
+import { CatalogoMaterialComponent } from './pages/catalogo-material/catalogo-material.component';
 
 @Component({
   selector: 'app-root',
@@ -113,5 +114,16 @@ export class AppComponent implements OnInit {
 
   devolverCantidadItemsCarrito(): number {
     return this.cantidadItemsCarrito;
+  }
+
+  shouldShowSubMenu(categoria: Categoria): boolean {
+    return !this.subMenuMap.has(categoria);
+  }
+
+  verCatalogo() {
+    this.dialog.open(CatalogoMaterialComponent, {
+      height: '500px',
+      data: {},
+    });
   }
 }

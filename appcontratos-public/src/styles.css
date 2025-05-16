@@ -3,6 +3,12 @@
 html,
 body {
   height: auto;
+  --mdc-checkbox-selected-icon-color: #000000;
+  --mdc-checkbox-selected-pressed-icon-color: #000000;
+  --mdc-checkbox-selected-pressed-state-layer-color: #000000;
+  --mdc-checkbox-selected-focus-icon-color: #000000;
+  --mdc-checkbox-selected-hover-icon-color: #000000;
+  --mdc-checkbox-selected-focus-state-layer-color: #000000;
 }
 
 body {
@@ -131,7 +137,8 @@ mat-stepper.stepper-cart button.mat-stepper-next:disabled {
   background-color: #00000082;
 }
 
-mat-radio-group.tipo-envio .mat-mdc-radio-button.mat-accent {
+mat-radio-group.tipo-envio .mat-mdc-radio-button.mat-accent,
+mat-radio-group.menor-edad .mat-mdc-radio-button.mat-accent {
   --mdc-radio-selected-focus-icon-color: #000000;
   --mdc-radio-selected-hover-icon-color: #000000;
   --mdc-radio-selected-icon-color: #000000;
@@ -160,6 +167,18 @@ mat-button-toggle-group.detalles-material-group mat-button-toggle.mat-button-tog
 
 mat-button-toggle-group.detalles-material-group mat-button-toggle img {
   border-radius: 8px;
+}
+
+button.enviar-reclamo {
+  margin-top: 20px;
+  width: 100%;
+  color: #ffffff;
+  background-color: #000000 !important;
+}
+
+button.enviar-reclamo:disabled {
+  color: #ffffff;
+  background-color: #797979 !important;
 }
 
 @media (max-width: 1090px) {

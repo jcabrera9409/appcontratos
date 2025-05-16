@@ -1,0 +1,193 @@
+<div class="content-libro">
+    <div class="libro">
+        <form [formGroup]="formGroup" *ngIf="!reclamoRegistrado">
+            <div class="exampler-container">
+                <h1>Identificación del consumidor reclamante</h1>
+                <mat-form-field class="col-30">
+                    <mat-label>Nombre</mat-label>
+                    <input type="text" matInput formControlName="nombre"
+                        placeholder="Nombre" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Primer Apellido</mat-label>
+                    <input type="text" matInput formControlName="primerApellido"
+                        placeholder="Primer Apellido" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Segundo Apellido</mat-label>
+                    <input type="text" matInput formControlName="segundoApellido"
+                        placeholder="Segundo Apellido" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Tipo de Documento</mat-label>
+                    <mat-select value="DNI" formControlName="documento" required="true">
+                        <mat-option value="DNI">DNI</mat-option>
+                        <mat-option value="CE">CE</mat-option>
+                        <mat-option value="Pasaporte">Pasaporte</mat-option>
+                        <mat-option value="RUC">RUC</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Número de Documento</mat-label>
+                    <input type="text" matInput formControlName="numeroDocumento"
+                        placeholder="Número de Documento" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Celular</mat-label>
+                    <input type="text" matInput formControlName="celular"
+                        placeholder="Celular" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-100">
+                    <mat-label>Correo electrónico</mat-label>
+                    <input type="email" matInput formControlName="correo"
+                        placeholder="Correo electrónico" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Departamento</mat-label>
+                    <input type="text" matInput formControlName="departamento"
+                        [matAutocomplete]="autoDepartamento">
+                    <mat-autocomplete #autoDepartamento="matAutocomplete" [displayWith]="displayDepartamento">
+                        <mat-option *ngFor="let d of( dataDepartamento$ | async)"
+                            [value]="d">{{d.nombre}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Provincia</mat-label>
+                    <input type="text" matInput formControlName="provincia"
+                        [matAutocomplete]="autoProvincia">
+                    <mat-autocomplete #autoProvincia="matAutocomplete" [displayWith]="displayProvincia">
+                        <mat-option *ngFor="let d of( dataProvincia$ | async)"
+                            [value]="d">{{d.nombre}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field class="col-30">
+                    <mat-label>Distrito</mat-label>
+                    <input type="text" matInput formControlName="distrito"
+                        [matAutocomplete]="autoDistrito">
+                    <mat-autocomplete #autoDistrito="matAutocomplete" [displayWith]="displayDistrito">
+                        <mat-option *ngFor="let d of( dataDistrito$ | async)"
+                            [value]="d">{{d.nombre}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field class="col-100">
+                    <mat-label>Dirección</mat-label>
+                    <input type="text" matInput formControlName="direccion"
+                        placeholder="Dirección" required="true">
+                </mat-form-field>
+                <mat-form-field class="col-100">
+                    <mat-label>Referencia</mat-label>
+                    <input type="text" matInput formControlName="referencia"
+                        placeholder="Referencia">
+                </mat-form-field>
+                <div class="col-100">
+                    <mat-label style="font-size: 16px;">¿Eres menor de edad?</mat-label>
+                    <mat-radio-group aria-label="¿Eres menor de edad?" formControlName="menorEdad" class="menor-edad" (change)="onChangeMenorEdad($event.value)">
+                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                        <mat-radio-button [value]="false" checked="true">No</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <mat-form-field class="col-50" *ngIf="esMenorEdad">
+                    <mat-label>Tipo de Documento del Tutor</mat-label>
+                    <mat-select value="DNI" formControlName="tipoDocumentoTutor">
+                        <mat-option value="DNI">DNI</mat-option>
+                        <mat-option value="CE">CE</mat-option>
+                        <mat-option value="Pasaporte">Pasaporte</mat-option>
+                        <mat-option value="RUC">RUC</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col-50" *ngIf="esMenorEdad">
+                    <mat-label>Número de Documento del Tutor</mat-label>
+                    <input type="text" matInput formControlName="numeroDocumentoTutor"
+                        placeholder="Número de Documento del Tutor">
+                </mat-form-field>
+                <mat-form-field class="col-100" *ngIf="esMenorEdad">
+                    <mat-label>Nombre Completo del Tutor</mat-label>
+                    <input type="text" matInput formControlName="nombreTutor"
+                        placeholder="Nombre Completo del Tutor">
+                </mat-form-field>
+                <mat-form-field class="col-100" *ngIf="esMenorEdad">
+                    <mat-label>Correo electrónico del Tutor</mat-label>
+                    <input type="text" matInput formControlName="correoTutor"
+                        placeholder="Correo electrónico del Tutor">
+                </mat-form-field>
+
+                <h1>Identificación de la Queja o Reclamo</h1>
+
+                <mat-form-field class="col-50">
+                    <mat-label>Tipo de Reclamo</mat-label>
+                    <mat-select formControlName="tipoReclamo" required="true">
+                        <mat-option value="Reclamo">Reclamo (1)</mat-option>
+                        <mat-option value="Queja">Queja (2)</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-50">
+                    <mat-label>Tipo de Consumo</mat-label>
+                    <mat-select formControlName="tipoConsumo" required="true">
+                        <mat-option value="Producto">Producto</mat-option>
+                        <mat-option value="Servicio">Servicio</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-50">
+                    <mat-label>Código de contrato</mat-label>
+                    <input type="text" matInput formControlName="codigoContrato"
+                        placeholder="Código de contrato" required="true">
+                </mat-form-field>
+
+                <mat-form-field class="col-50">
+                    <mat-label>Monto reclamado (S/.)</mat-label>
+                    <input type="number" value="0" matInput formControlName="montoReclamado"
+                        placeholder="Monto reclamado (S/.)">
+                </mat-form-field>
+
+                <mat-form-field class="col-100">
+                    <mat-label>Descripción del producto o servicio</mat-label>
+                    <textarea matInput placeholder="Descripción del producto o servicio" formControlName="descripcion"></textarea>
+                </mat-form-field>
+
+                <mat-form-field class="col-100">
+                    <mat-label>Detalle de la Reclamación / Queja</mat-label>
+                    <textarea matInput placeholder="Detalle de la Reclamación / Queja" formControlName="detalleReclamo"></textarea>
+                </mat-form-field>
+
+                <mat-form-field class="col-100">
+                    <mat-label>Pedido del Cliente</mat-label>
+                    <textarea matInput placeholder="Pedido del Cliente" formControlName="pedidoCliente"></textarea>
+                </mat-form-field>
+
+                <p class="col-50"><strong class="color-red">(1) </strong><strong class="color-black">Reclamo: </strong><strong class="color-gray">Es una manifestación en la cual expresas tu disconformidad relacionada al producto / servicio brindado.</strong></p>
+                <p class="col-50"><strong class="color-red">(2) </strong><strong class="color-black">Queja: </strong><strong class="color-gray">Es una manifestación en la cual expresas una disconformidad que no se encuentra relacionada con el producto / servicio brindado.</strong></p>
+                <div class="dv-aceptacion">
+                    <mat-checkbox class="check-acepto" formControlName="acepto1" required="true">
+                        <strong class="color-black">Declaro que soy el dueño del servicio y acepto el contenido de este formulario al declarar bajo Declaración Jurada la veracidad de los hechos descritos.</strong>
+                    </mat-checkbox>
+                    <div class="dv-aceptacion-text">
+                        <p><strong class="color-red">* </strong><strong class="color-black">La formulación del reclamo no excluye el recurso a otros medios de resolución de controversias ni es un requisito previo para presentar una denuncia ante el Indecopi.</strong></p>
+                        <p><strong class="color-red">* </strong><strong class="color-black">El proveedor debe responder a la reclamación en un plazo no superior a quince (15) días naturales, pudiendo ampliar el plazo hasta quince días.</strong></p>
+                        <p><strong class="color-red">* </strong><strong class="color-black">Con la firma de este documento, el cliente autoriza a ser contactado después de la tramitación de la reclamación para evaluar la calidad y satisfacción del proceso de atención de reclamaciones.</strong></p>
+                    </div>
+                </div>
+                <mat-checkbox class="check-acepto" formControlName="acepto2" required="true">
+                    <a href="/politica-privacidad" target="_blank">
+                        <strong class="color-black">He leído y acepto la Política de privacidad y seguridad.</strong>
+                    </a>
+                </mat-checkbox>
+
+                <button mat-flat-button color="primary" class="enviar-reclamo" [disabled]="formGroup.invalid" (click)="registrarReclamo()">Enviar</button>
+            </div>
+        </form>
+        
+        <div class="reclamo-registrado" *ngIf="reclamoRegistrado">
+            <h1>Reclamo registrado con éxito</h1>
+            <p class="color-black">Ya hemos recibido su reclamo. El número de reclamo es: <strong class="color-black">{{nuevoReclamo?.codigo}}</strong></p>
+            <p class="color-black">Uno de nuestros asesores pronto se pondrá en contacto contigo. Si tienes dudas recuerda que puedes llamar al 
+                <a href="tel:+51957294224">957 294 224</a> o contactarnos a nuestro email <a href="mailto:creaconfortperu@gmail.com">creaconfortperu&#64;gmail.com</a></p>
+        </div>
+    </div>
+</div>
+
+<app-footer classBorder="border-top"></app-footer>
+
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>

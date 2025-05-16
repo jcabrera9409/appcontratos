@@ -71,7 +71,7 @@ export class FinalizarContratoComponent implements OnInit {
       "apellidoCliente": new FormControl('', Validators.required),
       "razonSocialCliente": new FormControl(''),
       "telefonoCliente": new FormControl('', Validators.required),
-      "emailCliente": new FormControl('', Validators.required),
+      "emailCliente": new FormControl('', [Validators.required, Validators.email]),
     });
 
     this.secondFormGroup = new FormGroup({
@@ -265,7 +265,6 @@ export class FinalizarContratoComponent implements OnInit {
       next: (data) => {
         this.contratoCreado = data.data;
         this.carritoService.limpiarCarrito();
-        console.log(data);
         this.isLoading = false;
       },
       error: (e) => {

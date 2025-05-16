@@ -1,0 +1,130 @@
+.content-libro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.content-libro .libro {
+    min-width: 900px;
+    width: 50%;
+}
+
+.content-libro .libro a {
+    text-decoration: underline;
+}
+
+.content-libro .libro .reclamo-registrado {
+    text-align: center;
+}
+
+.content-libro .libro .dv-aceptacion {
+    display: flex;
+    width: 100%;
+    gap: 50px;
+    text-align: justify;
+}
+
+.content-libro .libro .dv-aceptacion .dv-aceptacion-text p {
+    font-size: 10px;
+    margin-bottom: 0px;
+}
+
+.content-libro .libro h1 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-right: 2%;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.content-libro .libro mat-form-field.col-30 {
+    width: 32%;
+    margin-bottom: 15px;
+    margin-right: 1%;
+}
+
+.content-libro .libro div.col-50,
+.content-libro .libro mat-checkbox.col-50,
+.content-libro .libro mat-form-field.col-50 {
+    width: 48%;
+    margin-bottom: 15px;
+    margin-right: 2%;
+}
+
+.content-libro .libro mat-form-field.col-100 {
+    width: 98%;
+    margin-bottom: 15px;
+    margin-right: 2%;
+}
+
+.color-red {
+    color: #FF0000;
+}
+
+.color-black {
+    color: #000000;
+}
+
+.color-gray {
+    color: #808080;
+}
+
+@media (max-width: 950px) {
+    .content-libro .libro {
+        min-width: auto;
+        width: 95%;
+    }
+}
+
+@media (max-width: 750px) {
+    .content-libro {
+        margin-top: 70px;
+        margin-bottom: 30px;
+    }
+
+    .content-libro .libro {
+        min-width: auto;
+        width: 98%
+    }
+
+    .content-libro .libro .dv-aceptacion {
+        display: block;
+    }
+
+    .content-libro .libro .dv-aceptacion > div{
+        margin: 20px 0px; 
+    }
+
+    .content-libro .libro h1 {
+        margin-top: 0px;
+        margin-bottom: 10px;
+        margin-right: 0px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .content-libro .libro mat-form-field.col-30 {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0px;
+    }
+
+    .content-libro .libro div.col-50,
+    .content-libro .libro mat-checkbox.col-50,
+    .content-libro .libro mat-form-field.col-50 {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0px;
+    }
+
+    .content-libro .libro mat-form-field.col-100 {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0px;
+    }
+}

@@ -31,30 +31,11 @@
       </mat-menu>
   
       <!-- Asociamos el submenu dinámicamente -->
-      <ng-container *ngIf="!subMenuMap.has(categoria)">
+      <ng-container *ngIf="shouldShowSubMenu(categoria)">
         {{ subMenuMap.set(categoria, subMenu) }}
       </ng-container>
     </ng-container>
   </mat-menu>
-
-  <!--<button mat-button [matMenuTriggerFor]="categorias" style="background-color: rgb(170, 170, 170); font-weight: bold;">
-    Categorías<mat-icon iconPositionEnd>
-      arrow_drop_down
-    </mat-icon>
-  </button>
-  <mat-menu #categorias="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="sala">Sala</button>
-    <button mat-menu-item [matMenuTriggerFor]="dormitorio">Dormitorio</button>
-  </mat-menu>
-  <mat-menu #sala="matMenu">
-    <button mat-menu-item>Seccional</button>
-    <button mat-menu-item>Sofá Cama</button>
-  </mat-menu>
-  <mat-menu #dormitorio="matMenu">
-    <button mat-menu-item>Cabecera</button>
-    <button mat-menu-item>Banqueta</button>
-    <button mat-menu-item>Box Tarima</button>
-  </mat-menu>-->
 
   <span class="example-spacer" style="flex:1 1 auto"></span>
 
@@ -64,7 +45,7 @@
     <a mat-button routerLink="/">Blog</a>
     <a mat-button routerLink="/">Contacto</a>
     <a mat-button routerLink="/tienda" routerLinkActive="active">Tienda</a>
-    <a mat-button routerLink="/">Catálogo</a>
+    <a mat-button routerLink="#" (click)="verCatalogo()">Catálogo</a>
   </div>
 
   <span class="example-spacer"></span>
