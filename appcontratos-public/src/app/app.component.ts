@@ -123,6 +123,7 @@ export class AppComponent implements OnInit {
   verCatalogo() {
     this.dialog.open(CatalogoMaterialComponent, {
       height: '500px',
+      width: '600px',
       data: {},
     });
   }

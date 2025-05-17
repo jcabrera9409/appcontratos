@@ -19,6 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MensajeComponent } from '../mensaje/mensaje.component';
 import { MatIconModule } from '@angular/material/icon';
 import { FooterComponent } from '../footer/footer.component';
+import { CatalogoMaterialComponent } from '../catalogo-material/catalogo-material.component';
 
 @Component({
   selector: 'app-product',
@@ -91,7 +92,11 @@ export class ProductComponent implements OnInit {
   }
 
   verCatalogo() {
-
+    this.dialog.open(CatalogoMaterialComponent, {
+      height: '500px',
+      width: '600px',
+      data: {},
+    });
   }
 
   agregarItemCarrito() {

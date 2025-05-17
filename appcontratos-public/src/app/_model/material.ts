@@ -1,6 +1,7 @@
 export interface DetalleMaterial {
     id: number;
     nombre: string;
+    descripcion: string;
     url: string;
 }
 

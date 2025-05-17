@@ -4,14 +4,15 @@ import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MaterialService } from '../../_service/material.service';
-import { DetalleMaterial, Material } from '../../_model/material';
+import { Material } from '../../_model/material';
 import { map, Observable, startWith } from 'rxjs';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @Component({
   selector: 'app-catalogo-material',
   standalone: true,
-  imports: [MatDialogModule, CommonModule, MatAutocompleteModule, MatInputModule, FormsModule, ReactiveFormsModule],
+  imports: [MatDialogModule, CommonModule, MatAutocompleteModule, MatInputModule, FormsModule, ReactiveFormsModule, SlickCarouselModule],
   templateUrl: './catalogo-material.component.html',
   styleUrl: './catalogo-material.component.css'
 })
@@ -23,6 +24,16 @@ export class CatalogoMaterialComponent implements OnInit {
   dataMateriales$: Observable<Material[]>;
 
   formGroup: FormGroup;
+
+  slideConfig = {
+    "slidesToShow": 1, 
+    "slidesToScroll": 1,
+    "autoplay": false,
+    "autoplaySpeed": 5000,
+    "infinite": true,
+    "dots": true,
+    "arrows": false,
+  };
   
   constructor(
     private materialService: MaterialService,

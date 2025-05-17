@@ -16,7 +16,21 @@
                     </mat-autocomplete>
                 </mat-form-field>
 
-                <p><strong>Descripción:</strong> {{materialSeleccionado?.descripcion}}</p>
+                <p class="description"><strong>Descripción:</strong> {{materialSeleccionado?.descripcion}}</p>
+
+                <div class="details">
+                    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+                        @for (slide of materialSeleccionado?.detalles; track slide) {
+                        <div ngxSlickItem class="slide">
+                            <img src="{{ slide.url }}" alt="Imagen referencial" width="40%">
+                            <div>
+                                <p><strong>Nombre: </strong> {{slide.nombre}}</p>
+                                <p><strong>Descripción: </strong> {{slide.descripcion}}</p>
+                            </div>
+                        </div>
+                        }
+                    </ngx-slick-carousel>
+                </div>
             </form>
         </div>
     </div>
