@@ -5,5 +5,5 @@ import java.util.List;
 import com.surrender.model.Material;
 
 public interface IMaterialRepo extends IGenericRepo<Material, Integer> {
-	List<Material> findByEstadoTrue();
+	List<Material> findByEstadoTrueOrderByNombreAsc();
 }

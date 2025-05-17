@@ -23,7 +23,7 @@ public class MaterialServiceImpl extends CRUDImpl<Material, Integer> implements 
 	
 	@Override
 	public List<Material> listarMaterialesActivos() {
-		return repo.findByEstadoTrue();
+		return repo.findByEstadoTrueOrderByNombreAsc();
 	}
 
 

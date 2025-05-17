@@ -25,6 +25,9 @@ public class DetalleMaterial {
 	@Column(nullable = false)
 	private String url;
 	
+	@Column(nullable = false)
+	private String descripcion;
+	
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name = "id_material", nullable = false)
@@ -52,6 +55,14 @@ public class DetalleMaterial {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public Material getObjMaterial() {
