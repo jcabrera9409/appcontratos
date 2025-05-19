@@ -64,7 +64,7 @@ public class AuthenticationController {
     }
 	
 	@PostMapping("/refresh_token")
-    public ResponseEntity refreshToken(
+    public ResponseEntity<?> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) {
@@ -72,7 +72,7 @@ public class AuthenticationController {
     }
 	
 	@GetMapping("/recover_password/{correo}")
-	public ResponseEntity recoverPassword(@PathVariable String correo) throws Exception {
+	public ResponseEntity<?> recoverPassword(@PathVariable String correo) throws Exception {
 		Optional<Vendedor> optVendedor = serviceVendedor.listarPorCorreo(correo);
 		if (optVendedor.isPresent()) {
 			Vendedor vendedor = optVendedor.get();
@@ -103,17 +103,16 @@ public class AuthenticationController {
 			
 			emailUtil.enviarMail(mail);
 			
-			return new ResponseEntity(HttpStatus.OK);
+			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
 		else {
-			Vendedor v = new Vendedor();
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 		
 	}
 	
 	@PutMapping("/reset_password")
-	public ResponseEntity postMethodName(@RequestBody ResetPasswordRequest resetPassword) throws Exception {
+	public ResponseEntity<?> postMethodName(@RequestBody ResetPasswordRequest resetPassword) throws Exception {
 		Optional<ResetToken> optionalReset = serviceResetToken.listarPorToken(resetPassword.getToken());
 		if (optionalReset.isPresent()) {
 			ResetToken reset = optionalReset.get();
@@ -124,22 +123,22 @@ public class AuthenticationController {
 						int filasAfectadas = authService.modificarPasswordPorId(vendedor.getId(), resetPassword.getPassword());
 						if (filasAfectadas > 0) {
 							serviceResetToken.eliminar(reset.getId());
-							return new ResponseEntity(HttpStatus.OK);
+							return new ResponseEntity<Void>(HttpStatus.OK);
 						} else {
-							return new ResponseEntity(HttpStatus.FAILED_DEPENDENCY);
+							return new ResponseEntity<Void>(HttpStatus.FAILED_DEPENDENCY);
 						}
 					} else {
-						return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+						return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
 					}
 				} else {
-					return new ResponseEntity(HttpStatus.CONTINUE);
+					return new ResponseEntity<Void>(HttpStatus.CONTINUE);
 				}
 			} else {
-				return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
+				return new ResponseEntity<Void>(HttpStatus.PRECONDITION_FAILED);
 			}
 			
 		} else {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 		}
 		
 	}

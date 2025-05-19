@@ -1,0 +1,35 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmCategoria="ngForm" (ngSubmit)="operar()">
+    <mat-dialog-content class="mat-typography">
+        <div class="example-container">
+            <div [hidden]="true">
+                <mat-form-field>
+                    <input matInput placeholder="ID" formControlName="id" />
+                </mat-form-field>
+            </div>
+            <mat-form-field *ngIf="mostrarPadre">
+                <mat-label>Categoría Padre</mat-label>
+                <mat-select formControlName="padre">
+                    <mat-option [value]="null">-- Selecciona una Categoría Padre --</mat-option>
+                    <mat-option *ngFor="let c of dataCategorias"
+                        [value]="c">{{c.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Nombre Categoría</mat-label>
+                <input formControlName="nombre" matInput placeholder="Ingresar Nombre">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Descripción Categoría</mat-label>
+                <input formControlName="descripcion" matInput placeholder="Ingresar Descripción">
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button color="primary" type="submit" [disabled]="frmCategoria.invalid">Guardar</button>
+    </mat-dialog-actions>
+</form>

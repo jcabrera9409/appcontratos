@@ -20,7 +20,7 @@ import { Mensaje } from '../../../_model/Mensaje';
   templateUrl: './cambiar-estado-plantilla.component.html',
   styleUrl: './cambiar-estado-plantilla.component.css'
 })
-export class CambiarEstadoPlantillaComponent {
+export class CambiarEstadoPlantillaComponent implements OnInit {
 
   tituloDialogo: String = "Deshabilitar Plantilla";
   mensajeDialogo: String = "¿Desea deshabilitar la Plantilla?";

@@ -78,8 +78,13 @@ export class CatalogoMaterialComponent implements OnInit {
     const filterValue = typeof value === 'string' ? value.toLowerCase() : value?.nombre?.toLowerCase() || '';
     return this.dataMateriales.filter(d => d.nombre.toLowerCase().includes(filterValue));
   }
-  
+
   displayMaterial(material: Material): string {
     return material && material.nombre ? material.nombre : '';
+  }
+
+  limpiarMaterial(): void {
+    this.formGroup.get('material')!.setValue('');
+    this.materialSeleccionado = null;
   }
 }

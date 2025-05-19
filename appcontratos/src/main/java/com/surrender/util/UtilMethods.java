@@ -1,5 +1,7 @@
 package com.surrender.util;
 
+import java.text.Normalizer;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class UtilMethods {
@@ -48,5 +50,28 @@ public class UtilMethods {
 	public static boolean esRuc(String ruc) {
 		Pattern rucPattern = Pattern.compile("^\\d{11}$");
 		return ruc != null && rucPattern.matcher(ruc).matches();
+	}
+	
+	public static String generarSlugUnico(String nombre, List<String> slugsExistentes) {
+		if(nombre == null) return null;
+		
+		String slugBase = nombre.toLowerCase();
+		
+		slugBase = Normalizer.normalize(slugBase, Normalizer.Form.NFD);
+		slugBase = slugBase.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+		
+		slugBase = slugBase.replaceAll("[^a-z0-9\\s-]", "");
+		
+		slugBase = slugBase.trim().replaceAll("\\s+", "-");
+		
+		if(slugsExistentes == null) return slugBase;
+		
+		if(!slugsExistentes.contains(slugBase)) return slugBase;
+		
+		int contador = 1;
+		
+		while(slugsExistentes.contains(slugBase + "-" + contador)) contador++;
+		
+		return slugBase + "-" + contador;
 	}
 }

@@ -20,6 +20,7 @@ public interface IPlantillaRepo extends IGenericRepo<Plantilla, Integer> {
 	@Query("UPDATE Plantilla p SET p.estado = :estado, p.objVendedorActualizacion.id = :vendedorId, p.fechaActualizacion = :fechaActualizacion WHERE p.id = :id")
 	int updateEstadoById(@Param("id") Integer id, @Param("estado") boolean estado,
 			@Param("vendedorId") Integer vendedorId, @Param("fechaActualizacion") LocalDateTime fechaActualizacion);
+	
 	List<Plantilla> findByEstadoTrue();
 	
 	@Query("SELECT p.nombre as nombre, SUM(dc.cantidad) as cantidad " 

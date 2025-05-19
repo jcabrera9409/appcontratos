@@ -9,7 +9,7 @@
                 <input type="text" matInput placeholder="Buscar material" style="display: none;">
                 <mat-form-field class="col-100">
                     <mat-label>Material</mat-label>
-                    <input type="text" matInput [matAutocomplete]="autoMaterial" formControlName="material" tabindex="-1">
+                    <input type="text" matInput [matAutocomplete]="autoMaterial" formControlName="material" tabindex="-1" (click)="limpiarMaterial()">
                     <mat-autocomplete #autoMaterial="matAutocomplete" [displayWith]="displayMaterial">
                         <mat-option *ngFor="let d of( dataMateriales$ | async)"
                             [value]="d">{{d.nombre}}</mat-option>

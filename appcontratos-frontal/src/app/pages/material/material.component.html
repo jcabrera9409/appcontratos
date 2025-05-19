@@ -1,0 +1,143 @@
+<mat-card class="mat-card-page-style">
+    <mat-card-header class="mat-card-header-style">
+        <mat-card-title>Materiales</mat-card-title>
+        <span class="spacer"></span>
+        <button mat-fab extended color="accent" (click)="openDialogMaterial()">
+            <mat-icon>add</mat-icon>
+            Nuevo Material
+        </button>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field>
+            <mat-label>Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
+        </mat-form-field>
+        <div class="responsive-table">
+            <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+            
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef class="center-text"> Id </th>
+                    <td mat-cell *matCellDef="let element" class="center-text" 
+                    (click)="expandedElement = expandedElement === element ? null : element"> {{element.id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                    <td mat-cell *matCellDef="let element"
+                    (click)="expandedElement = expandedElement === element ? null : element"> {{element.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descripcion">
+                    <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                    <td mat-cell *matCellDef="let element"
+                    (click)="expandedElement = expandedElement === element ? null : element"> {{element.descripcion}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="center-text"> Acciones </th>
+                    <td mat-cell *matCellDef="let element" class="center-text">
+                        <button mat-icon-button color="primary" matTooltip="Editar" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="primary" aria-label="Editar" (click)="openDialogMaterial(element)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="Nueva Muestra" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="primary" aria-label="Nueva Muestra" 
+                        *ngIf="element.estado"
+                        (click)="openDialogDetalle(element)">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="Deshabilitar" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="warn" aria-label="Deshabilitar" 
+                        *ngIf="element.estado"
+                        (click)="openDialogCambiarEstadoMaterial(element)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="Habilitar" matTooltipPosition="above"
+                        matTooltipShowDelay="500" color="primary" caria-label="Habilitar" 
+                        *ngIf="!element.estado"
+                        (click)="openDialogCambiarEstadoMaterial(element)">
+                            <mat-icon>check_circle</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expand">
+                    <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
+                    <td mat-cell *matCellDef="let element" class="center-text"
+                    (click)="expandedElement = expandedElement === element ? null : element">
+                        <button mat-icon-button
+                            (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                            @if (expandedElement === element) {
+                            <mat-icon>keyboard_arrow_up</mat-icon>
+                            } @else {
+                            <mat-icon>keyboard_arrow_down</mat-icon>
+                            }
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                        <div class="example-element-detail"
+                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                            <div class="detail">
+                                <h2>Muestras de {{element.nombre}}</h2>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td class="center-text">Id</td>
+                                            <td>Nombre</td>
+                                            <td>Descripcion</td>
+                                            <td class="center-text">Imagen</td>
+                                            <td class="center-text">Acciones</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let detalle of element.detalles">
+                                            <td class="center-text">{{detalle.id}}</td>
+                                            <td>{{detalle.nombre}}</td>
+                                            <td>{{detalle.descripcion}}</td>
+                                            <td class="center-text"><img [src]="detalle.url" width="40px" style="vertical-align: middle;" /></td>
+                                            <td class="center-text">
+                                                <button mat-icon-button color="primary" matTooltip="Editar" matTooltipPosition="above"
+                                                matTooltipShowDelay="500" color="primary" aria-label="Editar" (click)="openDialogDetalle(element, detalle)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="primary" matTooltip="Deshabilitar" matTooltipPosition="above"
+                                                matTooltipShowDelay="500" color="warn" aria-label="Deshabilitar" 
+                                                *ngIf="detalle.estado"
+                                                (click)="openDialogCambiarEstadoDetalle(detalle)">
+                                                    <mat-icon>cancel</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="primary" matTooltip="Habilitar" matTooltipPosition="above"
+                                                matTooltipShowDelay="500" color="primary" caria-label="Habilitar" 
+                                                *ngIf="!detalle.estado"
+                                                (click)="openDialogCambiarEstadoDetalle(detalle)">
+                                                    <mat-icon>check_circle</mat-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+                <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No se encuentran coincidencias para "{{input.value}}"</td>
+                </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"
+                showFirstLastButtons
+                aria-label="Selecciona página">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

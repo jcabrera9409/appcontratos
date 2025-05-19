@@ -57,6 +57,18 @@ data-initializer:
     roles:
      - nombre: ADMIN
      - nombre: REPORTER
+  - indice: 8
+    icono: category
+    nombre: Categorías
+    url: /pages/categorias
+    roles:
+     - nombre: ADMIN
+  - indice: 9
+    icono: texture
+    nombre: Materiales
+    url: /pages/materiales
+    roles:
+     - nombre: ADMIN
  vendedores:
   - nombres: Administrador
     correo: admin@admin.com

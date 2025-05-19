@@ -86,13 +86,13 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 	
-	public ResponseEntity refreshToken(
+	public ResponseEntity<?> refreshToken(
             HttpServletRequest request,
             HttpServletResponse response) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
         }
 
         String token = authHeader.substring(7);
@@ -109,10 +109,10 @@ public class AuthenticationService {
             revokeAllTokenByVendedor(vendedor);
             saveUserToken(accessToken, refreshToken, vendedor);
 
-            return new ResponseEntity(new AuthenticationResponse(accessToken, refreshToken, "Nuevo token generado"), HttpStatus.OK);
+            return new ResponseEntity<AuthenticationResponse>(new AuthenticationResponse(accessToken, refreshToken, "Nuevo token generado"), HttpStatus.OK);
         }
 
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
     }
 	
 	public int modificarPasswordPorId(Integer id, String password) {
@@ -135,6 +135,8 @@ public class AuthenticationService {
     		break;
     	case "vendedor":
     	case "plantilla":
+    	case "categoria":
+    	case "material":
     	case "rol-listar":
     	case "contrato-admin":
     		metodoRol="ADMIN,ROOT";

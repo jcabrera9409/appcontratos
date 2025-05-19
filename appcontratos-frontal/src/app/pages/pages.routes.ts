@@ -9,6 +9,8 @@ import { VendedorComponent } from './vendedor/vendedor.component';
 import { ComprobanteComponent } from './comprobante/comprobante.component';
 import { Not403Component } from './not403/not403.component';
 import { ReporteComponent } from './reporte/reporte.component';
+import { CategoriaComponent } from './categoria/categoria.component';
+import { MaterialComponent } from './material/material.component';
 
 export const pagesRoutes: Routes = [
     { path: 'contratos', component: ContratoComponent, canActivate: [authGuard] },
@@ -19,6 +21,8 @@ export const pagesRoutes: Routes = [
     { path: 'plantillas', component: PlantillaComponent, canActivate: [authGuard] },
     { path: 'vendedores', component: VendedorComponent, canActivate: [authGuard] },
     { path: 'reportes', component: ReporteComponent, canActivate: [authGuard] },
+    { path: 'categorias', component: CategoriaComponent, canActivate: [authGuard] },
+    { path: 'materiales', component: MaterialComponent, canActivate: [authGuard] },
     { path: 'not-403', component: Not403Component},
     { path: '', component: InicioComponent}
 ];

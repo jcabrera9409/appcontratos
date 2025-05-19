@@ -3,8 +3,6 @@ package com.surrender.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -17,7 +15,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.surrender.model.Cliente;
 import com.surrender.model.Contrato;
 import com.surrender.model.DetalleContrato;
 

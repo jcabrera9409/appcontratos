@@ -1,0 +1,13 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="example-container">
+        <span>{{mensajeDialogo}}</span>    
+</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button color="primary" (click)="cambiarEstado()">Confirmar</button>
+</mat-dialog-actions>

@@ -1,0 +1,32 @@
+<div *ngIf="this.isLoading" class="overlay">
+    <mat-progress-spinner class="spinner" [diameter]="80" mode="indeterminate" color="primary"></mat-progress-spinner>
+</div>
+<h2 mat-dialog-title>{{tituloDialogo}}</h2>
+<form [formGroup]="form" #frmMaterial="ngForm" (ngSubmit)="operar()">
+    <mat-dialog-content class="mat-typography">
+        <div class="example-container" style="text-align: center;">
+            <div [hidden]="true">
+                <mat-form-field>
+                    <input matInput placeholder="ID" formControlName="id" />
+                </mat-form-field>
+            </div>
+            <mat-form-field>
+                <mat-label>Nombre Muestra</mat-label>
+                <input formControlName="nombre" matInput placeholder="Ingresar Nombre">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Descripción Muestra</mat-label>
+                <input formControlName="descripcion" matInput placeholder="Ingresar Descripción">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>URL Muestra</mat-label>
+                <input type="url" formControlName="url" matInput placeholder="Ingresar URL">
+            </mat-form-field>
+            <img *ngIf="form.get('url').value" [src]="form.get('url').value" alt="Imagen Muestra" class="img-preview" width="200px" />
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancelar</button>
+        <button mat-button color="primary" type="submit" [disabled]="frmMaterial.invalid">Guardar</button>
+    </mat-dialog-actions>
+</form>

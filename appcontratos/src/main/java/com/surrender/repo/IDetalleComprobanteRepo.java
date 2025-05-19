@@ -1,7 +1,5 @@
 package com.surrender.repo;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
