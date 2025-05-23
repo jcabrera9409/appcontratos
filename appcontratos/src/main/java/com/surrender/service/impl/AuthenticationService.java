@@ -137,6 +137,7 @@ public class AuthenticationService {
     	case "plantilla":
     	case "categoria":
     	case "material":
+    	case "producto":
     	case "rol-listar":
     	case "contrato-admin":
     		metodoRol="ADMIN,ROOT";
