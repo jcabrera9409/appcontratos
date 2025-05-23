@@ -69,6 +69,12 @@ data-initializer:
     url: /pages/materiales
     roles:
      - nombre: ADMIN
+  - indice: 10
+    icono: inventory_2
+    nombre: Productos
+    url: /pages/productos
+    roles:
+     - nombre: ADMIN
  vendedores:
   - nombres: Administrador
     correo: admin@admin.com

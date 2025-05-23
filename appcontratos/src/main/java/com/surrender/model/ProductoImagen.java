@@ -1,48 +1,37 @@
 package com.surrender.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="tblMaterial")
-public class Material {
+@Table(name="tblProductoImagen")
+public class ProductoImagen {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Column(nullable = false)
 	private String nombre;
 	
 	@Column(nullable = false)
-	private String descripcion;
+	private String url;
 	
-	@Column(nullable = false)
-	private boolean estado;
-	
-	@OneToMany(mappedBy = "objMaterial", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OrderBy("nombre ASC")
-	private List<DetalleMaterial> detalles;
-	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "materiales")
-	private List<Producto> productos;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Producto objProducto;
 	
 	@ManyToOne
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -68,36 +57,20 @@ public class Material {
 		this.nombre = nombre;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public boolean isEstado() {
-		return estado;
+	public Producto getObjProducto() {
+		return objProducto;
 	}
 
-	public void setEstado(boolean estado) {
-		this.estado = estado;
-	}
-
-	public List<DetalleMaterial> getDetalles() {
-		return detalles;
-	}
-
-	public void setDetalles(List<DetalleMaterial> detalles) {
-		this.detalles = detalles;
-	}
-
-	public List<Producto> getProductos() {
-		return productos;
-	}
-
-	public void setProductos(List<Producto> productos) {
-		this.productos = productos;
+	public void setObjProducto(Producto objProducto) {
+		this.objProducto = objProducto;
 	}
 
 	public Vendedor getObjVendedorActualizacion() {
